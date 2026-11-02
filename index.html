@@ -959,6 +959,89 @@ function renderMonsterIndex(page=1) {
   }
 }
 
+  /* 메인 홈페이지 번역 */
+function applyTranslations(language) {
+  const translations = {
+    ko: {
+      title: "몬스터 도감",
+      intro: "Kmon의 존재들을 하나씩 만나 보세요.",
+      monsters: [
+        ["세로(Sero)", "Kmon팀의 리더(저승사자)"],
+        ["체시(Chesy)", "Kmon팀소속, 세자매의 맏언니(처녀귀신)"],
+        ["체리(Chery)", "Kmon 캐릭터"],
+        ["체미(Chemi)", "Kmon팀소속, 세자매의 막내(처녀귀신)"],
+        ["덤부(Dumboo)", "Kmon팀소속, 몽달귀신(총각귀신)"],
+        ["뚱보아귀(Hungry Monster)", "악귀 : 뚱보아귀"]
+      ],
+      more: "몬스터 더보기",
+      videos: "에피소드 영상",
+      cards: "디지털 카드",
+      cardTitle1: "캐릭터 카드",
+      cardText1: "좋아하는 Kmon 캐릭터를 만나 보세요.",
+      cardTitle2: "특별한 이야기",
+      cardText2: "캐릭터들의 숨겨진 이야기를 탐험하세요.",
+      nav: ["홈", "도감", "영상", "카드·스토리"]
+    },
+    en: {
+      title: "Monster Bestiary",
+      intro: "Meet the mysterious beings of Kmon, one by one.",
+      monsters: [
+        ["Sero", "Leader of the Kmon team (Grim Reaper)"],
+        ["Chesy", "Eldest of the three sisters (Virgin Ghost)"],
+        ["Chery", "Kmon character"],
+        ["Chemi", "Youngest of the three sisters (Virgin Ghost)"],
+        ["Dumboo", "Kmon team member (Bachelor Ghost)"],
+        ["Hungry Monster", "Evil spirit: Hungry Monster"]
+      ],
+      more: "Discover More Monsters",
+      videos: "Episode Videos",
+      cards: "Digital Cards",
+      cardTitle1: "Character Cards",
+      cardText1: "Meet your favorite Kmon characters.",
+      cardTitle2: "Special Stories",
+      cardText2: "Explore the hidden stories of the characters.",
+      nav: ["Home", "Bestiary", "Videos", "Cards & Stories"]
+    }
+  };
+
+  const t = translations[language] || translations.ko;
+
+  document.querySelector(".title-text").textContent = t.title;
+  document.querySelector("#bestiary .intro").textContent = t.intro;
+
+  const monsterCards = document.querySelectorAll("#bestiary .cards .card");
+
+  t.monsters.forEach((monster, index) => {
+    if (!monsterCards[index]) return;
+    monsterCards[index].querySelector("h3").textContent = monster[0];
+    monsterCards[index].querySelector("p").textContent = monster[1];
+  });
+
+  document.querySelector(".more-monsters-button").textContent = t.more;
+  document.querySelector("#videos .section-title").textContent = t.videos;
+  document.querySelector("#cards .section-title").textContent = t.cards;
+
+  const digitalCards = document.querySelectorAll("#cards .card");
+
+  if (digitalCards[0]) {
+    digitalCards[0].querySelector("h3").textContent = t.cardTitle1;
+    digitalCards[0].querySelector("p").textContent = t.cardText1;
+    digitalCards[0].querySelector(".card-art").textContent =
+      language === "en" ? "Card Image Area" : "카드 이미지 영역";
+  }
+
+  if (digitalCards[1]) {
+    digitalCards[1].querySelector("h3").textContent = t.cardTitle2;
+    digitalCards[1].querySelector("p").textContent = t.cardText2;
+    digitalCards[1].querySelector(".card-art").textContent =
+      language === "en" ? "Story Image Area" : "스토리 이미지 영역";
+  }
+
+  document.querySelectorAll("#bottom-nav a span:last-child")
+    .forEach((item, index) => {
+      item.textContent = t.nav[index];
+    });
+}
 /* 다국어 설정 */
 const languageButton = document.getElementById("language-button");
 const languageMenu = document.getElementById("language-menu");
