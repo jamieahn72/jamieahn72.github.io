@@ -1249,6 +1249,62 @@ function updatePage() {
 }
 window.addEventListener("hashchange",updatePage);
 updatePage();
+  // Pi Sign-In 설정
+const PI_CLIENT_ID = "K7O4VU2cn5KRldwhdI0NZGwRhqiS-lHYYh7GR4qAP0I";
+const PI_REDIRECT_URI = "https://jamieahn72.github.io/";
+
+// Pi 로그인 버튼
+const piLoginButton = document.getElementById("pi-login-button");
+
+if (piLoginButton) {
+  piLoginButton.addEventListener("click", () => {
+    const state = Array.from(
+      crypto.getRandomValues(new Uint8Array(16)),
+      b => b.toString(16).padStart(2, "0")
+    ).join("");
+
+    sessionStorage.setItem("pi_login_state", state);
+
+    Pi.signIn({
+      clientId: PI_CLIENT_ID,
+      redirectUri: PI_REDIRECT_URI,
+      scopes: ["username"],
+      state: state
+    });
+  });
+}
+
+// Pi 로그인 인증 결과 처리
+const params = new URLSearchParams(
+  window.location.hash.replace(/^#/, "")
+);
+
+const accessToken = params.get("access_token");
+const returnedState = params.get("state");
+const savedState = sessionStorage.getItem("pi_login_state");
+
+if (accessToken && returnedState && savedState === returnedState) {
+  sessionStorage.removeItem("pi_login_state");
+
+  fetch("https://api.minepi.com/v2/me", {
+    headers: {
+      Authorization: `Bearer ${accessToken}`
+    }
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("Pi 인증에 실패했습니다.");
+    return response.json();
+  })
+  .then(user => {
+    console.log("Pi 로그인 성공:", user.username);
+    alert("Pi 로그인이 완료되었습니다!");
+    history.replaceState(null, "", window.location.pathname);
+  })
+  .catch(error => {
+    console.error(error);
+    alert("Pi 로그인에 실패했습니다. 다시 시도해 주세요.");
+  });
+}
 </script>
 </body>
 </html>
