@@ -742,12 +742,13 @@ async function createGallery(galleryId, images, description) {
 
   try {
     const response = await fetch(
-  "https://api.github.com/repos/jamieahn72/jamieahn72.github.io/contents/?t=" + Date.now()
+  "https://api.github.com/repos/jamieahn72/jamieahn72.github.io/git/trees/main?recursive=1&t=" + Date.now()
 );
 
-    if (!response.ok) throw new Error("GitHub 파일 목록을 불러오지 못했습니다.");
+if (!response.ok) throw new Error("GitHub 파일 목록을 불러오지 못했습니다.");
 
-    const files = await response.json();
+const data = await response.json();
+const files = data.tree;
 
     const imageFiles = files
       .filter(file =>
