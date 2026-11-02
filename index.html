@@ -1249,15 +1249,40 @@ function updatePage() {
 }
 window.addEventListener("hashchange",updatePage);
 updatePage();
-  // Pi Sign-In 설정
+// Pi Sign-In 설정
 const PI_CLIENT_ID = "K7O4VU2cn5KRldwhdI0NZGwRhqiS-lHYYh7GR4qAP0I";
 const PI_REDIRECT_URI = "https://jamieahn72.github.io/";
 
-// Pi 로그인 버튼
 const piLoginButton = document.getElementById("pi-login-button");
+
+function updatePiLoginButton(isLoggedIn) {
+  if (!piLoginButton) return;
+
+  piLoginButton.textContent = isLoggedIn ? "로그인 완료" : "Pi 로그인";
+  piLoginButton.title = isLoggedIn
+    ? "클릭하면 로그아웃됩니다."
+    : "Pi 계정으로 로그인합니다.";
+}
+
+function clearPiLogin() {
+  sessionStorage.removeItem("pi_access_token");
+  sessionStorage.removeItem("pi_username");
+  sessionStorage.removeItem("pi_login_state");
+  updatePiLoginButton(false);
+}
 
 if (piLoginButton) {
   piLoginButton.addEventListener("click", () => {
+    const savedToken = sessionStorage.getItem("pi_access_token");
+
+    if (savedToken) {
+      if (confirm("Kmon에서 로그아웃하시겠습니까?")) {
+        clearPiLogin();
+        alert("로그아웃되었습니다.");
+      }
+      return;
+    }
+
     const state = Array.from(
       crypto.getRandomValues(new Uint8Array(16)),
       b => b.toString(16).padStart(2, "0")
@@ -1274,63 +1299,68 @@ if (piLoginButton) {
   });
 }
 
-// Pi 로그인 인증 결과 처리
-const params = new URLSearchParams(
-  window.location.hash.replace(/^#/, "")
-);
-
-const accessToken = params.get("access_token");
-const returnedState = params.get("state");
-const savedState = sessionStorage.getItem("pi_login_state");
-
-if (accessToken && returnedState && savedState === returnedState) {
-  sessionStorage.removeItem("pi_login_state");
-
-  fetch("https://api.minepi.com/v2/me", {
+async function verifyPiToken(token) {
+  const response = await fetch("https://api.minepi.com/v2/me", {
     headers: {
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${token}`
     }
-  })
-  .then(response => {
-    if (!response.ok) throw new Error("Pi 인증에 실패했습니다.");
-    return response.json();
-  })
-  .then(user => {
-    sessionStorage.setItem("pi_access_token", accessToken);
-    sessionStorage.setItem("pi_username", user.username);
-
-    console.log("Pi 로그인 성공:", user.username);
-    alert("Pi 로그인이 완료되었습니다!");
-
-    history.replaceState(null, "", window.location.pathname);
-})
-  .catch(error => {
-    console.error(error);
-    alert("Pi 로그인에 실패했습니다. 다시 시도해 주세요.");
   });
-}
-// 저장된 Pi 로그인 상태 확인
-const savedAccessToken = sessionStorage.getItem("pi_access_token");
 
-if (savedAccessToken) {
-  fetch("https://api.minepi.com/v2/me", {
-    headers: {
-      Authorization: `Bearer ${savedAccessToken}`
+  if (!response.ok) {
+    throw new Error("Pi 인증에 실패했습니다.");
+  }
+
+  return await response.json();
+}
+
+(async function initializePiLogin() {
+  const params = new URLSearchParams(
+    window.location.hash.replace(/^#/, "")
+  );
+
+  const accessToken = params.get("access_token");
+  const returnedState = params.get("state");
+  const savedState = sessionStorage.getItem("pi_login_state");
+
+  if (accessToken && returnedState && savedState === returnedState) {
+    sessionStorage.removeItem("pi_login_state");
+
+    try {
+      const user = await verifyPiToken(accessToken);
+
+      sessionStorage.setItem("pi_access_token", accessToken);
+      sessionStorage.setItem("pi_username", user.username);
+
+      updatePiLoginButton(true);
+
+      alert("Pi 로그인이 완료되었습니다!");
+
+      history.replaceState(null, "", window.location.pathname);
+      return;
+    } catch (error) {
+      console.error(error);
+      clearPiLogin();
+      alert("Pi 로그인에 실패했습니다. 다시 시도해 주세요.");
+      return;
     }
-  })
-  .then(response => {
-    if (!response.ok) throw new Error("로그인 만료");
-    return response.json();
-  })
-  .then(user => {
-    console.log("Pi 로그인 상태 유지:", user.username);
-  })
-  .catch(() => {
-    sessionStorage.removeItem("pi_access_token");
-    sessionStorage.removeItem("pi_username");
-    console.log("Pi 로그인이 만료되었습니다.");
-  });
-}
+  }
+
+  const savedAccessToken = sessionStorage.getItem("pi_access_token");
+
+  if (savedAccessToken) {
+    try {
+      const user = await verifyPiToken(savedAccessToken);
+
+      sessionStorage.setItem("pi_username", user.username);
+      updatePiLoginButton(true);
+    } catch (error) {
+      clearPiLogin();
+      console.log("Pi 로그인이 만료되었습니다.");
+    }
+  } else {
+    updatePiLoginButton(false);
+  }
+})();
 </script>
 </body>
 </html>
