@@ -750,7 +750,9 @@ if (!response.ok) throw new Error("GitHub 파일 목록을 불러오지 못했�
 const data = await response.json();
 const files = data.tree;
 
-    const imageFiles = files
+console.log("sero 파일 목록:", files.filter(file => file.path.includes("sero_")));
+
+const imageFiles = files
       .filter(file =>
   file.type === "blob" &&
   !file.path.includes("/") &&
