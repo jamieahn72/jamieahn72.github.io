@@ -296,6 +296,75 @@ section { padding:30px 20px; }
   object-fit:cover; object-position:center;
 }
 .bestiary-heading { margin:0; line-height:1; }
+  /* 언어 선택 버튼 */
+.bestiary-title-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.language-selector {
+  position:relative;
+  flex:0 0 auto;
+}
+
+.language-button {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 11px;
+  border:2px solid var(--orange);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--navy);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.language-button:focus-visible,
+.language-option:focus-visible {
+  outline:2px solid var(--navy);
+  outline-offset:3px;
+}
+
+.language-menu {
+  position:absolute;
+  top:calc(100% + 7px);
+  right:0;
+  z-index:30;
+  display:none;
+  min-width:125px;
+  padding:5px;
+  border:2px solid var(--orange);
+  border-radius:9px;
+  background:var(--bg);
+  box-shadow:0 4px 12px rgba(32,43,75,.12);
+}
+
+.language-menu.open {
+  display:block;
+}
+
+.language-option {
+  display:block;
+  width:100%;
+  padding:9px 10px;
+  border:0;
+  border-radius:5px;
+  background:transparent;
+  color:var(--navy);
+  text-align:left;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.language-option:hover {
+  background:rgba(82,118,165,.1);
+}
 .label {
   color:#65718d; font-size:10px; font-weight:700;
   letter-spacing:1.5px; line-height:1; margin-bottom:2px;
@@ -511,13 +580,38 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   </section>
   <section id="bestiary">
     <div class="bestiary-heading">
-      <div class="label">DISCOVER THE UNKNOWN</div>
-      <h2 class="bestiary-title">
-        <span class="title-k">K</span>
-        <span class="title-text">몬스터 도감</span>
-      </h2>
-      <p class="intro">Kmon의 존재들을 하나씩 만나 보세요.</p>
+  <div class="label">DISCOVER THE UNKNOWN</div>
+
+  <div class="bestiary-title-row">
+    <h2 class="bestiary-title">
+      <span class="title-k">K</span>
+      <span class="title-text">몬스터 도감</span>
+    </h2>
+
+    <div class="language-selector">
+      <button
+        class="language-button"
+        id="language-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="language-menu"
+      >
+        한국어
+        <span aria-hidden="true">⌄</span>
+      </button>
+
+      <div class="language-menu" id="language-menu">
+        <button class="language-option" type="button" data-lang="ko">한국어</button>
+        <button class="language-option" type="button" data-lang="en">English</button>
+        <button class="language-option" type="button" data-lang="zh">简体中文</button>
+        <button class="language-option" type="button" data-lang="ja">日本語</button>
+        <button class="language-option" type="button" data-lang="vi">Tiếng Việt</button>
+      </div>
     </div>
+  </div>
+
+  <p class="intro">Kmon의 존재들을 하나씩 만나 보세요.</p>
+</div>
     <div class="cards">
       <article class="card">
         <a class="card-link" href="#sero">
@@ -865,6 +959,41 @@ function renderMonsterIndex(page=1) {
   }
 }
 
+  /* 언어 선택 메뉴 */
+const languageButton = document.getElementById("language-button");
+const languageMenu = document.getElementById("language-menu");
+
+languageButton.addEventListener("click", () => {
+  const isOpen = languageMenu.classList.toggle("open");
+  languageButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+languageMenu.addEventListener("click", (event) => {
+  const option = event.target.closest(".language-option");
+  if (!option) return;
+
+  const selectedLanguage = option.dataset.lang;
+  const languageNames = {
+    ko: "한국어",
+    en: "English",
+    zh: "简体中文",
+    ja: "日本語",
+    vi: "Tiếng Việt"
+  };
+
+  languageButton.innerHTML =
+    languageNames[selectedLanguage] + ' <span aria-hidden="true">⌄</span>';
+
+  languageMenu.classList.remove("open");
+  languageButton.setAttribute("aria-expanded", "false");
+});
+
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".language-selector")) {
+    languageMenu.classList.remove("open");
+    languageButton.setAttribute("aria-expanded", "false");
+  }
+});
 /* 입장 버튼 */
 const introScreen = document.getElementById("intro-screen");
 const introEnter = document.getElementById("intro-enter");
