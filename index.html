@@ -752,11 +752,11 @@ const files = data.tree;
 
     const imageFiles = files
       .filter(file =>
-        file.type === "file" &&
-new RegExp("^" + prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\d+\\.(png|jpe?g|webp|gif)$", "i").test(file.name) &&
-        /\.(png|jpe?g|webp|gif)$/i.test(file.name)
-      )
-      .map(file => file.name)
+  file.type === "blob" &&
+  !file.path.includes("/") &&
+  new RegExp("^" + prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\d+\\.(png|jpe?g|webp|gif)$", "i").test(file.path)
+)
+.map(file => file.path)
       .sort((a, b) => {
         const numberA = Number(a.match(/(\d+)\.(png|jpe?g|webp|gif)$/i)?.[1] || 0);
         const numberB = Number(b.match(/(\d+)\.(png|jpe?g|webp|gif)$/i)?.[1] || 0);
