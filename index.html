@@ -1255,12 +1255,15 @@ const PI_REDIRECT_URI = "https://jamieahn72.github.io/";
 
 const piLoginButton = document.getElementById("pi-login-button");
 
-function updatePiLoginButton(isLoggedIn) {
+function updatePiLoginButton(username) {
   if (!piLoginButton) return;
 
-  piLoginButton.textContent = isLoggedIn ? "로그인 완료" : "Pi 로그인";
-  piLoginButton.title = isLoggedIn
-    ? "클릭하면 로그아웃됩니다."
+  piLoginButton.textContent = username
+    ? "@" + username
+    : "Pi 로그인";
+
+  piLoginButton.title = username
+    ? "@" + username + " · 클릭하면 로그아웃됩니다."
     : "Pi 계정으로 로그인합니다.";
 }
 
@@ -1268,7 +1271,7 @@ function clearPiLogin() {
   sessionStorage.removeItem("pi_access_token");
   sessionStorage.removeItem("pi_username");
   sessionStorage.removeItem("pi_login_state");
-  updatePiLoginButton(false);
+  updatePiLoginButton(null);
 }
 
 if (piLoginButton) {
@@ -1331,7 +1334,7 @@ async function verifyPiToken(token) {
       sessionStorage.setItem("pi_access_token", accessToken);
       sessionStorage.setItem("pi_username", user.username);
 
-      updatePiLoginButton(true);
+      updatePiLoginButton(user.username);
 
       alert("Pi 로그인이 완료되었습니다!");
 
@@ -1352,14 +1355,14 @@ async function verifyPiToken(token) {
       const user = await verifyPiToken(savedAccessToken);
 
       sessionStorage.setItem("pi_username", user.username);
-      updatePiLoginButton(true);
+      updatePiLoginButton(user.username);
     } catch (error) {
       clearPiLogin();
       console.log("Pi 로그인이 만료되었습니다.");
     }
   } else {
-    updatePiLoginButton(false);
-  }
+  updatePiLoginButton(null);
+}
 })();
 </script>
 </body>
