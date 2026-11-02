@@ -959,41 +959,68 @@ function renderMonsterIndex(page=1) {
   }
 }
 
-  /* 언어 선택 메뉴 */
+/* 다국어 설정 */
 const languageButton = document.getElementById("language-button");
 const languageMenu = document.getElementById("language-menu");
 
-languageButton.addEventListener("click", () => {
+const languageNames = {
+  ko: "한국어",
+  en: "English",
+  zh: "简体中文",
+  ja: "日本語",
+  vi: "Tiếng Việt"
+};
+
+function setLanguage(language) {
+  if (!languageNames[language]) return;
+
+  // 선택한 언어 기억
+  localStorage.setItem("kmon-language", language);
+
+  // 홈페이지 언어 설정
+  document.documentElement.lang = language;
+
+  // 버튼 글자 변경
+  languageButton.innerHTML =
+    languageNames[language] + ' <span aria-hidden="true">⌄</span>';
+
+  // 메뉴 닫기
+  languageMenu.classList.remove("open");
+  languageButton.setAttribute("aria-expanded", "false");
+
+  // 번역 적용 함수가 준비되면 실행
+  if (typeof applyTranslations === "function") {
+    applyTranslations(language);
+  }
+}
+
+// 언어 메뉴 열기 및 닫기
+languageButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+
   const isOpen = languageMenu.classList.toggle("open");
   languageButton.setAttribute("aria-expanded", String(isOpen));
 });
 
+// 언어 선택
 languageMenu.addEventListener("click", (event) => {
   const option = event.target.closest(".language-option");
   if (!option) return;
 
-  const selectedLanguage = option.dataset.lang;
-  const languageNames = {
-    ko: "한국어",
-    en: "English",
-    zh: "简体中文",
-    ja: "日本語",
-    vi: "Tiếng Việt"
-  };
-
-  languageButton.innerHTML =
-    languageNames[selectedLanguage] + ' <span aria-hidden="true">⌄</span>';
-
-  languageMenu.classList.remove("open");
-  languageButton.setAttribute("aria-expanded", "false");
+  setLanguage(option.dataset.lang);
 });
 
+// 메뉴 바깥을 누르면 닫기
 document.addEventListener("click", (event) => {
   if (!event.target.closest(".language-selector")) {
     languageMenu.classList.remove("open");
     languageButton.setAttribute("aria-expanded", "false");
   }
 });
+
+// 저장된 언어 불러오기
+const savedLanguage = localStorage.getItem("kmon-language") || "ko";
+setLanguage(savedLanguage);
 /* 입장 버튼 */
 const introScreen = document.getElementById("intro-screen");
 const introEnter = document.getElementById("intro-enter");
