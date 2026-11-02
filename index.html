@@ -752,7 +752,7 @@ async function createGallery(galleryId, images, description) {
     const imageFiles = files
       .filter(file =>
         file.type === "file" &&
-        file.name.startsWith(prefix) &&
+new RegExp("^" + prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\d+\\.(png|jpe?g|webp|gif)$", "i").test(file.name) &&
         /\.(png|jpe?g|webp|gif)$/i.test(file.name)
       )
       .map(file => file.name)
