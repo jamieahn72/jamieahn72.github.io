@@ -1296,13 +1296,39 @@ if (accessToken && returnedState && savedState === returnedState) {
     return response.json();
   })
   .then(user => {
+    sessionStorage.setItem("pi_access_token", accessToken);
+    sessionStorage.setItem("pi_username", user.username);
+
     console.log("Pi 로그인 성공:", user.username);
     alert("Pi 로그인이 완료되었습니다!");
+
     history.replaceState(null, "", window.location.pathname);
-  })
+})
   .catch(error => {
     console.error(error);
     alert("Pi 로그인에 실패했습니다. 다시 시도해 주세요.");
+  });
+}
+// 저장된 Pi 로그인 상태 확인
+const savedAccessToken = sessionStorage.getItem("pi_access_token");
+
+if (savedAccessToken) {
+  fetch("https://api.minepi.com/v2/me", {
+    headers: {
+      Authorization: `Bearer ${savedAccessToken}`
+    }
+  })
+  .then(response => {
+    if (!response.ok) throw new Error("로그인 만료");
+    return response.json();
+  })
+  .then(user => {
+    console.log("Pi 로그인 상태 유지:", user.username);
+  })
+  .catch(() => {
+    sessionStorage.removeItem("pi_access_token");
+    sessionStorage.removeItem("pi_username");
+    console.log("Pi 로그인이 만료되었습니다.");
   });
 }
 </script>
