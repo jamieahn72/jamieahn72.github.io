@@ -1,0 +1,60 @@
+name: Update character image lists
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "*.png"
+      - "*.jpg"
+      - "*.jpeg"
+      - "*.webp"
+      - "*.gif"
+
+permissions:
+  contents: write
+
+jobs:
+  update-images:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate image lists
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          patterns = {
+              "sero": r"^sero_\d+\.(png|jpe?g|webp|gif)$",
+              "chesy": r"^chesy_\d+\.(png|jpe?g|webp|gif)$",
+              "chery": r"^chery_\d+\.(png|jpe?g|webp|gif)$",
+              "chemi": r"^chemi_\d+\.(png|jpe?g|webp|gif)$",
+              "egg": r"^egg_\d+\.(png|jpe?g|webp|gif)$",
+              "dumboo": r"^dumboo_\d+\.(png|jpe?g|webp|gif)$",
+              "ddboaq": r"^ddboaq_\d+\.(png|jpe?g|webp|gif)$"
+          }
+
+          for name, pattern in patterns.items():
+              files = [
+                  p.name for p in Path(".").iterdir()
+                  if p.is_file() and re.match(pattern, p.name, re.I)
+              ]
+              files.sort(key=lambda x: int(re.search(r"_(\d+)\.", x).group(1)))
+              Path(f"{name}_images.json").write_text(
+                  json.dumps(files, ensure_ascii=False, indent=2),
+                  encoding="utf-8"
+              )
+          PY
+
+      - name: Commit image lists
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add *_images.json
+          git diff --cached --quiet || git commit -m "Update character image lists"
+          git push
