@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<head>sero-modal
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F7F2E9">
@@ -1492,9 +1492,10 @@ async function verifyPiToken(token) {
       clearPiLogin();
       console.log("Pi 로그인이 만료되었습니다.");
     }
-  } else {
-  updatePiLoginButton(null);
-}
+    } else {
+    updatePiLoginButton(null);
+  }
+})();
 
 // 세로 카드 팝업 열기 및 닫기
 const seroOpenButton = document.getElementById("sero-card-open");
@@ -1516,7 +1517,6 @@ if (seroOpenButton && seroModal && seroCloseButton) {
     }
   });
 }
-})();
 </script>
 </body>
 </html>
