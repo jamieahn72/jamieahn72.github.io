@@ -1232,11 +1232,10 @@ function applyTranslations(language) {
   }
 
   if (digitalCards[1]) {
-    digitalCards[1].querySelector("h3").textContent = t.cardTitle2;
-    digitalCards[1].querySelector("p").textContent = t.cardText2;
-    digitalCards[1].querySelector(".card-art").textContent =
-      language === "en" ? "Story Image Area" : "스토리 이미지 영역";
-  }
+  digitalCards[1].querySelector("h3").textContent = "세로 (Sero)";
+  digitalCards[1].querySelector("p").textContent =
+    "LEGEND · 절대 소유물 수호";
+}
 
   document.querySelectorAll("#bottom-nav a span:last-child")
     .forEach((item, index) => {
