@@ -168,19 +168,23 @@
   }
 
   .sero-modal-content {
-    grid-template-columns: 1fr;
-    gap: 10px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
     max-width: 420px;
+    max-height: 90vh;
     padding: 28px 22px;
     text-align: center;
+    box-sizing: border-box;
   }
 
   .sero-modal-content img {
     grid-column: 1;
     grid-row: auto;
-    width: 58%;
-    max-height: 38vh;
-    margin: 8px auto 12px;
+    width: 78%;
+    max-height: 42vh;
+    margin: 8px auto;
   }
 
   .sero-modal-content h2 {
@@ -188,9 +192,37 @@
   }
 
   .sero-modal-content h3 {
-    font-size: 18px;
+    font-size: 19px;
+  }
+
+  .sero-modal-content p {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .sero-modal-guide {
+    grid-column: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    text-align: left;
+  }
+
+  .sero-modal-guide p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .sero-modal-notice {
+    font-size: 13px !important;
+  }
+
+  .sero-buy-button {
+    grid-column: 1;
   }
 }
+  :root {
   --bg:#F7F2E9; --panel:#fff; --line:#e5dccd;
   --text:#202b4b; --muted:#737d91; --orange:#E58A32; --navy:#5276a5;
 }
