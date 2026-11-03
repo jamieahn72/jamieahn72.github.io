@@ -43,7 +43,7 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(10, 15, 30, 0.85);
+  background: rgba(32, 43, 75, 0.72);
   padding: 20px;
   align-items: center;
   justify-content: center;
@@ -60,10 +60,10 @@
   max-height: 90vh;
   overflow-y: auto;
   padding: 25px;
-  border: 2px solid #d9b65e;
+  border: 2px solid var(--orange);
   border-radius: 16px;
-  background: #171b2b;
-  color: #fff;
+  background: var(--bg);
+  color: var(--navy);
   text-align: center;
 }
 
@@ -82,24 +82,33 @@
   right: 12px;
   border: none;
   background: transparent;
-  color: #fff;
+  color: var(--navy);
   font-size: 32px;
   cursor: pointer;
 }
 
 .sero-modal-content h2 {
   margin: 10px 0;
+  color: var(--text);
+}
+
+.sero-modal-content h3 {
+  color: var(--navy);
+}
+
+.sero-modal-content p {
+  color: var(--navy);
 }
 
 .sero-modal-rarity {
-  color: #e8c66e;
+  color: #b58a35;
   font-weight: bold;
   letter-spacing: 3px;
 }
 
 .sero-modal-notice {
   margin-top: 24px;
-  color: #c5c9d4;
+  color: #9299ad;
   font-size: 13px;
 }
 
@@ -108,11 +117,12 @@
   padding: 13px;
   border: none;
   border-radius: 8px;
-  background: #777;
+  background: var(--navy);
   color: white;
   font-weight: bold;
   cursor: not-allowed;
 }
+
 :root {
   --bg:#F7F2E9; --panel:#fff; --line:#e5dccd;
   --text:#202b4b; --muted:#737d91; --orange:#E58A32; --navy:#5276a5;
