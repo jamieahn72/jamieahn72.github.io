@@ -1034,7 +1034,8 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   <div class="detail-heading">
     <div class="label">KMON CHARACTER</div>
     <h1>체리(Chery)</h1>
-  </div>
+<p class="detail-intro" data-i18n="chery_intro">처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 공주병 기질을 가진 사랑스러운 귀신이다. 언제나 자신이 가장 예쁘고 특별하다고 생각하며 관심과 칭찬을 즐긴다. Kmon의 팀원으로서 다른 네 명의 팀원 사이를 이어주는 가교 역할을 하며, 팀의 조화와 화합에 중요한 역할을 한다.</p>
+</div>
   <div class="character-gallery" id="chery-gallery"></div>
   <div class="detail-bottom"><a class="detail-back" href="#bestiary">← 도감으로 돌아가기</a></div>
 </main>
@@ -1078,6 +1079,11 @@ const chesyDescription =
   "처녀귀신 세자매의 맏언니 체시는 기숙사 사감같은 존재감을 가지고 있다.\n" +
   "평소엔 규율부장같지만 속마음은 츤데레같이 따뜻한 마음의 소유자이다.\n" +
   "Kmon팀의 안살림을 맡고 있다.";
+
+const cheryDescription =
+  "처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 공주병 기질을 가진 사랑스러운 귀신이다.\n" +
+  "언제나 자신이 가장 예쁘고 특별하다고 생각하며 관심과 칭찬을 즐긴다.\n" +
+  "Kmon의 팀원으로서 다른 네 명의 팀원 사이를 이어주는 가교 역할을 하며, 팀의 조화와 화합에 중요한 역할을 한다.";
 
 const chemiDescription =
   "처녀귀신 세자매의 막내이며 말광량이 같은 성격의 소유자다.\n" +
@@ -1144,7 +1150,7 @@ async function createGallery(galleryId, images, description) {
 
 createGallery("sero-gallery",seroImages,seroDescription);
 createGallery("chesy-gallery",chesyImages,chesyDescription);
-createGallery("chery-gallery",cheryImages,"");
+createGallery("chery-gallery",cheryImages,cheryDescription);
 createGallery("chemi-gallery",chemiImages,chemiDescription);
 createGallery("egg-gallery",eggImages,eggDescription);
 createGallery("dumboo-gallery",dumbooImages,dumbooDescription);
@@ -1154,7 +1160,7 @@ createGallery("ddboaq-gallery",ddboaqImages,ddboaqDescription);
 const monsters = [
   {name:"세로(Sero)", description:"Kmon팀의 리더(저승사자)", thumbnail:"sero_thumbnail_1.png", hash:"#sero"},
   {name:"체시(Chesy)", description:"Kmon팀소속, 세자매의 맏언니(처녀귀신)", thumbnail:"chesy_thumbnail_1.png", hash:"#chesy"},
-  {name:"체리(Chery)", description:"Kmon 캐릭터", thumbnail:"chery_thumbnail_1.png", hash:"#chery"},
+  {name:"체리(Chery)", description:"Kmon팀소속, 처녀귀신 세자매의 둘째", thumbnail:"chery_thumbnail_1.png", hash:"#chery"},
   {name:"체미(Chemi)", description:"Kmon팀소속, 세자매의 막내(처녀귀신)", thumbnail:"chemi_thumbnail_1.png", hash:"#chemi"},
   {name:"덤부(Dumboo)", description:"Kmon팀소속, 몽달귀신(총각귀신)", thumbnail:"dumboo_thumbnail_1.png", hash:"#dumboo"},
   {name:"뚱보아귀(Hungry Monster)", description:"악귀 : 뚱보아귀", thumbnail:"ddboaq_thumbnail_1.png", hash:"#ddboaq"},
@@ -1259,7 +1265,7 @@ function applyTranslations(language) {
       monsters: [
         ["Sero", "Leader of the Kmon team (Grim Reaper)"],
         ["Chesy", "Eldest of the three sisters (Virgin Ghost)"],
-        ["Chery", "Kmon character"],
+        ["Chery", "Kmon team member, second of the three virgin ghost sisters"],
         ["Chemi", "Youngest of the three sisters (Virgin Ghost)"],
         ["Dumboo", "Kmon team member (Bachelor Ghost)"],
         ["Hungry Monster", "Evil spirit: Hungry Monster"]
@@ -1387,11 +1393,11 @@ const pageTranslations = {
     guide:["혹시, 물건을 잘 잃어버리거나 없어지나요?","이 카드를 소유하는 순간, 캐릭터에 깃든 특별한 능력이 사용자에게 이어집니다.","이러한 특별한 경험은 캐릭터 카드마다 고유 심볼을 부여했기에 가능합니다.","Kmon의 고유 심볼은 한국의 전통 민속신앙을 바탕으로 창작되었으며, 각 캐릭터만의 고유한 의미와 능력을 상징합니다."],
     notice:"카드 구매 및 정식 원본 다운로드 기능은 준비 중입니다.", buy:"Pi로 구매하기 · 준비 중",
     monsters:[
-      ["세로(Sero)","Kmon팀의 리더(저승사자)"],["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)"],["체리(Chery)","Kmon 캐릭터"],["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)"],["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)"],["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀"],["준비중",""],["준비중",""],["달걀귀","악귀 : 달걀귀신"]],
+      ["세로(Sero)","Kmon팀의 리더(저승사자)"],["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)"],["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째"],["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)"],["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)"],["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀"],["준비중",""],["준비중",""],["달걀귀","악귀 : 달걀귀신"]],
     details:{
       sero:["세로(Sero)","Kmon팀의 리더(저승사자)","Kmon팀의 리더이자 저승사자이며 귀신들을 관장한다.\n염라대왕의 명을 받아 한국의 악귀들을 소탕해야하는 임무를 가지고 있지만 팀원들인 체시, 체리, 체미, 덤부가 딱히 도움이 되진 않는다.\n늘 고독을 씹으며 혼자 있기를 좋아한다."],
       chesy:["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)","처녀귀신 세자매의 맏언니 체시는 기숙사 사감같은 존재감을 가지고 있다.\n평소엔 규율부장같지만 속마음은 츤데레같이 따뜻한 마음의 소유자이다.\nKmon팀의 안살림을 맡고 있다."],
-      chery:["체리(Chery)","",""],
+      chery:["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째","처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 공주병 기질을 가진 사랑스러운 귀신이다.\n언제나 자신이 가장 예쁘고 특별하다고 생각하며 관심과 칭찬을 즐긴다.\nKmon의 팀원으로서 다른 네 명의 팀원 사이를 이어주는 가교 역할을 하며, 팀의 조화와 화합에 중요한 역할을 한다."],
       chemi:["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)","처녀귀신 세자매의 막내이며 말광량이 같은 성격의 소유자다.\n좌충우돌하지만 매우 재빠르며 악귀들 소탕하는데 1등공신이며 세로가 가장 신임하는 존재이다."],
       egg:["달걀귀","악귀 : 달걀귀신","불우한 닭장에서 태어난 '달걀귀' 매우 빠른 몸놀림을 가지고 있으며 조금 촐싹거린다."],
       dumboo:["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)","몽달귀신(총각귀신)인 덤부(Dumboo), 이성이 좋아하지 않은 외모로 101번째 프로포즈를 하다가 집으로 돌아오는 길에 교통사고로 귀신이 되었다.\n지금은 Kmon팀원이 되어 악귀 소탕하는 일에 전념하고 있으며 힘이 쎄다."],
@@ -1413,7 +1419,7 @@ const pageTranslations = {
     details:{
       sero:["Sero","Leader of the Kmon team (Grim Reaper)","Sero is the leader of the Kmon team and a grim reaper who governs ghosts.\nHe was assigned by the King of the Underworld to hunt evil spirits in Korea, but his teammates Chesy, Chery, Chemi, and Dumboo are not much help.\nHe is often lonely and prefers being alone."],
       chesy:["Chesy","Eldest of the three sisters (Virgin Ghost)","Chesy, the eldest of the three virgin-ghost sisters, has the presence of a strict dorm supervisor.\nShe may seem like a rule enforcer, but deep down she has a warm, tsundere-like heart.\nShe takes care of the Kmon team's household affairs."],
-      chery:["Chery","Kmon character",""],
+      chery:["Chery","Kmon team member, second of the three virgin ghost sisters","Chery, the second of the three virgin-ghost sisters, is a lovable ghost with a cute appearance and a princess-like personality.\nShe always thinks she is the prettiest and most special, and enjoys attention and compliments.\nAs a member of Kmon, she serves as a bridge between the other four team members, playing an important role in keeping the team harmonious and united."],
       chemi:["Chemi","Youngest of the three sisters (Virgin Ghost)","The youngest of the three virgin-ghost sisters, Chemi has a mischievous personality.\nShe is lively and incredibly fast, making her a major force in hunting evil spirits and the teammate Sero trusts most."],
       egg:["Egg Ghost","Evil spirit: Egg Ghost","Born in a poor chicken coop, Egg Ghost moves very quickly and can be a little hyperactive."],
       dumboo:["Dumboo","Kmon team member (Bachelor Ghost)","Dumboo is a bachelor ghost. After being rejected for his looks and making his 101st marriage proposal, he became a ghost in a traffic accident on his way home.\nNow a member of the Kmon team, he devotes himself to hunting evil spirits and is very strong."],
