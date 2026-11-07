@@ -11,6 +11,11 @@ html,body { margin:0; padding:0; }
 body { background:#F7F2E9; }
 .world-story { width:100%; max-width:1920px; margin:0 auto; }
 .world-story img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; }
+.world-story .story-copy { padding:clamp(30px,5vw,76px) 22px; background:#FFF9EF; color:#202B4B; text-align:center; font-family:Arial,"Noto Sans KR",sans-serif; }
+.story-copy-inner { max-width:760px; margin:0 auto; }
+.story-copy h2 { font-size:clamp(21px,3vw,34px); line-height:1.5; margin:0 0 28px; font-weight:800; word-break:keep-all; }
+.story-copy p { font-size:clamp(15px,1.65vw,19px); line-height:1.95; margin:0 0 20px; word-break:keep-all; }
+.story-copy p:last-child { margin-bottom:0; }
 .back-home {
  position:fixed; top:calc(14px + env(safe-area-inset-top)); right:calc(14px + env(safe-area-inset-right));
  z-index:10; padding:10px 16px; border:2px solid #E58A32; border-radius:999px;
@@ -27,6 +32,14 @@ body { background:#F7F2E9; }
   <img src="Kmon_world_1.png" alt="Kmon의 세계 1번째 이야기" fetchpriority="high">
   <img src="Kmon_world_2.png" alt="Kmon의 세계 2번째 이야기" loading="lazy">
   <img src="Kmon_world_3.png" alt="Kmon의 세계 3번째 이야기" loading="lazy">
+  <section class="story-copy" aria-labelledby="world-q3">
+    <div class="story-copy-inner">
+      <h2 id="world-q3">캐릭터마다 고유한 심볼이 있는 이유는 무엇인가요?</h2>
+      <p>각 캐릭터의 능력과 의미를 담아내기 위해서입니다.</p>
+      <p>Kmon의 고유 심볼은 단순한 장식이나 문양이 아닙니다. 예로부터 수호와 소망, 특별한 힘에 대한 염원을 담아 전해 내려온 한국의 전통 상징을 바탕으로, 현대적인 감각으로 재해석한 고유한 표식입니다.</p>
+      <p>각 캐릭터가 지닌 특별한 능력을 상징하며, 캐릭터와 사람을 이어주는 매개체이기도 합니다.</p>
+    </div>
+  </section>
   <img src="Kmon_world_4.png" alt="Kmon의 세계 4번째 이야기" loading="lazy">
   <img src="Kmon_world_5.png" alt="Kmon의 세계 5번째 이야기" loading="lazy">
   <img src="Kmon_world_6.png" alt="Kmon의 세계 6번째 이야기" loading="lazy">
