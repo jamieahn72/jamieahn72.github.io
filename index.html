@@ -1565,7 +1565,7 @@ function applyPageTranslations(language) {
   }
   const modal = document.getElementById("sero-card-modal");
   if (modal) {
-    if (kmonSelectedCard) {
+    if (window.kmonCardsReady && kmonSelectedCard) {
       openKmonCard(kmonSelectedCard);
     }
     modal.querySelectorAll(".sero-modal-guide p").forEach((p, i) => {
@@ -1576,7 +1576,7 @@ function applyPageTranslations(language) {
     if (notice) notice.textContent = t.notice;
     if (buy) buy.textContent = t.buy;
   }
-  if (typeof renderKmonCards === "function") renderKmonCards();
+  if (window.kmonCardsReady) renderKmonCards();
   if (typeof renderMonsterIndex === "function" && location.hash === "#monster-index") {
     renderMonsterIndex(monsterIndexPage);
   }
@@ -1893,6 +1893,7 @@ function renderKmonCards(){
  sorted.forEach(card=>{if(!groups.has(card.character))groups.set(card.character,[]);groups.get(card.character).push(card);});
  collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=kmonTranslated(cards[0]).character;section.appendChild(h);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
 }
+window.kmonCardsReady=true;
 renderKmonCards();
 </script>
 <script>
