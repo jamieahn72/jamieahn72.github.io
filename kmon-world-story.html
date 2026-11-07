@@ -61,6 +61,9 @@ body { background:#F7F2E9; }
   padding-top:clamp(72px,9vw,128px) !important;
   padding-bottom:clamp(56px,7vw,94px) !important;
 }
+.world-brand-title { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.16em; }
+.world-brand-logo { display:inline-block; width:clamp(145px,28vw,275px); height:auto; object-fit:contain; vertical-align:middle; }
+.world-title-suffix { display:inline-block; }
 .story-intro h1 {
   font-size:clamp(37px,6vw,66px);letter-spacing:-.055em;
   margin:0 0 17px;line-height:1.2;
@@ -115,7 +118,7 @@ body { background:#F7F2E9; }
 <main class="world-story" aria-label="Kmon의 세계">
   <header class="story-copy story-intro">
     <div class="story-copy-inner">
-      <h1>Kmon의 세계</h1>
+      <h1 class="world-brand-title"><img class="world-brand-logo" src="kmon-logo.png" alt="KMON"><span class="world-title-suffix">의 세계</span></h1>
       <p class="story-subtitle">당신의 일상에 특별한 의미가 되어줄 존재</p>
     </div>
   </header>
