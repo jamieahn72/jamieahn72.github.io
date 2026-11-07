@@ -1297,6 +1297,19 @@ function renderMonsterIndex(page=1) {
 }
 
   /* 메인 홈페이지 번역 */
+// Randomize only the homepage monster previews; keep the full bestiary order unchanged.
+(function shuffleHomeMonstersOnce() {
+  const grid = document.querySelector("#bestiary .cards");
+  if (!grid) return;
+  const cards = Array.from(grid.querySelectorAll(":scope > .card"));
+  cards.forEach((card, index) => { card.dataset.monsterIndex = String(index); });
+  for (let i = cards.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [cards[i], cards[j]] = [cards[j], cards[i]];
+  }
+  grid.append(...cards);
+})();
+
 function applyTranslations(language) {
   const translations = {
     ko: {
@@ -1408,10 +1421,12 @@ function applyTranslations(language) {
 
   const monsterCards = document.querySelectorAll("#bestiary .cards .card");
 
-  t.monsters.forEach((monster, index) => {
-    if (!monsterCards[index]) return;
-    monsterCards[index].querySelector("h3").textContent = monster[0];
-    monsterCards[index].querySelector("p").textContent = monster[1];
+  monsterCards.forEach((card) => {
+    const index = Number(card.dataset.monsterIndex);
+    const monster = t.monsters[index];
+    if (!monster) return;
+    card.querySelector("h3").textContent = monster[0];
+    card.querySelector("p").textContent = monster[1];
   });
 
   document.querySelector(".more-monsters-button").textContent = t.more;
