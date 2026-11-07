@@ -42,6 +42,9 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100vw;
   padding: 20px;
   background: rgba(20, 27, 46, 0.82);
   backdrop-filter: blur(8px);
@@ -61,8 +64,12 @@
   gap: 12px 28px;
   width: 100%;
   max-width: 760px;
+  min-width: 0;
+  box-sizing: border-box;
   max-height: 90vh;
+  overflow-x: hidden;
   overflow-y: auto;
+  overflow-wrap: anywhere;
   padding: 38px;
   border: 2px solid #c9a24e;
   box-shadow: 0 0 0 3px rgba(201, 162, 78, 0.15), 0 24px 70px rgba(0, 0, 0, 0.35);
@@ -123,6 +130,7 @@
 
 .sero-modal-guide {
   grid-column: 2;
+  min-width: 0;
   margin-top: 14px;
   padding: 16px 18px;
   border-left: 3px solid #c9a24e;
