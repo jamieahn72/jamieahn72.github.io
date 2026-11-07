@@ -1647,6 +1647,11 @@ function enterKmonWorld() {
   window.scrollTo(0,0);
 }
 introEnter.addEventListener("click",enterKmonWorld);
+// 상세페이지에서 돌아올 때에만 인트로를 건너뛴다.
+if (new URLSearchParams(window.location.search).get("from") === "world") {
+  enterKmonWorld();
+  history.replaceState(null, "", window.location.pathname + "#world");
+}
 
 /* 페이지 전환 */
 function updatePage() {
