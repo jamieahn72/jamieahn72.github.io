@@ -11,14 +11,95 @@ html,body { margin:0; padding:0; }
 body { background:#F7F2E9; }
 .world-story { width:100%; max-width:1920px; margin:0 auto; }
 .world-story img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; }
-.world-story .story-copy { padding:clamp(30px,5vw,76px) 22px; background:#FFF9EF; color:#202B4B; text-align:center; font-family:Arial,"Noto Sans KR",sans-serif; }
-.story-copy-inner { max-width:760px; margin:0 auto; }
-.story-copy h2 { font-size:clamp(21px,3vw,34px); line-height:1.5; margin:0 0 28px; font-weight:800; word-break:keep-all; }
-.story-copy p { font-size:clamp(15px,1.65vw,19px); line-height:1.95; margin:0 0 20px; word-break:keep-all; }
-.story-copy p:last-child { margin-bottom:0; }
-.story-intro h1 {font-size:clamp(30px,5vw,52px); margin:0 0 14px;}
-.story-intro .story-subtitle {font-size:clamp(18px,2.5vw,26px); font-weight:700;}
-.story-ending h2 {font-size:clamp(28px,4vw,42px); margin-bottom:14px;}
+/* Main-page palette, carried into the illustrated story */
+.world-story .story-copy {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:clamp(48px,6.5vw,98px) 22px;
+  background:radial-gradient(ellipse at 50% 0%,#fffefa 0%,#fff7e8 58%,#f7eddb 100%);
+  color:#202B4B;
+  text-align:center;
+  font-family:Arial,"Noto Sans KR",sans-serif;
+}
+.world-story .story-copy::before,
+.world-story .story-copy::after {
+  content:"✦"; position:absolute; z-index:-1;
+  color:rgba(211,154,67,.25); font-size:clamp(32px,6vw,76px);
+  pointer-events:none;
+}
+.world-story .story-copy::before {top:17%;left:max(4%,calc(50% - 520px));}
+.world-story .story-copy::after {bottom:13%;right:max(4%,calc(50% - 520px));font-size:clamp(22px,4vw,48px);}
+.story-copy-inner {
+  max-width:850px; margin:0 auto;
+  position:relative;
+}
+.world-story section.story-copy .story-copy-inner {
+  padding:clamp(32px,5vw,66px) clamp(22px,5.4vw,76px);
+  border:1px solid rgba(204,160,92,.5);
+  border-radius:28px;
+  background:linear-gradient(155deg,rgba(255,255,255,.92),rgba(255,250,240,.86));
+  box-shadow:0 18px 48px rgba(87,67,44,.085),inset 0 0 0 5px rgba(255,249,235,.85);
+}
+.world-story section.story-copy .story-copy-inner::before {
+  content:"";display:block;width:68px;height:3px;margin:0 auto 24px;
+  border-radius:999px;background:linear-gradient(90deg,#e58a32,#e8c57d,#e58a32);
+}
+.story-copy h2 {
+  font-size:clamp(23px,3vw,35px);line-height:1.52;
+  margin:0 0 28px;font-weight:800;letter-spacing:-.045em;word-break:keep-all;
+}
+.world-story section.story-copy h2::first-letter {color:#d47a27;}
+.story-copy p {
+  font-size:clamp(16px,1.7vw,19px);line-height:1.95;
+  margin:0 0 20px;word-break:keep-all;overflow-wrap:break-word;
+  color:#48516a;
+}
+.story-copy p:last-child {margin-bottom:0;}
+.story-intro {
+  background:radial-gradient(ellipse at top,#fffdf7,#f7eddb) !important;
+  padding-top:clamp(72px,9vw,128px) !important;
+  padding-bottom:clamp(56px,7vw,94px) !important;
+}
+.story-intro h1 {
+  font-size:clamp(37px,6vw,66px);letter-spacing:-.055em;
+  margin:0 0 17px;line-height:1.2;
+  text-shadow:0 3px 0 rgba(229,138,50,.13);
+}
+.story-intro .story-copy-inner::before {
+  content:"✦  KMON STORY  ✦";display:block;
+  color:#b77a36;font-weight:800;font-size:12px;
+  letter-spacing:.22em;margin-bottom:20px;
+}
+.story-intro .story-subtitle {
+  font-size:clamp(18px,2.4vw,26px);font-weight:700;color:#68718a;
+}
+.story-ending {
+  background:linear-gradient(150deg,#26395c,#202b4b) !important;
+  color:#fff9ec !important;
+  padding-top:clamp(66px,9vw,125px) !important;
+  padding-bottom:clamp(70px,9vw,130px) !important;
+}
+.story-ending h2 {
+  font-size:clamp(38px,6vw,66px);margin:0 0 16px;
+  color:#f4c778;letter-spacing:.02em;
+}
+.story-ending p {color:#fff8e8;font-size:clamp(18px,2.4vw,26px);letter-spacing:-.025em;}
+.story-ending .story-copy-inner::before {
+  content:"✦ ✦ ✦";display:block;color:#e5ad5c;
+  letter-spacing:12px;font-size:19px;margin-bottom:22px;
+}
+@media(max-width:600px) {
+  .world-story .story-copy {padding:36px 14px;}
+  .world-story section.story-copy .story-copy-inner {
+    border-radius:20px;padding:32px 20px;
+    box-shadow:0 9px 26px rgba(87,67,44,.08),inset 0 0 0 3px rgba(255,249,235,.85);
+  }
+  .story-copy h2 {font-size:23px;line-height:1.45;margin-bottom:22px;}
+  .story-copy p {font-size:16px;line-height:1.85;margin-bottom:16px;}
+  .story-intro {padding-top:80px !important;}
+}
+@media(prefers-reduced-motion:reduce) { .world-story * {scroll-behavior:auto;} }
 .back-home {
  position:fixed; top:calc(14px + env(safe-area-inset-top)); right:calc(14px + env(safe-area-inset-right));
  z-index:10; padding:10px 16px; border:2px solid #E58A32; border-radius:999px;
