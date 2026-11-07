@@ -1532,7 +1532,7 @@ function applyPageTranslations(language) {
   activeLanguage = pageTranslations[language] ? language : "ko";
   const setText = (selector, value) => document.querySelectorAll(selector).forEach(el => { el.textContent = value; });
   document.querySelectorAll(".detail-back").forEach(el => {
-    el.textContent = el.getAttribute("href") === "#bestiary" ? t.mainBack : t.indexBack;
+    el.textContent = ["#bestiary", "#world", "#cards"].includes(el.getAttribute("href")) ? t.mainBack : t.indexBack;
   });
   const index = document.querySelector("#monster-index-page .detail-heading");
   if (index) {
