@@ -825,7 +825,7 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 <main id="home-page">
   <section class="world-banner" id="world">
     <img src="kmon-world.png" alt="Kmon의 세계">
-    <button class="world-detail-button" type="button" onclick="window.location.href='kmon-world.html?v=ba20db80'">Kmon의 세계 알아보기 <span aria-hidden="true">→</span></button>
+    <button class="world-detail-button" type="button" onclick="window.location.href='kmon-world-story.html'">Kmon의 세계 알아보기 <span aria-hidden="true">→</span></button>
   </section>
   <section id="bestiary">
     <div class="bestiary-heading">
@@ -1648,7 +1648,8 @@ function enterKmonWorld() {
 }
 introEnter.addEventListener("click",enterKmonWorld);
 // 상세페이지에서 돌아올 때에만 인트로를 건너뛴다.
-if (new URLSearchParams(window.location.search).get("from") === "world") {
+if (new URLSearchParams(window.location.search).get("from") === "world" || sessionStorage.getItem("kmon_world_return") === "1") {
+  sessionStorage.removeItem("kmon_world_return");
   enterKmonWorld();
   history.replaceState(null, "", window.location.pathname + "#world");
 }
@@ -1839,7 +1840,8 @@ if (seroOpenButton && seroModal && seroCloseButton) {
 <script>
 /* Kmon 세계 상세페이지에서 돌아온 경우에만 메인 화면으로 직접 복귀 */
 (function () {
-  if (new URLSearchParams(location.search).get("from") !== "world") return;
+  if (new URLSearchParams(location.search).get("from") !== "world" && sessionStorage.getItem("kmon_world_return") !== "1") return;
+  sessionStorage.removeItem("kmon_world_return");
   const intro = document.getElementById("intro-screen");
   const home = document.getElementById("home-page");
   const nav = document.getElementById("bottom-nav");
