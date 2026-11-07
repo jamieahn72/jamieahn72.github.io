@@ -792,6 +792,17 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   .bestiary-title .title-text,
   .section-title { font-size:27px; }
 }
+
+/* KMON digital card collection */
+.kmon-card-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+.kmon-card-item{min-width:0;text-align:center}
+.kmon-card-item button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
+.kmon-card-item img{display:block;width:100%;aspect-ratio:5/7;object-fit:contain;border-radius:9px;box-shadow:0 5px 15px #202b4b25}
+.kmon-card-item h3{font-size:14px;margin:9px 0 3px}.kmon-card-item p{font-size:12px;margin:0;color:#596176}
+.kmon-more{display:block;margin:25px auto 5px;padding:12px 27px;background:#202b4b;color:white;border-radius:24px;text-decoration:none;width:max-content;font-weight:700}
+#card-collection-page{display:none;max-width:1150px;margin:0 auto;padding:45px 24px 90px;min-height:100vh}
+.kmon-collection-group{margin:28px 0 38px}.kmon-collection-group h2{font-size:22px;color:#202b4b;margin-bottom:14px}
+@media(max-width:600px){.kmon-card-grid{gap:7px}.kmon-card-item h3{font-size:11px}.kmon-card-item p{font-size:10px}.kmon-card-item img{border-radius:5px}#card-collection-page{padding:26px 12px 80px}}
 </style>
 </head>
 <body class="intro-active">
@@ -953,20 +964,8 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   <section id="cards">
     <div class="label">COLLECT YOUR WORLD</div>
     <h2 class="section-title">디지털 카드</h2>
-    <div class="cards">
-      <article class="card">
-        <div class="card-art">카드 이미지 영역</div>
-        <h3>캐릭터 카드</h3>
-        <p>좋아하는 Kmon 캐릭터를 만나 보세요.</p>
-      </article>
-      <article class="card">
-  <button type="button" class="sero-card-preview" id="sero-card-open">
-    <img src="sero_legend_thumbnail_1.png" alt="세로 LEGEND 카드">
-  </button>
-  <h3>세로 (Sero)</h3>
-  <p>LEGEND · 절대 소유물 수호</p>
-</article>
-    </div>
+    <div class="kmon-card-grid" id="kmon-home-cards"></div>
+    <a class="kmon-more" href="#card-collection">전체 카드 더보기 →</a>
   </section>
 
   <!-- 세로 카드 상세 팝업 -->
@@ -991,6 +990,15 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
     </div>
   </div>
 
+</main>
+
+<!-- KMON 전체 디지털 카드 컬렉션 -->
+<main id="card-collection-page">
+  <a class="detail-back" href="#cards">← 메인으로 돌아가기</a>
+  <div class="label">KMON CARD COLLECTION</div>
+  <h1>디지털 카드 컬렉션</h1>
+  <p>캐릭터 순서 · NORMAL → RARE → EPIC → LEGEND</p>
+  <div id="kmon-collection-cards"></div>
 </main>
 
 <!-- 전체 몬스터 도감 -->
@@ -1395,21 +1403,6 @@ function applyTranslations(language) {
   document.querySelector("#videos .section-title").textContent = t.videos;
   document.querySelector("#cards .section-title").textContent = t.cards;
 
-  const digitalCards = document.querySelectorAll("#cards .card");
-
-  if (digitalCards[0]) {
-    digitalCards[0].querySelector("h3").textContent = t.cardTitle1;
-    digitalCards[0].querySelector("p").textContent = t.cardText1;
-    digitalCards[0].querySelector(".card-art").textContent =
-      language === "en" ? "Card Image Area" : "카드 이미지 영역";
-  }
-
-  if (digitalCards[1]) {
-  digitalCards[1].querySelector("h3").textContent = "세로 (Sero)";
-  digitalCards[1].querySelector("p").textContent =
-    "LEGEND · 절대 소유물 수호";
-}
-
   document.querySelectorAll("#bottom-nav a span:last-child")
     .forEach((item, index) => {
       item.textContent = t.nav[index];
@@ -1558,13 +1551,6 @@ function applyPageTranslations(language) {
     const label = heading.querySelector(".label");
     if (label) label.textContent = t.characterLabel;
   });
-  const digitalCard = document.querySelector("#cards .cards .card:nth-child(2)");
-  if (digitalCard) {
-    const cardTitle = digitalCard.querySelector("h3");
-    const cardDescription = digitalCard.querySelector("p");
-    if (cardTitle) cardTitle.textContent = t.cardTitle2;
-    if (cardDescription) cardDescription.textContent = t.cardRarity;
-  }
   const login = document.getElementById("pi-login-button");
   if (login && !sessionStorage.getItem("pi_username")) {
     login.textContent = t.piLogin;
@@ -1708,15 +1694,18 @@ function updatePage() {
     document.getElementById("dumboo-detail").style.display = "none";
     document.getElementById("ddboaq-detail").style.display = "none";
     document.getElementById("monster-index-page").style.display = "none";
+    document.getElementById("card-collection-page").style.display = "none";
     document.getElementById("page-footer").style.display = "none";
     document.getElementById("bottom-nav").style.display = "none";
     return;
   }
 
   const isIndexPage = hash === "#monster-index";
-  const showHome = !isDetailPage && !isIndexPage;
+  const isCardCollection = hash === "#card-collection";
+  const showHome = !isDetailPage && !isIndexPage && !isCardCollection;
   document.getElementById("home-page").style.display = showHome ? "block" : "none";
   document.getElementById("monster-index-page").style.display = isIndexPage ? "block" : "none";
+  document.getElementById("card-collection-page").style.display = isCardCollection ? "block" : "none";
   document.getElementById("sero-detail").style.display = selectedPage === "sero-detail" ? "block" : "none";
   document.getElementById("chesy-detail").style.display = selectedPage === "chesy-detail" ? "block" : "none";
   document.getElementById("chery-detail").style.display = selectedPage === "chery-detail" ? "block" : "none";
@@ -1724,8 +1713,8 @@ function updatePage() {
   document.getElementById("egg-detail").style.display = selectedPage === "egg-detail" ? "block" : "none";
   document.getElementById("dumboo-detail").style.display = selectedPage === "dumboo-detail" ? "block" : "none";
   document.getElementById("ddboaq-detail").style.display = selectedPage === "ddboaq-detail" ? "block" : "none";
-  document.getElementById("page-footer").style.display = (isDetailPage || isIndexPage) ? "none" : "block";
-  document.getElementById("bottom-nav").style.display = (isDetailPage || isIndexPage) ? "none" : "grid";
+  document.getElementById("page-footer").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "block";
+  document.getElementById("bottom-nav").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "grid";
   if (isIndexPage) renderMonsterIndex(monsterIndexPage);
   window.scrollTo(0,0);
 }
@@ -1845,26 +1834,48 @@ async function verifyPiToken(token) {
   }
 })();
 
-// 세로 카드 팝업 열기 및 닫기
-const seroOpenButton = document.getElementById("sero-card-open");
-const seroModal = document.getElementById("sero-card-modal");
-const seroCloseButton = document.getElementById("sero-card-close");
-
-if (seroOpenButton && seroModal && seroCloseButton) {
-  seroOpenButton.addEventListener("click", () => {
-    seroModal.classList.add("active");
-  });
-
-  seroCloseButton.addEventListener("click", () => {
-    seroModal.classList.remove("active");
-  });
-
-  seroModal.addEventListener("click", (event) => {
-    if (event.target === seroModal) {
-      seroModal.classList.remove("active");
-    }
-  });
+// KMON card catalog: add new cards here in character and rarity order.
+const kmonCards = [
+ {id:"sero-legend",character:"세로 (Sero)",rarity:"LEGEND",image:"sero_legend_thumbnail_1.png",power:"절대 소유물 수호",description:"내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다."},
+ {id:"egg-normal",character:"달걀귀신 (Egg ghost)",rarity:"NORMAL",image:"egg_normal_thumbnail_1.png",power:"정신 맑힘",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 흐트러진 정신을 맑게 하고, 자신의 실력을 제대로 발휘할 수 있도록 도와준다."},
+ {id:"egg-rare",character:"달걀귀신 (Egg ghost)",rarity:"RARE",image:"egg_rare_thumbnail_1.png",power:"집중력 강화",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 잡념을 걷어내고 집중력을 높여, 평소보다 한층 뛰어난 실력을 발휘할 수 있도록 도와준다."},
+ {id:"egg-epic",character:"달걀귀신 (Egg ghost)",rarity:"EPIC",image:"egg_epic_thumbnail_1.png",power:"예리한 통찰",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 맑고 예리하게 하여, 중요한 순간에 정확한 판단과 최선의 선택을 할 수 있도록 도와준다."},
+ {id:"egg-legend",character:"달걀귀신 (Egg ghost)",rarity:"LEGEND",image:"egg_legend_thumbnail_1.png",power:"잠재력 개화",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 가장 맑고 예리하게 깨워, 자신의 잠재력과 실력을 최대한 발휘하고 기대 이상의 결과를 얻을 수 있도록 도와준다."}
+];
+const kmonRarityOrder={NORMAL:0,RARE:1,EPIC:2,LEGEND:3};
+const kmonCharacterOrder=["세로 (Sero)","체시 (Chesy)","체리 (Chery)","체미 (Chemi)","달걀귀신 (Egg ghost)","덤부 (Dumboo)","뚱보악귀"];
+const kmonModal=document.getElementById("sero-card-modal");
+function kmonCardNode(card){
+ const article=document.createElement("article");article.className="kmon-card-item";
+ const button=document.createElement("button");button.type="button";button.setAttribute("aria-label",card.character+" "+card.rarity+" 카드 상세 보기");
+ const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity+" 카드";img.loading="lazy";button.appendChild(img);
+ button.addEventListener("click",()=>openKmonCard(card));article.appendChild(button);
+ const name=document.createElement("h3");name.textContent=card.character;article.appendChild(name);
+ const info=document.createElement("p");info.textContent=card.rarity+" · "+card.power;article.appendChild(info);return article;
 }
+function openKmonCard(card){
+ if(!kmonModal)return;
+ const content=kmonModal.querySelector(".sero-modal-content");
+ content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" 카드";
+ content.querySelector("h2").textContent=card.character;
+ content.querySelector(".sero-modal-rarity").textContent=card.rarity;
+ content.querySelector("h3").textContent=card.power;
+ const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
+ const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?"혹시, 물건을 잘 잃어버리거나 없어지나요?":"Kmon 캐릭터의 특별한 능력을 만나 보세요.";
+ kmonModal.classList.add("active");document.body.style.overflow="hidden";
+}
+function closeKmonCard(){if(kmonModal)kmonModal.classList.remove("active");document.body.style.overflow="";}
+const kmonClose=document.getElementById("sero-card-close");if(kmonClose)kmonClose.addEventListener("click",closeKmonCard);
+if(kmonModal)kmonModal.addEventListener("click",e=>{if(e.target===kmonModal)closeKmonCard();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeKmonCard();});
+function renderKmonCards(){
+ const home=document.getElementById("kmon-home-cards");const collection=document.getElementById("kmon-collection-cards");
+ if(home){const shuffled=[...kmonCards];for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}home.replaceChildren(...shuffled.slice(0,4).map(kmonCardNode));}
+ if(collection){const groups=new Map();const sorted=[...kmonCards].sort((a,b)=>(kmonCharacterOrder.indexOf(a.character)-kmonCharacterOrder.indexOf(b.character))||(kmonRarityOrder[a.rarity]-kmonRarityOrder[b.rarity]));
+ sorted.forEach(card=>{if(!groups.has(card.character))groups.set(card.character,[]);groups.get(card.character).push(card);});
+ collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=name;section.appendChild(h);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
+}
+renderKmonCards();
 </script>
 <script>
 /* Kmon 세계 상세페이지에서 돌아온 경우에만 메인 화면으로 직접 복귀 */
