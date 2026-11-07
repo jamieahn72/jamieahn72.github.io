@@ -450,6 +450,19 @@ section { padding:30px 20px; }
   overflow:hidden; isolation:isolate; cursor:pointer;
   -webkit-tap-highlight-color:transparent;
 }
+/* 인트로 이미지에 포함된 기존 버튼 문구를 덮고 공통 영어 문구를 표시 */
+.intro-enter .intro-enter-label {
+  position:absolute; inset:0; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:inherit;
+  background:linear-gradient(180deg,#f8d487 0%,#e9a94e 48%,#c9812d 100%);
+  border:2px solid #ffe3a1;
+  color:#372414;
+  font:800 clamp(11px,2.5vw,18px) Arial,sans-serif;
+  letter-spacing:.045em;
+  text-shadow:0 1px 1px rgba(255,248,215,.7);
+  white-space:nowrap;
+}
 .intro-enter::before {
   content:""; position:absolute; inset:0; z-index:2;
   border:1px solid rgba(255,231,177,0);
@@ -814,7 +827,8 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
       <span class="petal"></span><span class="petal"></span>
       <span class="petal"></span><span class="petal"></span>
     </div>
-    <button class="intro-enter" id="intro-enter" type="button" aria-label="Kmon World 입장하기">
+    <button class="intro-enter" id="intro-enter" type="button" aria-label="KMON WORLD ENTER">
+      <span class="intro-enter-label">KMON WORLD ENTER</span>
       <span class="button-sparkle left"></span>
       <span class="button-sparkle right"></span>
     </button>
