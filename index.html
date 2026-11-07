@@ -1604,6 +1604,11 @@ function setLanguage(language) {
     applyTranslations(language);
   }
   applyPageTranslations(language);
+  const worldButton = document.querySelector(".world-detail-button");
+  if (worldButton) {
+    const worldLabels = {ko:"Kmon의 세계 알아보기",en:"Explore Kmon's World",zh:"探索Kmon的世界",ja:"Kmonの世界を知る",vi:"Khám phá thế giới Kmon"};
+    worldButton.textContent = worldLabels[language] + " →";
+  }
 }
 
 // 언어 메뉴 열기 및 닫기
