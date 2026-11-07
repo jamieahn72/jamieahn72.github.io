@@ -1845,6 +1845,8 @@ const kmonCards = [
 const kmonRarityOrder={NORMAL:0,RARE:1,EPIC:2,LEGEND:3};
 const kmonCharacterOrder=["세로 (Sero)","체시 (Chesy)","체리 (Chery)","체미 (Chemi)","달걀귀신 (Egg ghost)","덤부 (Dumboo)","뚱보악귀"];
 const kmonModal=document.getElementById("sero-card-modal");
+// Keep the shared modal accessible from both the home and collection pages.
+if(kmonModal)document.body.appendChild(kmonModal);
 function kmonCardNode(card){
  const article=document.createElement("article");article.className="kmon-card-item";
  const button=document.createElement("button");button.type="button";button.setAttribute("aria-label",card.character+" "+card.rarity+" 카드 상세 보기");
