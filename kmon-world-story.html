@@ -16,6 +16,9 @@ body { background:#F7F2E9; }
 .story-copy h2 { font-size:clamp(21px,3vw,34px); line-height:1.5; margin:0 0 28px; font-weight:800; word-break:keep-all; }
 .story-copy p { font-size:clamp(15px,1.65vw,19px); line-height:1.95; margin:0 0 20px; word-break:keep-all; }
 .story-copy p:last-child { margin-bottom:0; }
+.story-intro h1 {font-size:clamp(30px,5vw,52px); margin:0 0 14px;}
+.story-intro .story-subtitle {font-size:clamp(18px,2.5vw,26px); font-weight:700;}
+.story-ending h2 {font-size:clamp(28px,4vw,42px); margin-bottom:14px;}
 .back-home {
  position:fixed; top:calc(14px + env(safe-area-inset-top)); right:calc(14px + env(safe-area-inset-right));
  z-index:10; padding:10px 16px; border:2px solid #E58A32; border-radius:999px;
@@ -29,20 +32,70 @@ body { background:#F7F2E9; }
 <body>
 <a class="back-home" href="./index.html?from=world&amp;return=2" onclick="sessionStorage.setItem('kmon_world_return', '1')">← 메인으로 돌아가기</a>
 <main class="world-story" aria-label="Kmon의 세계">
+  <header class="story-copy story-intro">
+    <div class="story-copy-inner">
+      <h1>Kmon의 세계</h1>
+      <p class="story-subtitle">당신의 일상에 특별한 의미가 되어줄 존재</p>
+    </div>
+  </header>
   <img src="Kmon_world_1.png" alt="Kmon의 세계 1번째 이야기" fetchpriority="high">
+  <section class="story-copy" aria-labelledby="world-q1">
+    <div class="story-copy-inner">
+      <h2 id="world-q1">Q. Kmon은 어떤 세계인가요?</h2>
+      <p>Kmon은 저마다 특별한 능력과 개성을 지닌 몬스터들이 살아가는 세계입니다.</p>
+      <p>우리는 이 특별한 존재들이 단순히 이야기 속 캐릭터로 머무는 것이 아니라, 사람들의 일상에도 작은 즐거움과 특별한 의미를 전해줄 수 있기를 바랐습니다. 그렇게 Kmon의 세계가 시작되었습니다.</p>
+    </div>
+  </section>
   <img src="Kmon_world_2.png" alt="Kmon의 세계 2번째 이야기" loading="lazy">
+  <section class="story-copy" aria-labelledby="world-q2">
+    <div class="story-copy-inner">
+      <h2 id="world-q2">Q. Kmon 캐릭터들은 어떤 특별함을 가지고 있나요?</h2>
+      <p>Kmon의 모든 캐릭터는 각자 고유한 능력을 가지고 있습니다.</p>
+      <p>어떤 캐릭터는 용기를, 어떤 캐릭터는 행운을, 또 어떤 캐릭터는 특별한 상황에 필요한 힘을 상징합니다. 캐릭터마다 성격도 능력도 다르기에 저마다의 이야기를 가지고 있습니다.</p>
+    </div>
+  </section>
   <img src="Kmon_world_3.png" alt="Kmon의 세계 3번째 이야기" loading="lazy">
   <section class="story-copy" aria-labelledby="world-q3">
     <div class="story-copy-inner">
-      <h2 id="world-q3">캐릭터마다 고유한 심볼이 있는 이유는 무엇인가요?</h2>
+      <h2 id="world-q3">Q. 캐릭터마다 고유한 심볼이 있는 이유는 무엇인가요?</h2>
       <p>각 캐릭터의 능력과 의미를 담아내기 위해서입니다.</p>
       <p>Kmon의 고유 심볼은 단순한 장식이나 문양이 아닙니다. 예로부터 수호와 소망, 특별한 힘에 대한 염원을 담아 전해 내려온 한국의 전통 상징을 바탕으로, 현대적인 감각으로 재해석한 고유한 표식입니다.</p>
       <p>각 캐릭터가 지닌 특별한 능력을 상징하며, 캐릭터와 사람을 이어주는 매개체이기도 합니다.</p>
     </div>
   </section>
+
   <img src="Kmon_world_4.png" alt="Kmon의 세계 4번째 이야기" loading="lazy">
+  <section class="story-copy" aria-labelledby="world-q4">
+    <div class="story-copy-inner">
+      <h2 id="world-q4">Q. Kmon 카드를 소유한다는 것은 어떤 의미인가요?</h2>
+      <p>Kmon 카드는 캐릭터의 모습과 고유 심볼을 간직하는 특별한 카드입니다.</p>
+      <p>그저 예쁜 그림을 소장하는 것을 넘어, 자신이 좋아하는 캐릭터의 심볼과 그 안에 담긴 특별한 의미를 늘 곁에 두는 것입니다.</p>
+    </div>
+  </section>
   <img src="Kmon_world_5.png" alt="Kmon의 세계 5번째 이야기" loading="lazy">
+  <section class="story-copy" aria-labelledby="world-q5">
+    <div class="story-copy-inner">
+      <h2 id="world-q5">Q. 카드에 담긴 캐릭터의 능력이 나에게도 이어질 수 있을까요?</h2>
+      <p>우리는 어렸을 때부터 아끼던 인형이나 소중한 물건을 곁에 두는 것만으로 마음이 편안해지고 든든해지는 경험을 하곤 합니다.</p>
+      <p>Kmon 카드도 그런 존재가 되기를 바랍니다. 캐릭터의 고유 심볼을 간직하고, 필요할 때 그 의미를 떠올리며 용기와 자신감을 얻고, 때로는 마음의 안정을 느낄 수 있는 존재 말입니다.</p>
+      <p>Kmon의 특별한 능력은 카드와 함께하는 사람의 일상 속에서 저마다의 의미로 이어집니다.</p>
+    </div>
+  </section>
   <img src="Kmon_world_6.png" alt="Kmon의 세계 6번째 이야기" loading="lazy">
+  <section class="story-copy" aria-labelledby="world-q6">
+    <div class="story-copy-inner">
+      <h2 id="world-q6">Q. 나에게 어울리는 Kmon은 누구일까요?</h2>
+      <p>마음에 드는 캐릭터를 만나보세요.</p>
+      <p>첫눈에 끌리는 캐릭터일 수도 있고, 지금 나에게 필요한 의미를 지닌 캐릭터일 수도 있습니다.</p>
+      <p>어떤 Kmon을 선택하든, 그 카드가 당신의 일상에 오래도록 간직하고 싶은 특별한 존재가 되기를 바랍니다.</p>
+    </div>
+  </section>
+  <footer class="story-copy story-ending">
+    <div class="story-copy-inner">
+      <h2>Kmon</h2>
+      <p><strong>언제나 당신의 곁에, 특별한 의미로.</strong></p>
+    </div>
+  </footer>
 </main>
 </body>
 </html>
