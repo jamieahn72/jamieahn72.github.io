@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F2E9">
+<title>Kmon의 세계 | KMON</title>
+<style>
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; }
+body { background:#F7F2E9; }
+.world-story { width:100%; max-width:1920px; margin:0 auto; }
+.world-story img { display:block; width:100%; height:auto; margin:0; padding:0; border:0; }
+.back-home {
+ position:fixed; top:calc(14px + env(safe-area-inset-top)); right:calc(14px + env(safe-area-inset-right));
+ z-index:10; padding:10px 16px; border:2px solid #E58A32; border-radius:999px;
+ background:#FFFDF8; color:#202B4B; font:700 13px Arial,"Noto Sans KR",sans-serif;
+ text-decoration:none; box-shadow:0 3px 12px rgba(0,0,0,.15);
+}
+.back-home:hover { background:#F7F2E9; }
+.back-home:focus-visible { outline:3px solid #5276a5; outline-offset:3px; }
+</style>
+</head>
+<body>
+<a class="back-home" href="./index.html?from=world&amp;return=2" onclick="sessionStorage.setItem('kmon_world_return', '1')">← 메인으로 돌아가기</a>
+<main class="world-story" aria-label="Kmon의 세계">
+  <img src="Kmon_world_1.png" alt="Kmon의 세계 1번째 이야기" fetchpriority="high">
+  <img src="Kmon_world_2.png" alt="Kmon의 세계 2번째 이야기" loading="lazy">
+  <img src="Kmon_world_3.png" alt="Kmon의 세계 3번째 이야기" loading="lazy">
+  <img src="Kmon_world_4.png" alt="Kmon의 세계 4번째 이야기" loading="lazy">
+  <img src="Kmon_world_5.png" alt="Kmon의 세계 5번째 이야기" loading="lazy">
+  <img src="Kmon_world_6.png" alt="Kmon의 세계 6번째 이야기" loading="lazy">
+</main>
+</body>
+</html>
