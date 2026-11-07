@@ -465,27 +465,28 @@ section { padding:30px 20px; }
 }
 .intro-enter::before {
   content:""; position:absolute; inset:0; z-index:2;
-  border:1px solid rgba(255,231,177,0);
+  border:2px solid rgba(255,237,178,.55);
   border-radius:inherit;
-  box-shadow:inset 0 0 0 rgba(255,238,194,0);
-  animation:button-edge-sparkle 3.1s ease-in-out infinite;
+  box-shadow:inset 0 0 8px rgba(255,244,198,.25),0 0 7px rgba(255,208,92,.35);
+  animation:button-golden-glow 2.8s ease-in-out infinite;
   pointer-events:none;
 }
+/* 이동하는 빛줄기 대신 버튼 전체의 부드러운 발광 */
 .intro-enter::after {
-  content:""; position:absolute; z-index:1; top:0; bottom:0;
-  left:-45%; width:32%; border-radius:inherit;
-  background:linear-gradient(100deg,transparent 0%,rgba(255,255,225,.12) 25%,rgba(255,222,145,.75) 50%,rgba(255,255,225,.12) 75%,transparent 100%);
-  animation:gold-shine 3.1s ease-in-out infinite;
+  content:""; position:absolute; inset:0; z-index:1;
+  border-radius:inherit;
+  background:radial-gradient(ellipse at 50% 45%,rgba(255,250,211,.4),rgba(255,217,118,.08) 75%);
+  opacity:.18;
+  animation:button-warm-light 2.8s ease-in-out infinite;
   pointer-events:none;
 }
-@keyframes gold-shine {
-  0% { left:-45%; }
-  65%,100% { left:115%; }
+@keyframes button-golden-glow {
+  0%,100% { border-color:rgba(255,237,178,.45); box-shadow:inset 0 0 5px rgba(255,244,198,.18),0 0 5px rgba(255,208,92,.25); }
+  50% { border-color:rgba(255,251,221,1); box-shadow:inset 0 0 14px rgba(255,250,212,.75),0 0 12px rgba(255,218,120,.8),0 0 25px rgba(255,198,72,.4); }
 }
-@keyframes button-edge-sparkle {
-  0%,100% { border-color:rgba(255,231,177,0); box-shadow:inset 0 0 0 rgba(255,238,194,0); }
-  42% { border-color:rgba(255,231,177,.88); box-shadow:inset 0 0 5px rgba(255,238,194,.4),0 0 4px rgba(255,225,165,.45); }
-  58% { border-color:rgba(255,231,177,.16); box-shadow:inset 0 0 2px rgba(255,238,194,.12); }
+@keyframes button-warm-light {
+  0%,100% { opacity:.12; }
+  50% { opacity:.8; }
 }
 .button-sparkle {
   position:absolute; z-index:3; top:50%; width:8px; height:8px;
