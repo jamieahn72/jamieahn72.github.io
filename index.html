@@ -794,6 +794,11 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 }
 
 /* KMON digital card collection */
+.kmon-rarity-normal{color:#7A8493!important;font-weight:800}
+.kmon-rarity-rare{color:#2378C5!important;font-weight:800}
+.kmon-rarity-epic{color:#8B42CB!important;font-weight:800}
+.kmon-rarity-legend{color:#B58A35!important;font-weight:800}
+
 .kmon-card-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
 .kmon-card-item{min-width:0;text-align:center}
 .kmon-card-item button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
@@ -994,10 +999,10 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 
 <!-- KMON 전체 디지털 카드 컬렉션 -->
 <main id="card-collection-page">
-  <a class="detail-back" href="#cards">← 메인으로 돌아가기</a>
+  <a class="detail-back" href="#world">← 메인으로 돌아가기</a>
   <div class="label">KMON CARD COLLECTION</div>
   <h1>디지털 카드 컬렉션</h1>
-  <p>캐릭터 순서 · NORMAL → RARE → EPIC → LEGEND</p>
+  <p>캐릭터 순서 · <span class="kmon-rarity-normal">NORMAL</span> → <span class="kmon-rarity-rare">RARE</span> → <span class="kmon-rarity-epic">EPIC</span> → <span class="kmon-rarity-legend">LEGEND</span></p>
   <div id="kmon-collection-cards"></div>
 </main>
 
@@ -1853,7 +1858,7 @@ function kmonCardNode(card){
  const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity+" 카드";img.loading="lazy";button.appendChild(img);
  button.addEventListener("click",()=>openKmonCard(card));article.appendChild(button);
  const name=document.createElement("h3");name.textContent=card.character;article.appendChild(name);
- const info=document.createElement("p");info.textContent=card.rarity+" · "+card.power;article.appendChild(info);return article;
+ const info=document.createElement("p");const rarity=document.createElement("strong");rarity.className="kmon-rarity-"+card.rarity.toLowerCase();rarity.textContent=card.rarity;info.appendChild(rarity);info.appendChild(document.createTextNode(" · "+card.power));article.appendChild(info);return article;
 }
 function openKmonCard(card){
  if(!kmonModal)return;
@@ -1861,6 +1866,7 @@ function openKmonCard(card){
  content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" 카드";
  content.querySelector("h2").textContent=card.character;
  content.querySelector(".sero-modal-rarity").textContent=card.rarity;
+ content.querySelector(".sero-modal-rarity").className="sero-modal-rarity kmon-rarity-"+card.rarity.toLowerCase();
  content.querySelector("h3").textContent=card.power;
  const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
  const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?"혹시, 물건을 잘 잃어버리거나 없어지나요?":"Kmon 캐릭터의 특별한 능력을 만나 보세요.";
