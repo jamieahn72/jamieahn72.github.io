@@ -1565,22 +1565,18 @@ function applyPageTranslations(language) {
   }
   const modal = document.getElementById("sero-card-modal");
   if (modal) {
-    const modalTitle = modal.querySelector(".sero-modal-content h2");
-    const modalImage = modal.querySelector(".sero-modal-content img");
-    if (modalTitle) modalTitle.textContent = t.cardTitle2;
-    if (modalImage) modalImage.alt = t.cardTitle2 + " card preview";
-    const rarity = modal.querySelector(".sero-modal-rarity");
-    const power = modal.querySelector("h3");
-    const promise = modal.querySelector(".sero-modal-content > p:not(.sero-modal-rarity):not(.sero-modal-notice)");
-    if (rarity) rarity.textContent = "LEGEND";
-    if (power) power.textContent = t.modalPower;
-    if (promise) promise.textContent = t.modalPromise;
-    modal.querySelectorAll(".sero-modal-guide p").forEach((p, i) => { if (t.guide[i]) p.textContent = t.guide[i]; });
+    if (kmonSelectedCard) {
+      openKmonCard(kmonSelectedCard);
+    }
+    modal.querySelectorAll(".sero-modal-guide p").forEach((p, i) => {
+      if (i > 0 && t.guide[i]) p.textContent = t.guide[i];
+    });
     const notice = modal.querySelector(".sero-modal-notice");
     const buy = modal.querySelector(".sero-buy-button");
     if (notice) notice.textContent = t.notice;
     if (buy) buy.textContent = t.buy;
   }
+  if (typeof renderKmonCards === "function") renderKmonCards();
   if (typeof renderMonsterIndex === "function" && location.hash === "#monster-index") {
     renderMonsterIndex(monsterIndexPage);
   }
@@ -1849,12 +1845,17 @@ const kmonCards = [
  {id:"egg-epic",character:"달걀귀신 (Egg ghost)",rarity:"EPIC",image:"egg_epic_thumbnail_1.png",power:"예리한 통찰",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 맑고 예리하게 하여, 중요한 순간에 정확한 판단과 최선의 선택을 할 수 있도록 도와준다."},
  {id:"egg-legend",character:"달걀귀신 (Egg ghost)",rarity:"LEGEND",image:"egg_legend_thumbnail_1.png",power:"잠재력 개화",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 가장 맑고 예리하게 깨워, 자신의 잠재력과 실력을 최대한 발휘하고 기대 이상의 결과를 얻을 수 있도록 도와준다."}
 ];
+const kmonCardTranslations={"en":{"sero-legend":["Sero","Guardian of treasured possessions","Protects the precious things you own so they are not lost or taken away, whatever happens."],"egg-normal":["Egg Ghost","Clear Mind","When facing a competitive situation such as an exam or election, helps clear a distracted mind so you can perform to the best of your ability."],"egg-rare":["Egg Ghost","Enhanced Focus","When facing a competitive situation such as an exam or election, helps remove distractions and sharpen focus so you can perform even better than usual."],"egg-epic":["Egg Ghost","Keen Insight","When facing a competitive situation such as an exam or election, helps keep your mind clear and sharp so you can make sound judgments and the best choices at crucial moments."],"egg-legend":["Egg Ghost","Awakened Potential","When facing a competitive situation such as an exam or election, helps awaken your clearest, sharpest mind so you can fully realize your potential and achieve results beyond expectations."]},"zh":{"sero-legend":["塞罗（Sero）","绝对守护所有物","无论发生什么，都守护你珍贵的物品，避免遗失或被夺走。"],"egg-normal":["鸡蛋鬼","澄澈心神","面对考试或选举等竞争场合时，帮助理清纷乱的思绪，让你充分发挥自己的实力。"],"egg-rare":["鸡蛋鬼","强化专注","面对考试或选举等竞争场合时，帮助排除杂念、提高专注力，让你发挥出比平时更出色的水平。"],"egg-epic":["鸡蛋鬼","敏锐洞察","面对考试或选举等竞争场合时，帮助保持清醒敏锐的头脑，在关键时刻作出准确判断与最佳选择。"],"egg-legend":["鸡蛋鬼","潜能绽放","面对考试或选举等竞争场合时，帮助唤醒最清醒敏锐的思维，充分发挥潜力与实力，获得超出预期的成果。"]},"ja":{"sero-legend":["セロ（Sero）","大切な持ち物の絶対守護","どんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。"],"egg-normal":["卵おばけ","心を澄ます","試験や選挙などの競争の場面で、乱れた心を落ち着かせ、自分の実力を十分に発揮できるよう助けます。"],"egg-rare":["卵おばけ","集中力強化","試験や選挙などの競争の場面で、雑念を取り除いて集中力を高め、普段以上の実力を発揮できるよう助けます。"],"egg-epic":["卵おばけ","鋭い洞察","試験や選挙などの競争の場面で、頭を明晰かつ鋭敏に保ち、重要な瞬間に的確な判断と最善の選択ができるよう助けます。"],"egg-legend":["卵おばけ","潜在能力の開花","試験や選挙などの競争の場面で、心を最も明晰かつ鋭敏な状態に導き、潜在能力と実力を最大限に発揮して期待以上の成果を得られるよう助けます。"]},"vi":{"sero-legend":["Sero","Bảo vệ tuyệt đối vật sở hữu","Bảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào."],"egg-normal":["Ma Trứng","Tinh thần minh mẫn","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp xua tan sự rối trí để bạn phát huy đúng năng lực của mình."],"egg-rare":["Ma Trứng","Tăng cường tập trung","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp loại bỏ suy nghĩ xao nhãng và tăng khả năng tập trung để bạn thể hiện tốt hơn thường lệ."],"egg-epic":["Ma Trứng","Nhận định sắc bén","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp đầu óc minh mẫn và nhạy bén để đưa ra nhận định chính xác và lựa chọn tốt nhất vào thời điểm quan trọng."],"egg-legend":["Ma Trứng","Khai mở tiềm năng","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp đánh thức sự minh mẫn và nhạy bén tối đa, phát huy hết tiềm năng và năng lực để đạt kết quả vượt mong đợi."]}};
+const kmonCardUi={ko:{more:"전체 카드 더보기",collection:"디지털 카드 컬렉션",homeTitle:"디지털 카드",order:"캐릭터 순서 · ",guide:"Kmon 캐릭터의 특별한 능력을 만나 보세요."},en:{more:"View All Cards",collection:"Digital Card Collection",homeTitle:"Digital Cards",order:"Character order · ",guide:"Discover the special abilities of Kmon characters."},zh:{more:"查看全部卡片",collection:"数字卡片收藏",homeTitle:"数字卡片",order:"角色顺序 · ",guide:"探索 Kmon 角色的特殊能力。"},ja:{more:"すべてのカードを見る",collection:"デジタルカードコレクション",homeTitle:"デジタルカード",order:"キャラクター順 · ",guide:"Kmonキャラクターの特別な能力をご覧ください。"},vi:{more:"Xem tất cả thẻ",collection:"Bộ sưu tập thẻ kỹ thuật số",homeTitle:"Thẻ kỹ thuật số",order:"Thứ tự nhân vật · ",guide:"Khám phá năng lực đặc biệt của các nhân vật Kmon."}};
+function kmonTranslated(card){const data=(kmonCardTranslations[activeLanguage]||{})[card.id];return data?{...card,character:data[0],power:data[1],description:data[2]}:card;}
 const kmonRarityOrder={NORMAL:0,RARE:1,EPIC:2,LEGEND:3};
 const kmonCharacterOrder=["세로 (Sero)","체시 (Chesy)","체리 (Chery)","체미 (Chemi)","달걀귀신 (Egg ghost)","덤부 (Dumboo)","뚱보악귀"];
 const kmonModal=document.getElementById("sero-card-modal");
+let kmonSelectedCard=null;
 // Keep the shared modal accessible from both the home and collection pages.
 if(kmonModal)document.body.appendChild(kmonModal);
 function kmonCardNode(card){
+ card=kmonTranslated(card);
  const article=document.createElement("article");article.className="kmon-card-item";
  const button=document.createElement("button");button.type="button";button.setAttribute("aria-label",card.character+" "+card.rarity+" 카드 상세 보기");
  const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity+" 카드";img.loading="lazy";button.appendChild(img);
@@ -1864,6 +1865,8 @@ function kmonCardNode(card){
 }
 function openKmonCard(card){
  if(!kmonModal)return;
+ kmonSelectedCard=kmonCards.find(c=>c.id===card.id)||card;
+ card=kmonTranslated(kmonSelectedCard);
  const content=kmonModal.querySelector(".sero-modal-content");
  content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" 카드";
  content.querySelector("h2").textContent=card.character;
@@ -1871,7 +1874,7 @@ function openKmonCard(card){
  content.querySelector(".sero-modal-rarity").className="sero-modal-rarity kmon-rarity-"+card.rarity.toLowerCase();
  content.querySelector("h3").textContent=card.power;
  const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
- const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?"혹시, 물건을 잘 잃어버리거나 없어지나요?":"Kmon 캐릭터의 특별한 능력을 만나 보세요.";
+ const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?(pageTranslations[activeLanguage]||pageTranslations.ko).guide[0]:kmonCardUi[activeLanguage].guide;
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
 }
 function closeKmonCard(){if(kmonModal)kmonModal.classList.remove("active");document.body.style.overflow="";}
@@ -1879,11 +1882,16 @@ const kmonClose=document.getElementById("sero-card-close");if(kmonClose)kmonClos
 if(kmonModal)kmonModal.addEventListener("click",e=>{if(e.target===kmonModal)closeKmonCard();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeKmonCard();});
 function renderKmonCards(){
+ const ui=kmonCardUi[activeLanguage]||kmonCardUi.ko;
+ const more=document.querySelector("#cards .more-monsters-button");if(more)more.textContent=ui.more;
+ const homeTitle=document.querySelector("#cards .section-title");if(homeTitle)homeTitle.textContent=ui.homeTitle;
+ const collectionTitle=document.querySelector("#card-collection-page h1");if(collectionTitle)collectionTitle.textContent=ui.collection;
+ const orderLabel=document.querySelector("#card-collection-page > p");if(orderLabel&&orderLabel.firstChild)orderLabel.firstChild.textContent=ui.order;
  const home=document.getElementById("kmon-home-cards");const collection=document.getElementById("kmon-collection-cards");
  if(home){const shuffled=[...kmonCards];for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}home.replaceChildren(...shuffled.slice(0,4).map(kmonCardNode));}
  if(collection){const groups=new Map();const sorted=[...kmonCards].sort((a,b)=>(kmonCharacterOrder.indexOf(a.character)-kmonCharacterOrder.indexOf(b.character))||(kmonRarityOrder[a.rarity]-kmonRarityOrder[b.rarity]));
  sorted.forEach(card=>{if(!groups.has(card.character))groups.set(card.character,[]);groups.get(card.character).push(card);});
- collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=name;section.appendChild(h);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
+ collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=kmonTranslated(cards[0]).character;section.appendChild(h);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
 }
 renderKmonCards();
 </script>
