@@ -1303,16 +1303,35 @@ function renderMonsterIndex(page=1) {
 
   /* 메인 홈페이지 번역 */
 // Randomize only the homepage monster previews; keep the full bestiary order unchanged.
-(function shuffleHomeMonstersOnce() {
+(function showRandomHomeMonsters() {
   const grid = document.querySelector("#bestiary .cards");
   if (!grid) return;
-  const cards = Array.from(grid.querySelectorAll(":scope > .card"));
-  cards.forEach((card, index) => { card.dataset.monsterIndex = String(index); });
-  for (let i = cards.length - 1; i > 0; i--) {
+  const eligible = monsters.map((monster, index) => ({monster, index})).filter(({monster}) => !monster.placeholder && monster.thumbnail && monster.hash);
+  for (let i = eligible.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [cards[i], cards[j]] = [cards[j], cards[i]];
+    [eligible[i], eligible[j]] = [eligible[j], eligible[i]];
   }
-  grid.append(...cards);
+  grid.replaceChildren(...eligible.slice(0, 6).map(({monster, index}) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.monsterIndex = String(index);
+    const link = document.createElement("a");
+    link.className = "card-link";
+    link.href = monster.hash;
+    const art = document.createElement("div");
+    art.className = "card-art";
+    const img = document.createElement("img");
+    img.src = monster.thumbnail;
+    img.alt = monster.name;
+    art.appendChild(img);
+    const heading = document.createElement("h3");
+    heading.textContent = monster.name;
+    const description = document.createElement("p");
+    description.textContent = monster.description || "";
+    link.append(art, heading, description);
+    card.appendChild(link);
+    return card;
+  }));
 })();
 
 function applyTranslations(language) {
@@ -1428,7 +1447,7 @@ function applyTranslations(language) {
 
   monsterCards.forEach((card) => {
     const index = Number(card.dataset.monsterIndex);
-    const monster = t.monsters[index];
+    const monster = (pageTranslations[language] || pageTranslations.ko).monsters[index] || [monsters[index]?.name, monsters[index]?.description || ""];
     if (!monster) return;
     card.querySelector("h3").textContent = monster[0];
     card.querySelector("p").textContent = monster[1];
