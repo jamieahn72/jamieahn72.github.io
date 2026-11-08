@@ -1016,6 +1016,8 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   <div id="kmon-collection-cards"></div>
 </main>
 
+<!-- 물귀신 상세 -->
+<main id="water_ghost-detail" class="character-detail"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a><div class="detail-heading"><div class="label">KMON CHARACTER</div><h1>물귀신(Water Ghost)</h1><p class="detail-intro">악귀 : 물귀신</p></div><div class="character-gallery" id="water_ghost-gallery"></div><div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div></main>
 <!-- 전체 몬스터 도감 -->
 <main id="monster-index-page">
   <a class="detail-back" href="#bestiary">← 메인으로 돌아가기</a>
@@ -1128,6 +1130,8 @@ const cheryImages = ["chery_1.png","chery_2.png","chery_3.png"];
 const chemiImages = ["chemi_1.png"];
 const eggImages = ["egg_1.png"];
 const dumbooImages = ["dumboo_1.png","dumboo_2.png"];
+const water_ghostImages = ["water_ghost_1.png","water_ghost_2.png","water_ghost_3.png","water_ghost_4.png"];
+const water_ghostDescription = "물귀신은 주로 물속에 숨어 지내는 악귀로, 제주도에서 스쿠버다이빙을 즐기던 중 불의의 사고를 당해 물귀신이 되었다.\n평소 장난기가 많고 짓궂은 성격으로, 사람들을 깜짝 놀라게 하거나 골탕 먹이는 것을 즐긴다.\n물귀신의 가장 특별한 능력은 입에서 강력한 물줄기를 발사하는 ‘입물총’이다. 별다른 무기 없이도 강력한 물줄기로 상대를 공격할 수 있다.\n특히 덤부를 놀리는 것을 좋아하는데, 달리기에 서툰 덤부가 자신을 잡으려고 힘겹게 쫓아오는 모습을 보며 더욱 신이 나 장난을 멈추지 않는다.";
 const ddboaqImages = ["ddboaq_1.png","ddboaq_2.png","ddboaq_3.png"];
 
 const seroDescription =
@@ -1215,6 +1219,7 @@ createGallery("chemi-gallery",chemiImages,chemiDescription);
 createGallery("egg-gallery",eggImages,eggDescription);
 createGallery("dumboo-gallery",dumbooImages,dumbooDescription);
 createGallery("ddboaq-gallery",ddboaqImages,ddboaqDescription);
+createGallery("water_ghost-gallery",water_ghostImages,water_ghostDescription);
 
 /* 전체 몬스터 도감 데이터: 등록 순서대로 추가 */
 const monsters = [
@@ -1224,7 +1229,7 @@ const monsters = [
   {name:"체미(Chemi)", description:"Kmon팀소속, 세자매의 막내(처녀귀신)", thumbnail:"chemi_thumbnail_1.png", hash:"#chemi"},
   {name:"덤부(Dumboo)", description:"Kmon팀소속, 몽달귀신(총각귀신)", thumbnail:"dumboo_thumbnail_1.png", hash:"#dumboo"},
   {name:"뚱보아귀(Hungry Monster)", description:"악귀 : 뚱보아귀", thumbnail:"ddboaq_thumbnail_1.png", hash:"#ddboaq"},
-  {name:"준비중", placeholder:true},
+  {name:"물귀신(Water Ghost)", description:"악귀 : 물귀신", thumbnail:"water_ghost_thumbnail_1.png", hash:"#water_ghost"},
   {name:"준비중", placeholder:true},
   {name:"달걀귀", description:"악귀 : 달걀귀신", thumbnail:"egg_thumbnail_1.png", hash:"#egg"}
 ];
@@ -1453,8 +1458,9 @@ const pageTranslations = {
     guide:["혹시, 물건을 잘 잃어버리거나 없어지나요?","이 카드를 소유하는 순간, 캐릭터에 깃든 특별한 능력이 사용자에게 이어집니다.","이러한 특별한 경험은 캐릭터 카드마다 고유 심볼을 부여했기에 가능합니다.","Kmon의 고유 심볼은 한국의 전통 민속신앙을 바탕으로 창작되었으며, 각 캐릭터만의 고유한 의미와 능력을 상징합니다."],
     notice:"카드 구매 및 정식 원본 다운로드 기능은 준비 중입니다.", buy:"Pi로 구매하기 · 준비 중",
     monsters:[
-      ["세로(Sero)","Kmon팀의 리더(저승사자)"],["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)"],["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째"],["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)"],["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)"],["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀"],["준비중",""],["준비중",""],["달걀귀","악귀 : 달걀귀신"]],
+      ["세로(Sero)","Kmon팀의 리더(저승사자)"],["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)"],["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째"],["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)"],["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)"],["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀"],["물귀신(Water Ghost)","악귀 : 물귀신"],["준비중",""],["달걀귀","악귀 : 달걀귀신"]],
     details:{
+      water_ghost:["물귀신(Water Ghost)","악귀 : 물귀신","물귀신은 주로 물속에 숨어 지내는 악귀로, 제주도에서 스쿠버다이빙을 즐기던 중 불의의 사고를 당해 물귀신이 되었다.\n평소 장난기가 많고 짓궂은 성격으로, 사람들을 깜짝 놀라게 하거나 골탕 먹이는 것을 즐긴다.\n물귀신의 가장 특별한 능력은 입에서 강력한 물줄기를 발사하는 ‘입물총’이다. 별다른 무기 없이도 강력한 물줄기로 상대를 공격할 수 있다.\n특히 덤부를 놀리는 것을 좋아하는데, 달리기에 서툰 덤부가 자신을 잡으려고 힘겹게 쫓아오는 모습을 보며 더욱 신이 나 장난을 멈추지 않는다."],
       sero:["세로(Sero)","Kmon팀의 리더(저승사자)","Kmon팀의 리더이자 저승사자이며 귀신들을 관장한다.\n염라대왕의 명을 받아 한국의 악귀들을 소탕해야하는 임무를 가지고 있지만 팀원들인 체시, 체리, 체미, 덤부가 딱히 도움이 되진 않는다.\n늘 고독을 씹으며 혼자 있기를 좋아한다."],
       chesy:["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)","처녀귀신 세자매의 맏언니 체시는 기숙사 사감같은 존재감을 가지고 있다.\n평소엔 규율부장같지만 속마음은 츤데레같이 따뜻한 마음의 소유자이다.\nKmon팀의 안살림을 맡고 있다."],
       chery:["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째","처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 공주병 기질을 가진 사랑스러운 귀신이다.\n언제나 자신이 가장 예쁘고 특별하다고 생각하며 관심과 칭찬을 즐긴다.\nKmon의 팀원으로서 다른 네 명의 팀원 사이를 이어주는 가교 역할을 하며, 팀의 조화와 화합에 중요한 역할을 한다."],
@@ -1475,8 +1481,9 @@ const pageTranslations = {
     modalPromise:"Protects the precious things you own so they are not lost or taken away, whatever happens.",
     guide:["Do you often lose or misplace your belongings?","When you own this card, the special ability within the character is passed on to you.","This special experience is made possible by the unique symbol assigned to each character card.","Kmon's unique symbols are inspired by traditional Korean folk beliefs and represent each character's individual meaning and abilities."],
     notice:"Card purchases and downloads of the official original are coming soon.", buy:"Buy with Pi · Coming Soon",
-    monsters:[["Sero","Leader of the Kmon team (Grim Reaper)"],["Chesy","Eldest of the three sisters (Virgin Ghost)"],["Chery","Second of the three virgin-ghost sisters"],["Chemi","Youngest of the three sisters (Virgin Ghost)"],["Dumboo","Kmon team member (Bachelor Ghost)"],["Hungry Monster","Evil spirit: Hungry Monster"],["Coming Soon",""],["Coming Soon",""],["Egg Ghost","Evil spirit: Egg Ghost"]],
+    monsters:[["Sero","Leader of the Kmon team (Grim Reaper)"],["Chesy","Eldest of the three sisters (Virgin Ghost)"],["Chery","Second of the three virgin-ghost sisters"],["Chemi","Youngest of the three sisters (Virgin Ghost)"],["Dumboo","Kmon team member (Bachelor Ghost)"],["Hungry Monster","Evil spirit: Hungry Monster"],["Water Ghost","Evil spirit: Water Ghost"],["Coming Soon",""],["Egg Ghost","Evil spirit: Egg Ghost"]],
     details:{
+      water_ghost:["Water Ghost","Evil spirit: Water Ghost","The Water Ghost usually hides underwater. It became an evil spirit after an unexpected accident while scuba diving on Jeju Island.\nMischievous and playful, it enjoys startling people and playing tricks on them.\nIts signature ability is the ‘Mouth Water Gun’, a powerful stream of water fired from its mouth that lets it attack without a weapon.\nIt especially enjoys teasing Dumboo, whose clumsy attempts to chase it only encourage more pranks."],
       sero:["Sero","Leader of the Kmon team (Grim Reaper)","Sero is the leader of the Kmon team and a grim reaper who governs ghosts.\nHe was assigned by the King of the Underworld to hunt evil spirits in Korea, but his teammates Chesy, Chery, Chemi, and Dumboo are not much help.\nHe is often lonely and prefers being alone."],
       chesy:["Chesy","Eldest of the three sisters (Virgin Ghost)","Chesy, the eldest of the three virgin-ghost sisters, has the presence of a strict dorm supervisor.\nShe may seem like a rule enforcer, but deep down she has a warm, tsundere-like heart.\nShe takes care of the Kmon team's household affairs."],
       chery:["Chery","Kmon team member, second of the three virgin ghost sisters","Chery, the second of the three virgin-ghost sisters, is a lovable ghost with a cute appearance and a princess-like personality.\nShe always thinks she is the prettiest and most special, and enjoys attention and compliments.\nAs a member of Kmon, she serves as a bridge between the other four team members, playing an important role in keeping the team harmonious and united."],
@@ -1496,8 +1503,9 @@ const pageTranslations = {
     modalPromise:"无论发生什么，都会守护你珍视的物品，避免遗失或被夺走。",
     guide:["你是否经常弄丢东西？","拥有这张卡片后，角色所蕴含的特殊能力将传递给用户。","每张角色卡都有独特的专属符号，因此才能带来这样的特别体验。","Kmon 的专属符号以韩国传统民间信仰为灵感，象征每个角色独有的意义与能力。"],
     notice:"卡片购买及正式原版下载功能正在准备中。", buy:"使用 Pi 购买 · 即将推出",
-    monsters:[["Sero","Kmon 团队的首领（死神）"],["Chesy","三姐妹中的大姐（处女鬼）"],["Chery","Kmon 角色"],["Chemi","三姐妹中的小妹（处女鬼）"],["Dumboo","Kmon 团队成员（单身鬼）"],["Hungry Monster","恶鬼：贪食怪物"],["敬请期待",""],["敬请期待",""],["蛋鬼","恶鬼：蛋鬼"]],
+    monsters:[["Sero","Kmon 团队的首领（死神）"],["Chesy","三姐妹中的大姐（处女鬼）"],["Chery","Kmon 角色"],["Chemi","三姐妹中的小妹（处女鬼）"],["Dumboo","Kmon 团队成员（单身鬼）"],["Hungry Monster","恶鬼：贪食怪物"],["水鬼(Water Ghost)","恶鬼：水鬼"],["敬请期待",""],["蛋鬼","恶鬼：蛋鬼"]],
     details:{
+      water_ghost:["水鬼(Water Ghost)","恶鬼：水鬼","水鬼通常躲藏在水中。它在济州岛潜水时遭遇意外，因此变成了恶鬼。\n它性格调皮，喜欢突然吓人和捉弄别人。\n它最特别的能力是从口中喷出强劲水柱的“口中水枪”，无需武器就能攻击对手。\n它尤其喜欢捉弄Dumboo。看到不擅长跑步的Dumboo费力追赶，它便更加兴奋，恶作剧也不停歇。"],
       sero:["Sero","Kmon 团队的首领（死神）","Sero 是 Kmon 团队的首领，也是掌管鬼魂的死神。\n他奉阎罗大王之命清除韩国的恶鬼，但队友 Chesy、Chery、Chemi 和 Dumboo 并没有帮上太多忙。\n他常常感到孤独，喜欢独处。"],
       chesy:["Chesy","三姐妹中的大姐（处女鬼）","处女鬼三姐妹中的大姐 Chesy，给人一种严格宿舍管理员的感觉。\n平时像纪律委员，但内心其实温暖又有些傲娇。\n她负责照料 Kmon 团队的日常事务。"],
       chery:["Chery","三姐妹中的二姐（处女鬼）","Chery是处女鬼三姐妹中的二妹，是一位外表可爱、带有公主病气质的可爱幽灵。\n她总认为自己最漂亮、最特别，也很享受受到关注和赞美。\n作为Kmon团队的一员，她在其他四位成员之间发挥纽带作用，对团队的和谐与团结起着重要作用。"],
@@ -1517,8 +1525,9 @@ const pageTranslations = {
     modalPromise:"どんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。",
     guide:["物をよくなくしたり、見失ったりしませんか？","このカードを所有すると、キャラクターに宿る特別な能力がユーザーに受け継がれます。","キャラクターカードごとに固有のシンボルが与えられているからこそ、特別な体験が可能になります。","Kmonの固有シンボルは韓国の伝統的な民間信仰をもとに創作され、各キャラクター独自の意味と能力を表しています。"],
     notice:"カード購入および正式版ダウンロード機能は準備中です。", buy:"Piで購入 · 準備中",
-    monsters:[["Sero","Kmonチームのリーダー（死神）"],["Chesy","三姉妹の長女（処女幽霊）"],["Chery","三姉妹の次女（処女幽霊）"],["Chemi","三姉妹の末っ子（処女幽霊）"],["Dumboo","Kmonチームのメンバー（独身幽霊）"],["Hungry Monster","悪霊：大食いモンスター"],["準備中",""],["準備中",""],["卵鬼","悪霊：卵鬼"]],
+    monsters:[["Sero","Kmonチームのリーダー（死神）"],["Chesy","三姉妹の長女（処女幽霊）"],["Chery","三姉妹の次女（処女幽霊）"],["Chemi","三姉妹の末っ子（処女幽霊）"],["Dumboo","Kmonチームのメンバー（独身幽霊）"],["Hungry Monster","悪霊：大食いモンスター"],["水鬼(Water Ghost)","悪霊：水鬼"],["準備中",""],["卵鬼","悪霊：卵鬼"]],
     details:{
+      water_ghost:["水鬼(Water Ghost)","悪霊：水鬼","水鬼は普段、水中に身を潜めている。済州島でスキューバダイビング中に不慮の事故に遭い、悪霊になった。\nいたずら好きで、人を驚かせたり困らせたりすることを楽しむ。\n特別な能力は、口から強力な水流を発射する「口水鉄砲」。武器がなくても相手を攻撃できる。\n特にダンブーをからかうのが大好き。走るのが苦手なダンブーが必死に追いかけてくると、ますます楽しくなっていたずらを続ける。"],
       sero:["Sero","Kmonチームのリーダー（死神）","SeroはKmonチームのリーダーで、幽霊たちを取り仕切る死神です。\n閻魔大王の命を受けて韓国の悪霊を退治する任務を持っていますが、仲間のChesy、Chery、Chemi、Dumbooはあまり頼りになりません。\nいつも孤独を感じ、一人でいることを好みます。"],
       chesy:["Chesy","三姉妹の長女（処女幽霊）","処女幽霊三姉妹の長女Chesyは、寮の管理人のような存在感があります。\n普段は規律に厳しいですが、心の中はツンデレのように温かい性格です。\nKmonチームの日常を支えています。"],
       chery:["Chery","三姉妹の次女（処女幽霊）","Cheryは処女幽霊三姉妹の次女で、かわいらしい外見とお姫様気質を持つ愛らしい幽霊です。\nいつも自分が一番かわいくて特別だと思っており、注目や褒め言葉を楽しみます。\nKmonのメンバーとして、ほかの4人のメンバーをつなぐ架け橋となり、チームの調和と団結に重要な役割を果たしています。"],
@@ -1538,8 +1547,9 @@ const pageTranslations = {
     modalPromise:"Bảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào.",
     guide:["Bạn có thường làm thất lạc đồ đạc không?","Khi sở hữu thẻ này, năng lực đặc biệt của nhân vật sẽ được truyền đến người dùng.","Trải nghiệm đặc biệt này có được nhờ mỗi thẻ nhân vật mang một biểu tượng riêng.","Các biểu tượng riêng của Kmon được sáng tạo dựa trên tín ngưỡng dân gian truyền thống Hàn Quốc, tượng trưng cho ý nghĩa và năng lực riêng của từng nhân vật."],
     notice:"Tính năng mua thẻ và tải bản gốc chính thức đang được chuẩn bị.", buy:"Mua bằng Pi · Sắp ra mắt",
-    monsters:[["Sero","Thủ lĩnh đội Kmon (Thần chết)"],["Chesy","Chị cả trong ba chị em (Ma nữ)"],["Chery","Chị thứ hai trong ba chị em ma nữ"],["Chemi","Em út trong ba chị em (Ma nữ)"],["Dumboo","Thành viên đội Kmon (Ma nam)"],["Hungry Monster","Ác quỷ: Quái vật háu ăn"],["Sắp ra mắt",""],["Sắp ra mắt",""],["Ma trứng","Ác quỷ: Ma trứng"]],
+    monsters:[["Sero","Thủ lĩnh đội Kmon (Thần chết)"],["Chesy","Chị cả trong ba chị em (Ma nữ)"],["Chery","Chị thứ hai trong ba chị em ma nữ"],["Chemi","Em út trong ba chị em (Ma nữ)"],["Dumboo","Thành viên đội Kmon (Ma nam)"],["Hungry Monster","Ác quỷ: Quái vật háu ăn"],["Ma Nước (Water Ghost)","Ác quỷ: Ma Nước"],["Sắp ra mắt",""],["Ma trứng","Ác quỷ: Ma trứng"]],
     details:{
+      water_ghost:["Ma Nước (Water Ghost)","Ác quỷ: Ma Nước","Ma Nước thường ẩn mình dưới nước. Nó trở thành ác quỷ sau một tai nạn bất ngờ khi lặn biển ở đảo Jeju.\nNó tinh nghịch, thích làm mọi người giật mình và bày trò trêu chọc.\nNăng lực đặc biệt của nó là ‘Súng nước bằng miệng’, phóng luồng nước mạnh để tấn công mà không cần vũ khí.\nNó đặc biệt thích trêu Dumboo. Thấy Dumboo vụng về chạy đuổi theo, nó càng hào hứng nghịch ngợm."],
       sero:["Sero","Thủ lĩnh đội Kmon (Thần chết)","Sero là thủ lĩnh đội Kmon và là thần chết cai quản các hồn ma.\nTheo lệnh Diêm Vương, anh phải tiêu diệt các ác quỷ ở Hàn Quốc, nhưng các đồng đội Chesy, Chery, Chemi và Dumboo không giúp được nhiều.\nAnh thường cô đơn và thích ở một mình."],
       chesy:["Chesy","Chị cả trong ba chị em (Ma nữ)","Chesy, chị cả trong ba chị em ma nữ, có phong thái nghiêm khắc như quản lý ký túc xá.\nBề ngoài cô giống người chuyên giữ kỷ luật, nhưng bên trong lại ấm áp và có phần tsundere.\nCô phụ trách việc nội bộ của đội Kmon."],
       chery:["Chery","Chị thứ hai trong ba chị em ma nữ","Chery là người chị thứ hai trong ba chị em ma nữ, một hồn ma đáng yêu với vẻ ngoài dễ thương và tính cách điệu đà như công chúa.\nCô luôn nghĩ mình là người xinh đẹp và đặc biệt nhất, đồng thời thích được chú ý và khen ngợi.\nLà thành viên của Kmon, cô đóng vai trò cầu nối giữa bốn thành viên còn lại, góp phần quan trọng vào sự hòa hợp và đoàn kết của cả nhóm."],
@@ -1705,7 +1715,8 @@ function updatePage() {
     "#chemi":"chemi-detail",
     "#egg":"egg-detail",
     "#dumboo":"dumboo-detail",
-    "#ddboaq":"ddboaq-detail"
+    "#ddboaq":"ddboaq-detail",
+    "#water_ghost":"water_ghost-detail"
   };
   const selectedPage = pages[hash] || null;
   const isDetailPage = selectedPage !== null;
@@ -1719,6 +1730,7 @@ function updatePage() {
     document.getElementById("egg-detail").style.display = "none";
     document.getElementById("dumboo-detail").style.display = "none";
     document.getElementById("ddboaq-detail").style.display = "none";
+    document.getElementById("water_ghost-detail").style.display = "none";
     document.getElementById("monster-index-page").style.display = "none";
     document.getElementById("card-collection-page").style.display = "none";
     document.getElementById("page-footer").style.display = "none";
@@ -1739,6 +1751,7 @@ function updatePage() {
   document.getElementById("egg-detail").style.display = selectedPage === "egg-detail" ? "block" : "none";
   document.getElementById("dumboo-detail").style.display = selectedPage === "dumboo-detail" ? "block" : "none";
   document.getElementById("ddboaq-detail").style.display = selectedPage === "ddboaq-detail" ? "block" : "none";
+  document.getElementById("water_ghost-detail").style.display = selectedPage === "water_ghost-detail" ? "block" : "none";
   document.getElementById("page-footer").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "block";
   document.getElementById("bottom-nav").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "grid";
   if (isIndexPage) renderMonsterIndex(monsterIndexPage);
