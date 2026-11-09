@@ -266,9 +266,9 @@ section { padding:30px 20px; }
 }
 .intro-art {
   position:relative;
-  width:min(100vw,calc(100dvh * 928 / 1648));
-  height:auto;
-  aspect-ratio:928 / 1648;
+  width:100%;
+  height:100%;
+  aspect-ratio:auto;
   flex:0 0 auto;
   overflow:hidden;
 }
@@ -276,7 +276,7 @@ section { padding:30px 20px; }
   display:block;
   width:100%;
   height:100%;
-  object-fit:contain;
+  object-fit:fill;
 }
 .effect-layer {
   position:absolute; inset:0; overflow:hidden;
