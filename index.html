@@ -787,6 +787,9 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   background:#fff; color:var(--text); font-size:15px;
   line-height:1.5; white-space:pre-line;
 }
+.character-description .legend-ability-title {
+  display:block; margin-top:2px; color:#a64a18; font-weight:800;
+}
 .detail-bottom { margin-top:28px; text-align:center; }
 .detail-bottom .detail-back { margin-bottom:0; }
 @media (min-width:700px) {
@@ -1167,6 +1170,23 @@ const ddboaqDescription =
   "배고픔을 참지못해 항상 음식을 찾고 먹고 또 먹는다. 어떤 이유인지는 모르지만 항상 배가 고파 한없이 먹지만 해결이 안된다. 악귀중 가장 덩치가 크다.";
 
 /* 캐릭터 이미지 목록 불러오기: JSON 파일 사용 */
+function renderCharacterDescription(element, description, characterName) {
+  if (!element) return;
+  element.textContent = description;
+  if (characterName !== "sero") return;
+  const lines = description.split("\n");
+  const abilityIndex = lines.findIndex(line => /^(고유 능력|Special Ability|专属能力|固有能力|Năng lực đặc biệt)\s*\|/.test(line));
+  if (abilityIndex < 0) return;
+  element.textContent = lines.slice(0, abilityIndex).join("\n");
+  const title = document.createElement("strong");
+  title.className = "legend-ability-title";
+  title.textContent = lines[abilityIndex];
+  element.appendChild(title);
+  if (lines.length > abilityIndex + 1) {
+    element.appendChild(document.createTextNode("\n" + lines.slice(abilityIndex + 1).join("\n")));
+  }
+}
+
 async function createGallery(galleryId, images, description) {
   const gallery = document.getElementById(galleryId);
   if (!gallery) return;
@@ -1206,13 +1226,13 @@ async function createGallery(galleryId, images, description) {
     if (index === 0 && description) {
       const descriptionBox = document.createElement("div");
       descriptionBox.className = "character-description";
-      descriptionBox.textContent = description;
+      renderCharacterDescription(descriptionBox, description, characterName);
       gallery.appendChild(descriptionBox);
     }
   });
   const localized = (pageTranslations[activeLanguage] || pageTranslations.ko).details[characterName];
   const descriptionElement = gallery.querySelector(".character-description");
-  if (localized && descriptionElement) descriptionElement.textContent = localized[2];
+  if (localized && descriptionElement) renderCharacterDescription(descriptionElement, localized[2], characterName);
 }
 
 createGallery("sero-gallery",seroImages,seroDescription);
@@ -1628,7 +1648,7 @@ function applyPageTranslations(language) {
     if (intro) intro.textContent = data[1];
     const gallery = page.querySelector(".character-gallery");
     const description = gallery && gallery.querySelector(".character-description");
-    if (description) description.textContent = data[2];
+    if (description) renderCharacterDescription(description, data[2], id);
     const label = heading.querySelector(".label");
     if (label) label.textContent = t.characterLabel;
   });
