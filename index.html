@@ -583,18 +583,12 @@ section { padding:30px 20px; }
   gap:8px;
 }
 
-/* 모바일: 도감 제목은 한 줄로 유지하고 제목 부분만 좌우 스와이프 */
+/* 모바일: 번역된 도감 제목 전체 표시, 버튼은 아래 오른쪽 */
 @media (max-width: 600px) {
-  .bestiary-title-row { flex-wrap:nowrap; justify-content:flex-start; }
-  .bestiary-title {
-    flex:1 1 auto; min-width:0; max-width:100%;
-    overflow-x:auto; overflow-y:hidden;
-    white-space:nowrap; -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;
-  }
-  .bestiary-title::-webkit-scrollbar { display:none; }
-  .bestiary-title .title-k { flex:0 0 auto; }
-  .bestiary-title .title-text { flex:0 0 auto; }
+  .bestiary-title-row { flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+  .bestiary-title { flex:0 0 100%; width:100%; min-width:0; overflow:visible; white-space:nowrap; }
+  .bestiary-title .title-k { flex:0 0 auto; font-size:clamp(28px, 7.5vw, 39px); }
+  .bestiary-title .title-text { flex:0 1 auto; min-width:0; font-size:clamp(16px, 5.6vw, 30px); letter-spacing:-1.3px; }
 }
 .language-selector {
   position:relative;
