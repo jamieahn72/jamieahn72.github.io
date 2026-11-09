@@ -793,7 +793,7 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 .character-description .legend-ability-label { color:#a64a18; }
 .character-description .legend-ability-separator { color:var(--text); font-weight:800; }
 .character-description .legend-ability-name { color:#777b80; }
-.character-description .legend-ability-text { display:block; margin-top:0; }
+.character-description .legend-ability-text { display:block; margin-top:1.5em; }
 .detail-bottom { margin-top:28px; text-align:center; }
 .detail-bottom .detail-back { margin-bottom:0; }
 @media (min-width:700px) {
@@ -876,28 +876,6 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
     </button>
   </div>
 </div>
-
-<!-- 인트로 입장 독립 처리: 다른 스크립트 오류와 무관하게 작동 -->
-<script>
-(function () {
-  const button = document.getElementById("intro-enter");
-  if (!button) return;
-  button.addEventListener("click", function (event) {
-    event.stopImmediatePropagation();
-    const intro = document.getElementById("intro-screen");
-    const home = document.getElementById("home-page");
-    if (intro) { intro.classList.add("hide"); intro.style.display = "none"; }
-    document.body.classList.remove("intro-active");
-    if (home) home.style.display = "block";
-    const nav = document.getElementById("bottom-nav");
-    if (nav) nav.style.display = "grid";
-    const footer = document.getElementById("page-footer");
-    if (footer) footer.style.display = "block";
-    history.replaceState(null, "", location.pathname + "#world");
-    window.scrollTo(0, 0);
-  });
-})();
-</script>
 
 <!-- 홈페이지 -->
 <main id="home-page">
@@ -1181,7 +1159,12 @@ const chesyDescription = "엄격한 규율 속에 따뜻한 마음을 숨긴, Km
 
 const cheryDescription = "자신이 세상에서 가장 예쁘다고 믿는, Kmon팀의 사랑스러운 공주님.\n\n처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 남다른 공주병 기질을 가진 귀신이다. 관심과 칭찬을 받는 것을 무엇보다 좋아하며, 주목받지 못하면 금세 시무룩해지는 귀여운 성격의 소유자다.\n\n하지만 밝고 다정한 성격 덕분에 개성 강한 Kmon팀의 동료들 사이를 이어주는 가교 역할도 한다. 때로는 제멋대로인 작은 공주님이지만, 팀의 분위기를 부드럽게 만들고 화합을 이끄는 없어서는 안 될 존재다.";
 
-const chemiDescription = "말괄량이지만 실력만큼은 최고! Kmon팀의 작은 해결사 체미.\n\n처녀귀신 세자매의 막내인 체미는 호기심 많고 장난기 넘치는 말괄량이 귀신이다. 언제나 좌충우돌하며 크고 작은 소동을 일으키지만, 특유의 재빠른 몸놀림과 행동력으로 위기의 순간마다 놀라운 활약을 펼친다.\n\n악귀 소탕에서는 누구보다 앞장서는 Kmon팀의 일등공신이다. 평소에는 사고뭉치처럼 보이지만, 임무를 수행할 때만큼은 누구보다 믿음직한 존재로, 과묵한 리더 세로가 가장 신임하는 팀원이기도 하다.";
+const chemiDescription =
+  "처녀귀신 세자매의 막내이며 말광량이 같은 성격의 소유자다.\n" +
+  "좌충우돌하지만 매우 재빠르며 악귀들 소탕하는데 1등공신이며 세로가 가장 신임하는 존재이다.";
+
+const eggDescription =
+  "불우한 닭장에서 태어난 '달걀귀' 매우 빠른 몸놀림을 가지고 있으며 조금 촐싹거린다.";
 
 const dumbooDescription =
   "몽달귀신(총각귀신)인 덤부(Dumboo), 이성이 좋아하지 않은 외모로 101번째 프로포즈를 하다가 집으로 돌아오는 길에 교통사고로 귀신이 되었다.\n" +
@@ -1547,7 +1530,7 @@ const pageTranslations = {
       sero:["세로(Sero)","Kmon팀의 리더(저승사자)","저승의 명령을 수행하는 고독한 사신, Kmon팀의 리더 세로.\n\n세로는 귀신들을 관장하는 저승사자이자 Kmon팀을 이끄는 리더다. 염라대왕의 명을 받아 한국 곳곳에 숨어 있는 악귀들을 소탕하는 임무를 맡고 있다.\n\n하지만 임무는 생각처럼 쉽지 않다. 함께하는 팀원 체시, 체리, 체미, 덤부는 저마다 개성이 넘치지만 정작 악귀를 소탕할 때는 그다지 도움이 되지 않는다. 결국 중요한 순간마다 세로가 직접 나서서 일을 해결해야 한다.\n\n늘 무표정하고 과묵한 세로는 시끌벅적한 팀원들 사이에서도 혼자 있는 시간을 좋아한다. 고독을 즐기는 성격 탓에 좀처럼 속마음을 드러내지 않지만, 누구보다 자신의 임무에 충실하다.\n\n세로의 망토 안에는 언제든 꺼내 사용할 수 있는 권총이 숨겨져 있다. 평소에는 조용히 모습을 감추고 있지만, 악귀를 상대해야 할 순간이 오면 망토 속 권총과 함께 냉철한 저승사자의 본모습을 드러낸다.\n\n고유 능력 | 절대 소유물 수호\n내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다."],
       chesy:["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)","엄격한 규율 속에 따뜻한 마음을 숨긴, Kmon팀의 든든한 맏언니 체시.\n\n처녀귀신 세자매의 맏언니인 체시는 Kmon팀에서 기숙사 사감 같은 존재다. 언제나 흐트러짐 없는 태도로 팀원들을 관리하며, 규칙과 질서를 중요하게 생각한다.\n\n평소에는 작은 실수도 그냥 넘어가지 않는 깐깐한 규율부장처럼 행동한다. 제멋대로인 팀원들에게 잔소리를 늘어놓기도 하지만, 사실 그 속에는 누구보다 동료들을 아끼는 따뜻한 마음이 숨어 있다.\n\n무뚝뚝한 말투와 엄격한 행동 때문에 차갑게 보일 때도 있지만, 정작 누군가 어려움에 처하면 누구보다 먼저 나서서 챙겨주는 츤데레 같은 성격의 소유자다.\n\nKmon팀의 안살림을 책임지는 체시는 개성 강한 팀원들이 함께 지낼 수 있도록 중심을 잡아주는 든든한 맏언니다. 때로는 잔소리꾼, 때로는 보호자처럼 팀을 지탱하는 없어서는 안 될 존재다."],
       chery:["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째","자신이 세상에서 가장 예쁘다고 믿는, Kmon팀의 사랑스러운 공주님.\n\n처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 남다른 공주병 기질을 가진 귀신이다. 관심과 칭찬을 받는 것을 무엇보다 좋아하며, 주목받지 못하면 금세 시무룩해지는 귀여운 성격의 소유자다.\n\n하지만 밝고 다정한 성격 덕분에 개성 강한 Kmon팀의 동료들 사이를 이어주는 가교 역할도 한다. 때로는 제멋대로인 작은 공주님이지만, 팀의 분위기를 부드럽게 만들고 화합을 이끄는 없어서는 안 될 존재다."],
-      chemi:["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)","말괄량이지만 실력만큼은 최고! Kmon팀의 작은 해결사 체미.\n\n처녀귀신 세자매의 막내인 체미는 호기심 많고 장난기 넘치는 말괄량이 귀신이다. 언제나 좌충우돌하며 크고 작은 소동을 일으키지만, 특유의 재빠른 몸놀림과 행동력으로 위기의 순간마다 놀라운 활약을 펼친다.\n\n악귀 소탕에서는 누구보다 앞장서는 Kmon팀의 일등공신이다. 평소에는 사고뭉치처럼 보이지만, 임무를 수행할 때만큼은 누구보다 믿음직한 존재로, 과묵한 리더 세로가 가장 신임하는 팀원이기도 하다."],
+      chemi:["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)","처녀귀신 세자매의 막내이며 말광량이 같은 성격의 소유자다.\n좌충우돌하지만 매우 재빠르며 악귀들 소탕하는데 1등공신이며 세로가 가장 신임하는 존재이다."],
       egg:["달걀귀","악귀 : 달걀귀신","불우한 닭장에서 태어난 '달걀귀' 매우 빠른 몸놀림을 가지고 있으며 조금 촐싹거린다."],
       dumboo:["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)","몽달귀신(총각귀신)인 덤부(Dumboo), 이성이 좋아하지 않은 외모로 101번째 프로포즈를 하다가 집으로 돌아오는 길에 교통사고로 귀신이 되었다.\n지금은 Kmon팀원이 되어 악귀 소탕하는 일에 전념하고 있으며 힘이 쎄다."],
       ddboaq:["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀","배고픔을 참지못해 항상 음식을 찾고 먹고 또 먹는다. 어떤 이유인지는 모르지만 항상 배가 고파 한없이 먹지만 해결이 안된다. 악귀중 가장 덩치가 크다."]
@@ -1573,7 +1556,7 @@ const pageTranslations = {
       sero:["Sero","Leader of the Kmon team (Grim Reaper)","A solitary reaper carrying out the orders of the underworld, Sero leads the Kmon team.\n\nSero is a grim reaper who oversees ghosts. Under orders from the King of the Underworld, he is tasked with eliminating evil spirits lurking throughout Korea.\n\nBut the mission is far from easy. His teammates Chesy, Chery, Chemi, and Dumboo each have their own strong personalities, yet they are rarely much help when it comes to hunting evil spirits. In the end, Sero often has to handle the crucial moments himself.\n\nQuiet and usually expressionless, Sero prefers solitude even amid his noisy teammates. He rarely reveals his feelings, but remains devoted to his duty.\n\nA pistol is concealed beneath his cloak, ready to be drawn when needed. Usually reserved, Sero reveals the cold, decisive side of a true grim reaper when facing evil spirits.\n\nSpecial Ability | Guardian of treasured possessions\nProtects the precious things you own so they are not lost or taken away, whatever happens."],
       chesy:["Chesy","Eldest of the three sisters (Virgin Ghost)","The dependable eldest sister of the Kmon team, Chesy hides a warm heart beneath her strict rules.\n\nThe eldest of three ghost sisters, Chesy is like a stern dormitory supervisor within the Kmon team. She keeps everyone in line and values order and discipline.\n\nShe acts like a demanding prefect who overlooks no small mistake. She often scolds her unruly teammates, but beneath those sharp words lies genuine affection for them.\n\nHer blunt manner and strict behavior can make her seem cold. Yet whenever someone is in trouble, she is the first to look after them—a true tsundere at heart.\n\nResponsible for the team's day-to-day affairs, Chesy keeps its strong-willed members together. Sometimes a nag, sometimes a guardian, she is an indispensable big sister to the Kmon team."],
       chery:["Chery","Kmon team member, second of the three virgin ghost sisters","The Kmon team's lovable princess, Chery believes she is the prettiest in the world.\n\nThe middle of three ghost sisters, Chery is an adorable ghost with a princess-like personality. She loves attention and compliments more than anything, and quickly sulks when nobody notices her.\n\nYet her cheerful, caring nature makes her a bridge between the Kmon team's strong-willed members. Though sometimes a spoiled little princess, she softens the mood and helps keep the team together."],
-      chemi:["Chemi","Youngest of the three sisters (Virgin Ghost)","A mischievous troublemaker with remarkable skills! Chemi is the Kmon team's little problem-solver.\n\nThe youngest of the three ghost sisters, Chemi is curious, playful, and always causing a commotion. Yet her incredible speed and quick reactions allow her to shine whenever danger strikes.\n\nShe leads the charge in hunting down evil spirits and is one of the team's greatest assets. She may seem like a troublemaker, but on missions she is exceptionally dependable—and the teammate whom quiet leader Sero trusts most."],
+      chemi:["Chemi","Youngest of the three sisters (Virgin Ghost)","The youngest of the three virgin-ghost sisters, Chemi has a mischievous personality.\nShe is lively and incredibly fast, making her a major force in hunting evil spirits and the teammate Sero trusts most."],
       egg:["Egg Ghost","Evil spirit: Egg Ghost","Born in a poor chicken coop, Egg Ghost moves very quickly and can be a little hyperactive."],
       dumboo:["Dumboo","Kmon team member (Bachelor Ghost)","Dumboo is a bachelor ghost. After being rejected for his looks and making his 101st marriage proposal, he became a ghost in a traffic accident on his way home.\nNow a member of the Kmon team, he devotes himself to hunting evil spirits and is very strong."],
       ddboaq:["Hungry Monster","Evil spirit: Hungry Monster","Unable to endure hunger, this monster is always searching for food, eating and eating again. For reasons unknown, it is constantly hungry and never seems full. It is the largest of the evil spirits."]
@@ -1598,7 +1581,7 @@ const pageTranslations = {
       sero:["Sero","Kmon 团队的首领（死神）","奉冥界之命行动的孤独死神——Kmon 团队的首领 Sero。\n\nSero 是掌管鬼魂的死神，也是 Kmon 团队的领袖。他奉阎罗大王之命，负责清除潜藏在韩国各地的恶鬼。\n\n然而任务并不轻松。队友 Chesy、Chery、Chemi 和 Dumboo 虽然个性鲜明，但在消灭恶鬼时往往帮不上太多忙。关键时刻，最终还是得由 Sero 亲自解决问题。\n\nSero 总是面无表情、沉默寡言。即使身处吵闹的队友之间，他也更喜欢独处。他很少表露内心，却始终忠于自己的使命。\n\n他的斗篷下藏着一把随时可以拔出的手枪。平时沉默低调的他，一旦面对恶鬼，便会展现出冷静果断的死神本色。\n\n专属能力 | 绝对守护所有物\n无论发生什么，都守护你珍贵的物品，避免遗失或被夺走。"],
       chesy:["Chesy","三姐妹中的大姐（处女鬼）","Kmon 团队可靠的大姐 Chesy，在严格的规矩之下藏着一颗温暖的心。\n\n身为幽灵三姐妹中的大姐，Chesy 在 Kmon 团队里就像一位严厉的宿舍管理员。她时刻约束队员，十分重视纪律与秩序。\n\n平日里，她像个连小错误都不放过的纪律委员，经常唠叨那些随心所欲的队友。但在严厉的言语背后，藏着比谁都关心伙伴的温柔。\n\n她说话直率、行事严格，有时显得冷淡。可一旦有人遇到困难，她总会第一个伸出援手，是个典型的傲娇性格。\n\nChesy 负责 Kmon 团队的日常事务，让个性鲜明的成员们能够和睦相处。她时而唠叨，时而像守护者一样照顾大家，是团队不可或缺的可靠大姐。"],
       chery:["Chery","三姐妹中的二姐（处女鬼）","坚信自己是世界上最美丽的存在，Chery 是 Kmon 团队可爱的小公主。\n\n身为幽灵三姐妹中的二姐，Chery 外表可爱，带着十足的公主脾气。她最喜欢得到关注和赞美，一旦没人注意她，就会立刻闷闷不乐。\n\n不过，她开朗又体贴，能够在个性鲜明的 Kmon 队员之间充当桥梁。虽然偶尔像个任性的小公主，但她总能缓和气氛，促进团队的团结。"],
-      chemi:["Chemi","三姐妹中的小妹（处女鬼）","虽然调皮捣蛋，实力却是一流！Chemi 是 Kmon 团队的小小行动派。\n\n作为幽灵三姐妹中的小妹，Chemi 好奇心旺盛，活泼淘气，总是横冲直撞，惹出各种小乱子。但凭借敏捷的身手和迅速的行动，她总能在危急时刻大显身手。\n\n清除恶鬼时，她总是冲在最前面，是 Kmon 团队的头号功臣。平时看似是个捣蛋鬼，执行任务时却格外可靠，也是沉默寡言的队长 Sero 最信赖的队员。"],
+      chemi:["Chemi","三姐妹中的小妹（处女鬼）","Chemi 是处女鬼三姐妹中最小的妹妹，性格调皮活泼。\n她行动敏捷，是清除恶鬼的重要功臣，也是 Sero 最信任的伙伴。"],
       egg:["蛋鬼","恶鬼：蛋鬼","蛋鬼出生于贫困的鸡舍，动作非常敏捷，性格有些活泼好动。"],
       dumboo:["Dumboo","Kmon 团队成员（单身鬼）","Dumboo 是单身鬼。因为外貌不受异性欢迎，在第 101 次求婚失败后，回家途中遭遇车祸而成为鬼魂。\n如今他加入 Kmon 团队，专心清除恶鬼，而且力气很大。"],
       ddboaq:["贪食怪物","恶鬼：贪食怪物","它无法忍受饥饿，总是在寻找食物，不停地吃。原因不明，它始终饥肠辘辘，怎么吃也吃不饱，是恶鬼中体型最大的。"]
@@ -1623,7 +1606,7 @@ const pageTranslations = {
       sero:["Sero","Kmonチームのリーダー（死神）","冥界の命令を遂行する孤独な死神、Kmonチームのリーダー・セロ。\n\nセロは幽霊たちを取り仕切る死神であり、Kmonチームを率いるリーダーだ。閻魔大王の命を受け、韓国各地に潜む悪霊を退治する任務を担っている。\n\nしかし任務は一筋縄ではいかない。仲間のチェシ、チェリ、チェミ、ダンブーはそれぞれ個性豊かだが、悪霊退治となるとあまり頼りにならない。結局、肝心な場面ではセロ自身が動かなければならない。\n\nいつも無表情で寡黙なセロは、にぎやかな仲間たちの中でも一人の時間を好む。感情をめったに表に出さないが、誰よりも任務に忠実だ。\n\nそのマントの内側には、いつでも取り出せる拳銃が隠されている。普段は静かなセロも、悪霊と対峙する瞬間には、冷静で容赦のない死神としての本性を見せる。\n\n固有能力 | 大切な持ち物の絶対守護\nどんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。"],
       chesy:["Chesy","三姉妹の長女（処女幽霊）","厳しい規律の奥に温かな心を隠した、Kmonチームの頼れる長女・チェシ。\n\n幽霊三姉妹の長女チェシは、Kmonチームではまるで寮の厳しい管理人のような存在だ。いつも仲間たちをきちんとまとめ、規則と秩序を大切にしている。\n\n普段は小さなミスも見逃さない風紀委員のように振る舞い、自由奔放な仲間たちに小言を言うことも多い。しかし、その厳しさの裏には誰よりも仲間を思う優しさが隠れている。\n\nぶっきらぼうな口調と厳しい態度で冷たく見えることもあるが、誰かが困っていると真っ先に世話を焼く、ツンデレな性格の持ち主だ。\n\nチームの身の回りのことを担うチェシは、個性豊かな仲間たちを支える頼もしいお姉さん。時には口うるさく、時には保護者のように皆を見守る、なくてはならない存在だ。"],
       chery:["Chery","三姉妹の次女（処女幽霊）","自分が世界でいちばんかわいいと信じる、Kmonチームの愛らしいお姫様・チェリ。\n\n幽霊三姉妹の次女チェリは、かわいらしい見た目とお姫様気質を持つ幽霊だ。注目されたり褒められたりすることが何より好きで、誰にも構ってもらえないとすぐにしょんぼりしてしまう。\n\nけれど明るく思いやりのある性格で、個性豊かなKmonチームの仲間たちをつなぐ架け橋でもある。時にはわがままな小さなお姫様だが、場を和ませ、チームの絆を深める欠かせない存在だ。"],
-      chemi:["Chemi","三姉妹の末っ子（処女幽霊）","おてんばだけど実力はピカイチ！Kmonチームの小さな切り込み隊長、チェミ。\n\n幽霊三姉妹の末っ子チェミは、好奇心旺盛でいたずら好きなおてんば幽霊。いつもあちこちで騒動を起こすが、持ち前の素早い身のこなしと行動力で、ピンチのたびに目覚ましい活躍を見せる。\n\n悪霊退治では誰よりも先頭に立つ、Kmonチームの一番の功労者だ。普段はトラブルメーカーに見えても、任務では誰より頼りになる存在で、寡黙なリーダーのセロが最も信頼する仲間でもある。"],
+      chemi:["Chemi","三姉妹の末っ子（処女幽霊）","処女幽霊三姉妹の末っ子で、いたずら好きな性格です。\nとても素早く、悪霊退治の大きな戦力であり、Seroが最も信頼する仲間です。"],
       egg:["卵鬼","悪霊：卵鬼","恵まれない鶏小屋で生まれた卵鬼は、動きがとても素早く、少し落ち着きのない性格です。"],
       dumboo:["Dumboo","Kmonチームのメンバー（独身幽霊）","Dumbooは独身幽霊です。異性に好まれない外見のため101回目のプロポーズにも失敗し、帰宅途中の交通事故で幽霊になりました。\n現在はKmonチームの一員となり、悪霊退治に専念しています。力持ちです。"],
       ddboaq:["Hungry Monster","悪霊：大食いモンスター","空腹に耐えられず、いつも食べ物を探しては食べ続けます。理由は不明ですが、いくら食べても満腹になりません。悪霊の中で最も大きな体をしています。"]
@@ -1648,7 +1631,7 @@ const pageTranslations = {
       sero:["Sero","Thủ lĩnh đội Kmon (Thần chết)","Sero, thần chết cô độc thực thi mệnh lệnh của âm giới, là thủ lĩnh đội Kmon.\n\nSero là thần chết cai quản các linh hồn và dẫn dắt đội Kmon. Theo lệnh Diêm Vương, anh có nhiệm vụ tiêu diệt những ác quỷ ẩn náu khắp Hàn Quốc.\n\nNhưng nhiệm vụ không hề dễ dàng. Các đồng đội Chesy, Chery, Chemi và Dumboo đều có cá tính riêng, song lại chẳng giúp được bao nhiêu khi săn lùng ác quỷ. Đến những thời khắc quan trọng, Sero thường phải tự mình giải quyết mọi chuyện.\n\nÍt nói và luôn giữ vẻ mặt lạnh lùng, Sero thích ở một mình ngay cả giữa những đồng đội ồn ào. Anh hiếm khi bộc lộ cảm xúc nhưng luôn tận tụy với nhiệm vụ.\n\nBên dưới áo choàng của Sero giấu một khẩu súng ngắn, sẵn sàng rút ra khi cần. Bình thường anh lặng lẽ, nhưng khi đối mặt ác quỷ, anh bộc lộ bản lĩnh lạnh lùng và quyết đoán của một thần chết thực thụ.\n\nNăng lực đặc biệt | Bảo vệ tuyệt đối vật sở hữu\nBảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào."],
       chesy:["Chesy","Chị cả trong ba chị em (Ma nữ)","Chesy, người chị cả đáng tin cậy của đội Kmon, giấu trái tim ấm áp sau vẻ ngoài nghiêm khắc.\n\nLà chị cả trong ba chị em ma nữ, Chesy giống như một quản lý ký túc xá nghiêm nghị của đội Kmon. Cô luôn giữ mọi người trong khuôn phép và coi trọng trật tự, kỷ luật.\n\nHằng ngày, cô hành xử như một trưởng ban kỷ luật khó tính, không bỏ qua cả những lỗi nhỏ. Cô thường cằn nhằn các đồng đội bướng bỉnh, nhưng đằng sau những lời nghiêm khắc ấy là sự quan tâm chân thành.\n\nCách nói chuyện thẳng thừng khiến cô đôi khi có vẻ lạnh lùng. Thế nhưng, khi ai đó gặp khó khăn, Chesy luôn là người đầu tiên đến chăm sóc—đúng kiểu ngoài lạnh trong nóng.\n\nPhụ trách mọi việc nội bộ của đội Kmon, Chesy giúp các thành viên cá tính mạnh gắn bó với nhau. Đôi khi hay càm ràm, đôi khi như một người bảo hộ, cô là người chị cả không thể thiếu của cả đội."],
       chery:["Chery","Chị thứ hai trong ba chị em ma nữ","Chery, nàng công chúa đáng yêu của đội Kmon, luôn tin mình là người xinh đẹp nhất thế giới.\n\nLà người chị thứ hai trong ba chị em ma nữ, Chery có vẻ ngoài dễ thương và tính cách điệu đà như công chúa. Cô thích được chú ý và khen ngợi hơn bất cứ điều gì, và nhanh chóng xị mặt khi không ai để ý đến mình.\n\nTuy nhiên, tính cách vui vẻ và ân cần giúp cô trở thành cầu nối giữa các thành viên cá tính mạnh của đội Kmon. Dù đôi lúc hơi đỏng đảnh, nàng công chúa nhỏ này luôn biết cách làm dịu bầu không khí và gắn kết cả đội."],
-      chemi:["Chemi","Em út trong ba chị em (Ma nữ)","Tinh nghịch nhưng tài năng xuất sắc! Chemi là cô nàng giải quyết rắc rối bé nhỏ của đội Kmon.\n\nLà em út trong ba chị em ma nữ, Chemi rất tò mò, hiếu động và thích nghịch ngợm. Cô thường gây ra đủ chuyện náo loạn, nhưng nhờ sự nhanh nhẹn và khả năng hành động tức thì, cô luôn tỏa sáng vào những lúc nguy cấp.\n\nTrong các cuộc truy quét ác quỷ, Chemi luôn xông lên trước và là một trong những người lập công lớn nhất của đội Kmon. Dù thường trông như một cô nàng chuyên gây rắc rối, khi làm nhiệm vụ cô lại vô cùng đáng tin cậy và chính là thành viên được thủ lĩnh ít nói Sero tin tưởng nhất."],
+      chemi:["Chemi","Em út trong ba chị em (Ma nữ)","Chemi là em út trong ba chị em ma nữ và có tính cách tinh nghịch.\nCô rất nhanh nhẹn, đóng góp lớn trong việc tiêu diệt ác quỷ và là người được Sero tin tưởng nhất."],
       egg:["Ma trứng","Ác quỷ: Ma trứng","Sinh ra trong một chuồng gà nghèo khó, Ma trứng di chuyển rất nhanh và hơi hiếu động."],
       dumboo:["Dumboo","Thành viên đội Kmon (Ma nam)","Dumboo là một ma nam. Vì ngoại hình không được người khác giới yêu thích, sau lần cầu hôn thứ 101 thất bại, anh gặp tai nạn giao thông trên đường về nhà và trở thành ma.\nHiện anh là thành viên đội Kmon, chuyên tâm tiêu diệt ác quỷ và có sức mạnh lớn."],
       ddboaq:["Hungry Monster","Ác quỷ: Quái vật háu ăn","Không thể chịu được cơn đói, nó luôn tìm thức ăn và ăn liên tục. Không rõ lý do, nó lúc nào cũng đói và không bao giờ thấy no. Đây là ác quỷ có thân hình lớn nhất."]
@@ -1778,12 +1761,7 @@ document.addEventListener("click", (event) => {
 
 // 저장된 언어 불러오기
 const savedLanguage = localStorage.getItem("kmon-language") || "ko";
-// 번역 중 오류가 나더라도 입장·탐색 버튼 초기화는 계속 진행한다.
-try {
-  setLanguage(savedLanguage);
-} catch (error) {
-  console.error("Kmon language initialization failed:", error);
-}
+setLanguage(savedLanguage);
 /* 입장 버튼 */
 const introScreen = document.getElementById("intro-screen");
 const introEnter = document.getElementById("intro-enter");
