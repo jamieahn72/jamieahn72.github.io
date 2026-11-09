@@ -788,8 +788,11 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   line-height:1.5; white-space:pre-line;
 }
 .character-description .legend-ability-title {
-  display:block; margin-top:2px; color:#3f4145; font-weight:800;
+  display:block; margin-top:0; font-weight:800;
 }
+.character-description .legend-ability-label { color:#a64a18; }
+.character-description .legend-ability-name { color:#3f4145; }
+.character-description .legend-ability-text { display:block; }
 .detail-bottom { margin-top:28px; text-align:center; }
 .detail-bottom .detail-back { margin-bottom:0; }
 @media (min-width:700px) {
@@ -1180,10 +1183,20 @@ function renderCharacterDescription(element, description, characterName) {
   element.textContent = lines.slice(0, abilityIndex).join("\n");
   const title = document.createElement("strong");
   title.className = "legend-ability-title";
-  title.textContent = lines[abilityIndex];
+  const parts = lines[abilityIndex].split("|");
+  const label = document.createElement("span");
+  label.className = "legend-ability-label";
+  label.textContent = parts[0].trim() + " | ";
+  const name = document.createElement("span");
+  name.className = "legend-ability-name";
+  name.textContent = parts.slice(1).join("|").trim();
+  title.append(label, name);
   element.appendChild(title);
   if (lines.length > abilityIndex + 1) {
-    element.appendChild(document.createTextNode("\n" + lines.slice(abilityIndex + 1).join("\n")));
+    const abilityText = document.createElement("span");
+    abilityText.className = "legend-ability-text";
+    abilityText.textContent = lines.slice(abilityIndex + 1).join("\n");
+    element.appendChild(abilityText);
   }
 }
 
