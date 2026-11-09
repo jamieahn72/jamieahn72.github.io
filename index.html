@@ -256,10 +256,18 @@ section { padding:30px 20px; }
   width:100%; height:100vh; height:100dvh;
   overflow:hidden; background:#17131c;
 }
+.intro-screen::before {
+  content:"";
+  position:absolute;
+  inset:-28px;
+  background:url("kmon-intro.webp") center center / cover no-repeat;
+  filter:blur(22px) brightness(.72);
+  pointer-events:none;
+}
 .intro-art {
   position:relative;
-  width:max(100vw,calc(100dvh * 928 / 1648));
-  height:max(100dvh,calc(100vw * 1648 / 928));
+  width:min(100vw,calc(100dvh * 928 / 1648));
+  height:auto;
   aspect-ratio:928 / 1648;
   flex:0 0 auto;
   overflow:hidden;
@@ -268,7 +276,7 @@ section { padding:30px 20px; }
   display:block;
   width:100%;
   height:100%;
-  object-fit:fill;
+  object-fit:contain;
 }
 .effect-layer {
   position:absolute; inset:0; overflow:hidden;
