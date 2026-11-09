@@ -1900,7 +1900,14 @@ function updatePage() {
   document.getElementById("page-footer").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "block";
   document.getElementById("bottom-nav").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "grid";
   if (isIndexPage) renderMonsterIndex(monsterIndexPage);
-  window.scrollTo(0,0);
+  if (hash === "#bestiary" || hash === "#cards") {
+    requestAnimationFrame(() => {
+      const section = document.querySelector(hash);
+      if (section) section.scrollIntoView({block:"start",behavior:"instant"});
+    });
+  } else {
+    window.scrollTo(0,0);
+  }
 }
 window.addEventListener("hashchange",updatePage);
 updatePage();
@@ -2092,8 +2099,12 @@ renderKmonCards();
   home.style.display = "block";
   if (nav) nav.style.display = "grid";
   if (footer) footer.style.display = "block";
-  history.replaceState(null, "", location.pathname + "#world");
-  window.scrollTo(0, 0);
+  if (!location.hash) {
+    history.replaceState(null, "", location.pathname + "#world");
+    window.scrollTo(0, 0);
+  } else {
+    updatePage();
+  }
 })();
 </script>
 </body>
