@@ -540,6 +540,15 @@ section { padding:30px 20px; }
 }
 /* 모바일은 최종 이미지 속 한글 버튼을 그대로 보여주고 투명 클릭 영역만 사용 */
 @media (max-width:767px) {
+  /* 최종 모바일 인트로 원본 비율을 보존하여 캐릭터 잘림과 왜곡 방지 */
+  .intro-art {
+    width:min(100vw, calc(100dvh * 874 / 1799));
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+  .intro-screen::before { background-image:url("KMON_intro_final_optimized.webp"); }
+  /* 원본 이미지 중앙의 한글 입장 버튼 위치에 맞춘 투명 클릭 영역 */
+  .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
   .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
   .intro-enter::before { border-color:transparent; box-shadow:none; }
   .intro-enter::after { opacity:.22; }
@@ -873,7 +882,7 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 <div class="intro-screen" id="intro-screen">
   <div class="intro-art">
     <picture>
-      <source media="(max-width: 767px)" srcset="KMON_intro_final.webp?v=20261110-3">
+      <source media="(max-width: 767px)" srcset="KMON_intro_final_optimized.webp?v=20261110-4">
       <img class="intro-image" src="kmon-intro.webp" alt="Kmon 인트로">
     </picture>
     <div class="effect-layer" aria-hidden="true">
