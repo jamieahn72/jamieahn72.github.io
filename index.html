@@ -788,7 +788,7 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   line-height:1.5; white-space:pre-line;
 }
 .character-description .legend-ability-title {
-  display:block; margin-top:0; font-weight:800;
+  display:block; margin-top:1.5em; font-weight:800;
 }
 .character-description .legend-ability-label { color:#a64a18; }
 .character-description .legend-ability-separator { color:var(--text); font-weight:800; }
@@ -1181,7 +1181,7 @@ function renderCharacterDescription(element, description, characterName) {
   const lines = description.split("\n");
   const abilityIndex = lines.findIndex(line => /^(고유 능력|Special Ability|专属能力|固有能力|Năng lực đặc biệt)\s*\|/.test(line));
   if (abilityIndex < 0) return;
-  element.textContent = lines.slice(0, abilityIndex).join("\n");
+  element.textContent = lines.slice(0, abilityIndex).join("\n").trimEnd();
   const title = document.createElement("strong");
   title.className = "legend-ability-title";
   const parts = lines[abilityIndex].split("|");
