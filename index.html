@@ -1842,7 +1842,8 @@ function enterKmonWorld() {
 }
 introEnter.addEventListener("click",enterKmonWorld);
 // 이미 입장한 페이지를 새로고침하면 인트로를 건너뛰고 현재 위치를 유지한다.
-const returningFromWorld = new URLSearchParams(window.location.search).get("from") === "world" || sessionStorage.getItem("kmon_world_return") === "1" || sessionStorage.getItem("kmon_intro_entered") === "1";
+const isPageReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+const returningFromWorld = new URLSearchParams(window.location.search).get("from") === "world" || sessionStorage.getItem("kmon_world_return") === "1" || (isPageReload && sessionStorage.getItem("kmon_intro_entered") === "1");
 const existingPageHash = window.location.hash;
 if (returningFromWorld || existingPageHash) {
   sessionStorage.removeItem("kmon_world_return");
