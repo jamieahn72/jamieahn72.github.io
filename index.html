@@ -583,12 +583,18 @@ section { padding:30px 20px; }
   gap:8px;
 }
 
-/* 좁은 화면에서는 긴 다국어 도감 제목을 버튼과 분리해 잘림 방지 */
+/* 모바일: 도감 제목은 한 줄로 유지하고 제목 부분만 좌우 스와이프 */
 @media (max-width: 600px) {
-  .bestiary-title-row { flex-wrap:wrap; justify-content:flex-start; gap:8px 10px; }
-  .bestiary-title { flex:0 0 100%; min-width:0; white-space:normal; }
-  .bestiary-title .title-text { overflow-wrap:anywhere; font-size:clamp(23px, 6.4vw, 30px); letter-spacing:-1px; }
-  .bestiary-title .title-k { font-size:clamp(32px, 8.4vw, 39px); }
+  .bestiary-title-row { flex-wrap:nowrap; justify-content:flex-start; }
+  .bestiary-title {
+    flex:1 1 auto; min-width:0; max-width:100%;
+    overflow-x:auto; overflow-y:hidden;
+    white-space:nowrap; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .bestiary-title::-webkit-scrollbar { display:none; }
+  .bestiary-title .title-k { flex:0 0 auto; }
+  .bestiary-title .title-text { flex:0 0 auto; }
 }
 .language-selector {
   position:relative;
