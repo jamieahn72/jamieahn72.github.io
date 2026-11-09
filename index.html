@@ -574,6 +574,16 @@ section { padding:30px 20px; }
 .world-detail-button:hover { background:#F7F2E9; }
 .world-detail-button:focus-visible { outline:3px solid #E58A32; outline-offset:3px; }
 
+.bestiary-toolbar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid rgba(32,43,75,.12); }
+.bestiary-brand { flex:0 0 auto; color:var(--navy); font:900 15px Arial,sans-serif; letter-spacing:-.5px; white-space:nowrap; }
+.bestiary-brand span { color:#65718d; font-size:9px; font-weight:700; letter-spacing:.5px; }
+.bestiary-toolbar-actions { display:flex; align-items:center; justify-content:flex-end; gap:7px; min-width:0; }
+@media (max-width:600px) {
+  .bestiary-title-row { display:block; }
+  .bestiary-title { display:flex; width:100%; min-width:0; overflow:visible; white-space:normal; }
+  .bestiary-title .title-text { overflow-wrap:anywhere; font-size:clamp(20px,6.5vw,30px); }
+  .bestiary-toolbar .language-button,.bestiary-toolbar .pi-login-button { padding:7px 8px; font-size:11px; }
+}
 .bestiary-heading { margin:0; line-height:1; }
   /* 언어 선택 버튼 */
 .bestiary-title-row {
@@ -912,14 +922,9 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   </section>
   <section id="bestiary">
     <div class="bestiary-heading">
-  <div class="label">DISCOVER THE UNKNOWN</div>
-
-  <div class="bestiary-title-row">
-    <h2 class="bestiary-title">
-      <span class="title-k">K</span>
-      <span class="title-text">몬스터 도감</span>
-    </h2>
-
+  <div class="bestiary-toolbar">
+    <span class="bestiary-brand">KMON <span>WORLD</span></span>
+    <div class="bestiary-toolbar-actions">
     <div class="language-selector">
       <button
         class="language-button"
@@ -946,6 +951,14 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
       id="pi-login-button"
       type="button"
     >Pi 로그인</button>
+    </div>
+  </div>
+  <div class="label">DISCOVER THE UNKNOWN</div>
+  <div class="bestiary-title-row">
+    <h2 class="bestiary-title">
+      <span class="title-k">K</span>
+      <span class="title-text">몬스터 도감</span>
+    </h2>
   </div>
 
   <p class="intro">Kmon의 존재들을 하나씩 만나 보세요.</p>
