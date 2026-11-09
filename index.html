@@ -7,7 +7,7 @@
 <title>KMON - Korean Monster Universe</title>
   <script src="https://sdk.minepi.com/pi-sdk.js"></script>
   <script>
-  Pi.init({ version: "2.0", sandbox: true });
+  Pi.init({ version: "2.0", sandbox: false });
 </script>
 <style>
 * { box-sizing: border-box; }
@@ -1951,9 +1951,8 @@ function clearPiLogin() {
 }
 
 if (piLoginButton) {
-  piLoginButton.addEventListener("click", () => {
+  piLoginButton.addEventListener("click", async () => {
     const savedToken = sessionStorage.getItem("pi_access_token");
-
     if (savedToken) {
       if (confirm((pageTranslations[activeLanguage] || pageTranslations.ko).logoutConfirm)) {
         clearPiLogin();
@@ -1962,19 +1961,29 @@ if (piLoginButton) {
       return;
     }
 
-    const state = Array.from(
-      crypto.getRandomValues(new Uint8Array(16)),
-      b => b.toString(16).padStart(2, "0")
-    ).join("");
+    if (!window.Pi || typeof window.Pi.authenticate !== "function") {
+      alert("Pi 로그인 SDK를 불러오지 못했습니다. Pi Browser에서 다시 접속해 주세요.");
+      return;
+    }
 
-    sessionStorage.setItem("pi_login_state", state);
-
-    Pi.signIn({
-      clientId: PI_CLIENT_ID,
-      redirectUri: PI_REDIRECT_URI,
-      scopes: ["username"],
-      state: state
-    });
+    piLoginButton.disabled = true;
+    try {
+      const auth = await window.Pi.authenticate(["username"], (payment) => {
+        console.warn("Pi 미완료 결제 확인:", payment?.identifier);
+      });
+      if (!auth?.accessToken || !auth?.user?.username) {
+        throw new Error("인증 결과가 올바르지 않습니다.");
+      }
+      sessionStorage.setItem("pi_access_token", auth.accessToken);
+      sessionStorage.setItem("pi_username", auth.user.username);
+      updatePiLoginButton(auth.user.username);
+      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
+    } catch (error) {
+      console.error("Pi 로그인 오류:", error);
+      alert("Pi 로그인에 실패했습니다. " + (error?.message || "Pi Browser와 앱 등록 설정을 확인해 주세요."));
+    } finally {
+      piLoginButton.disabled = false;
+    }
   });
 }
 
