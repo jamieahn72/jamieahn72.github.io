@@ -791,8 +791,9 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
   display:block; margin-top:0; font-weight:800;
 }
 .character-description .legend-ability-label { color:#a64a18; }
-.character-description .legend-ability-name { color:#3f4145; }
-.character-description .legend-ability-text { display:block; }
+.character-description .legend-ability-separator { color:var(--text); font-weight:800; }
+.character-description .legend-ability-name { color:#777b80; }
+.character-description .legend-ability-text { display:block; margin-top:1.5em; }
 .detail-bottom { margin-top:28px; text-align:center; }
 .detail-bottom .detail-back { margin-bottom:0; }
 @media (min-width:700px) {
@@ -1186,11 +1187,14 @@ function renderCharacterDescription(element, description, characterName) {
   const parts = lines[abilityIndex].split("|");
   const label = document.createElement("span");
   label.className = "legend-ability-label";
-  label.textContent = parts[0].trim() + " | ";
+  label.textContent = parts[0].trim();
+  const separator = document.createElement("span");
+  separator.className = "legend-ability-separator";
+  separator.textContent = " | ";
   const name = document.createElement("span");
   name.className = "legend-ability-name";
   name.textContent = parts.slice(1).join("|").trim();
-  title.append(label, name);
+  title.append(label, separator, name);
   element.appendChild(title);
   if (lines.length > abilityIndex + 1) {
     const abilityText = document.createElement("span");
