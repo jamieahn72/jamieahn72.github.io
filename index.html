@@ -570,10 +570,10 @@ section { padding:30px 20px; }
   .intro-enter { animation:none; box-shadow:0 0 12px 3px rgba(255,222,110,.6); }
 }
 @media (min-width:768px) {
-  .intro-art { width:min(520px,100vw,calc(100dvh * 928 / 1648)); height:auto; aspect-ratio:928 / 1648; }
-  .intro-screen::before { background-image:url("kmon-intro.webp"); }
-  .intro-enter { left:24.57%; top:87.38%; width:50.86%; height:5.34%; }
-  .intro-enter .intro-enter-label { font-size:15px; letter-spacing:.015em; }
+  .intro-art { width:min(520px,100vw,calc(100dvh * 874 / 1799)); height:auto; aspect-ratio:874 / 1799; }
+  .intro-screen::before { background-image:url("KMON_intro_final_approved.webp"); }
+  .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
+  .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
 }
 
 /* 카카오톡 인앱 브라우저에서만 인트로를 화면 너비에 맞춤. Pi Browser는 변경 없음. */
@@ -931,7 +931,7 @@ if (/Android/i.test(navigator.userAgent) &&
   <div class="intro-art">
     <picture>
       <source media="(max-width: 767px)" srcset="KMON_intro_final_approved.webp?v=20261110-1">
-      <img class="intro-image" src="kmon-intro.webp" alt="Kmon 인트로">
+      <img class="intro-image" src="KMON_intro_final_approved.webp?v=20261110-2" alt="Kmon 인트로">
     </picture>
     <div class="effect-layer" aria-hidden="true">
       <svg class="lightning-layer" viewBox="0 0 100 177.16" preserveAspectRatio="none">
