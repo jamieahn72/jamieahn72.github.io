@@ -564,7 +564,8 @@ section { padding:30px 20px; }
 @media (max-width:767px) {
   /* 최종 모바일 인트로 원본 비율을 보존하여 캐릭터 잘림과 왜곡 방지 */
   .intro-art {
-    width:min(100vw, calc(100dvh * 874 / 1799));
+    width:100vw;
+    max-width:100vw;
     height:auto;
     aspect-ratio:874 / 1799;
   }
