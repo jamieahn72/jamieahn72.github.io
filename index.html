@@ -546,21 +546,11 @@ section { padding:30px 20px; }
     height:auto;
     aspect-ratio:874 / 1799;
   }
-  .intro-screen::before { background-image:url("KMON_intro_final_optimized.webp"); }
+  .intro-screen::before { background-image:url("KMON_intro_ENTER_KMON_WORLD_corrected.webp"); }
   /* 원본 이미지 중앙의 한글 입장 버튼 위치에 맞춘 투명 클릭 영역 */
   .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
-  /* 원본 버튼의 테두리·좌우 금빛 다이아몬드는 보존하고 글씨 영역만 교체 */
-  .intro-enter .intro-enter-label {
-    opacity:1;
-    inset:12% 10%;
-    border:0;
-    border-radius:2px;
-    background:#fff2d1;
-    color:#bd8296;
-    font:800 clamp(11px,3.45vw,32px) Arial,sans-serif;
-    letter-spacing:-.025em;
-    text-shadow:none;
-  }
+  /* 버튼 글씨는 새 이미지에 포함되어 있으므로 별도 텍스트를 표시하지 않음 */
+  .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
   /* 원본 버튼을 가리지 않고 금빛 테두리와 빛의 이동을 강조 */
   .intro-enter {
     animation:mobile-enter-halo 2.8s ease-in-out infinite;
@@ -940,7 +930,7 @@ if (/Android/i.test(navigator.userAgent) &&
 <div class="intro-screen" id="intro-screen">
   <div class="intro-art">
     <picture>
-      <source media="(max-width: 767px)" srcset="KMON_intro_final_optimized.webp?v=20261110-4">
+      <source media="(max-width: 767px)" srcset="KMON_intro_ENTER_KMON_WORLD_corrected.webp?v=20261110-1">
       <img class="intro-image" src="kmon-intro.webp" alt="Kmon 인트로">
     </picture>
     <div class="effect-layer" aria-hidden="true">
