@@ -585,6 +585,16 @@ section { padding:30px 20px; }
   }
 }
 
+/* 모바일 Chrome에서만 인트로를 화면 너비에 맞춤. Pi Browser 및 카카오톡은 기존 설정 유지. */
+@media (max-width:767px) {
+  html.kmon-mobile-chrome .intro-art {
+    width:100vw;
+    max-width:100vw;
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+}
+
 /* 움직임 줄이기 설정 */
 @media (prefers-reduced-motion:reduce) {
   .intro-enter::after,.intro-enter::before,.button-sparkle,.petal,
@@ -904,6 +914,12 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 /* 카카오톡 인앱 브라우저만 구분해 별도 인트로 너비 적용 */
 if (/KAKAOTALK/i.test(navigator.userAgent)) {
   document.documentElement.classList.add("kmon-kakao-browser");
+}
+/* Android Chrome만 적용하며 Pi Browser의 UA는 제외 */
+if (/Android/i.test(navigator.userAgent) &&
+    /Chrome\/\d+/i.test(navigator.userAgent) &&
+    !/KAKAOTALK|PiBrowser|Pi Browser|MinePi|EdgA|OPR\/|SamsungBrowser|wv\)/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add("kmon-mobile-chrome");
 }
 </script>
 </head>
