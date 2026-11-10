@@ -236,6 +236,26 @@
     grid-column: 1;
   }
 }
+/* Mobile card detail redesign: square, full-width, consistent typography */
+.kmon-symbol-guide{display:none}
+@media(max-width:600px){
+  .sero-modal{padding:0;align-items:stretch;background:#fffaf2;backdrop-filter:none}
+  .sero-modal-content{display:flex;flex-direction:column;align-items:stretch;gap:0;width:100%;max-width:none;max-height:100dvh;min-height:100dvh;overflow-y:auto;padding:56px 22px 30px;border:0;border-radius:0;box-shadow:none;background:#fffaf2;text-align:center}
+  .sero-modal-close{position:fixed;top:12px;right:17px;font-size:34px;line-height:1;z-index:5}
+  .sero-modal-card-art{width:100%;margin:0}
+  .sero-modal-content .sero-modal-card-art img{display:block;width:min(70%,270px);height:auto;max-height:none;aspect-ratio:5/7;object-fit:contain;margin:0 auto;border-radius:0}
+  .sero-modal-content .sero-card-preview-note{margin:12px 0 0;font-size:12px;line-height:1.5;text-align:center;color:#737d91}
+  .sero-modal-content h2{margin:17px 0 0;font-size:28px;line-height:1.3;font-weight:900;color:var(--navy);text-align:center}
+  .sero-modal-content .sero-modal-rarity{margin:7px 0 0;font-size:13px;line-height:1.4;letter-spacing:2px;text-align:center;font-weight:800}
+  .sero-modal-content h3{margin:20px 0 0;padding-top:17px;border-top:1px solid #d6b66e;font-size:21px;line-height:1.35;font-weight:800;text-align:center;color:var(--text)}
+  .sero-modal-content > p:not(.sero-modal-rarity):not(.sero-modal-notice){margin:9px 0 0;font-size:15px;line-height:1.65;text-align:left;word-break:keep-all;color:#34405a}
+  .sero-modal-content .sero-modal-guide{display:none}
+  .sero-modal-content .kmon-symbol-guide{display:block;margin:22px 0 0;padding:16px;text-align:left;border:1px solid #d6b66e;border-radius:0;background:#fbf4e7}
+  .kmon-symbol-guide-title{font-size:16px;line-height:1.4;font-weight:800;color:#865819}
+  .sero-modal-content .kmon-symbol-guide-description{margin:7px 0 0;font-size:14px;line-height:1.65;color:#34405a;word-break:keep-all;text-align:left}
+  .sero-modal-content .sero-buy-button{display:block;width:100%;margin:24px 0 0;padding:15px 10px;border:0;border-radius:0;background:var(--navy);box-shadow:none;opacity:1;color:#fff;font-size:16px;line-height:1.4;font-weight:800;cursor:not-allowed}
+  .sero-modal-content .sero-modal-notice{order:10;margin:13px 0 0!important;font-size:12px!important;line-height:1.55;text-align:center;color:#737d91!important}
+}
   :root {
   --bg:#F7F2E9; --panel:#fff; --line:#e5dccd;
   --text:#202b4b; --muted:#737d91; --orange:#E58A32; --navy:#5276a5;
@@ -1116,6 +1136,7 @@ if (/Android/i.test(navigator.userAgent) &&
       <h3>절대 소유물 수호</h3>
             <p>내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다.</p>
 
+      <div class="kmon-symbol-guide" aria-label="고유 심볼 안내"><div class="kmon-symbol-guide-title">고유 심볼 안내</div><p class="kmon-symbol-guide-description">세로의 고유 심볼은 ‘소유와 보호’를 의미하며, 소중한 것을 지키는 힘을 상징합니다.</p></div>
       <div class="sero-modal-guide">
         <p>혹시, 물건을 잘 잃어버리거나 없어지나요?</p>
         <p>이 카드를 소유하는 순간, 캐릭터에 깃든 특별한 능력이 사용자에게 이어집니다.</p>
@@ -2138,6 +2159,7 @@ function openKmonCard(card){
  content.querySelector("h3").textContent=card.power;
  const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
  const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?(pageTranslations[activeLanguage]||pageTranslations.ko).guide[0]:kmonCardUi[activeLanguage].guide;
+ const symbolDescription=content.querySelector(".kmon-symbol-guide-description");if(symbolDescription)symbolDescription.textContent=card.id==="sero-legend"?"세로의 고유 심볼은 ‘소유와 보호’를 의미하며, 소중한 것을 지키는 힘을 상징합니다.":card.character.split(" (")[0]+"의 고유 심볼은 ‘"+card.power+"’의 의미를 담아 캐릭터의 특별한 능력을 상징합니다.";
  const testPrices={NORMAL:29,RARE:49,EPIC:79,LEGEND:129};
  const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" Test Pi 결제하기";buy.disabled=true;buy.title="테스트넷 결제 기능 준비 중";}
  const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent="※ 현재 테스트넷 운영 중입니다. 실제 Pi가 차감되지 않는 테스트 결제이며, 결제 기능은 준비 중입니다.";
