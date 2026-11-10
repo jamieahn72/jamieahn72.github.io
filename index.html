@@ -80,9 +80,9 @@
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
 }
 
+.sero-modal-card-art{grid-column:1;grid-row:1 / span 6;min-width:0}
+.sero-modal-content .sero-card-preview-note{margin:10px 0 0;color:#737d91;font-size:12px;line-height:1.5;text-align:center}
 .sero-modal-content img {
-  grid-column: 1;
-  grid-row: 1 / span 6;
   display: block;
   width: 100%;
   max-height: 68vh;
@@ -187,6 +187,7 @@
     box-sizing: border-box;
   }
 
+  .sero-modal-card-art{grid-column:1;grid-row:auto}
   .sero-modal-content img {
     grid-column: 1;
     grid-row: auto;
@@ -902,6 +903,8 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 .kmon-rarity-epic{color:#8B42CB!important;font-weight:800}
 .kmon-rarity-legend{color:#B58A35!important;font-weight:800}
 
+.kmon-mobile-break{display:none}
+@media(max-width:600px){.kmon-mobile-break{display:inline}.kmon-desktop-space{display:none}}
 .kmon-card-tagline{color:#B75C12;font-size:18px;font-weight:600;line-height:1.6;margin:12px 0 0;word-break:keep-all}
 @media(max-width:600px){.kmon-card-tagline{font-size:16px}}
 .kmon-card-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
@@ -1097,7 +1100,7 @@ if (/Android/i.test(navigator.userAgent) &&
   <section id="cards">
     <div class="label">COLLECT YOUR WORLD</div>
     <h2 class="section-title">디지털 카드</h2>
-    <p class="kmon-card-tagline">당신에게 필요한 특별한 힘, KMON 카드에서 만나보세요.</p>
+    <p class="kmon-card-tagline">당신에게 필요한 특별한 힘,<span class="kmon-mobile-break"><br></span><span class="kmon-desktop-space"> </span>KMON 카드에서 만나보세요.</p>
     <div class="kmon-card-grid" id="kmon-home-cards"></div>
     <div class="more-monsters-wrap"><a class="more-monsters-button" href="#card-collection">전체 카드 더보기</a></div>
   </section>
@@ -1106,7 +1109,7 @@ if (/Android/i.test(navigator.userAgent) &&
   <div id="sero-card-modal" class="sero-modal">
     <div class="sero-modal-content">
       <button type="button" id="sero-card-close" class="sero-modal-close">×</button>
-      <img src="sero_legend_thumbnail_1.webp" alt="세로 LEGEND 카드 미리보기">
+      <div class="sero-modal-card-art"><img src="sero_legend_thumbnail_1.webp" alt="세로 LEGEND 카드 미리보기"><p class="sero-card-preview-note">※ 카드 이미지는 미리보기용입니다.</p></div>
       <h2>세로 (Sero)</h2>
       <p class="sero-modal-rarity">LEGEND</p>
       <h3>절대 소유물 수호</h3>
