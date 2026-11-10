@@ -2138,6 +2138,9 @@ function openKmonCard(card){
  content.querySelector("h3").textContent=card.power;
  const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
  const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?(pageTranslations[activeLanguage]||pageTranslations.ko).guide[0]:kmonCardUi[activeLanguage].guide;
+ const testPrices={NORMAL:29,RARE:49,EPIC:79,LEGEND:129};
+ const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" Test Pi 결제하기";buy.disabled=true;buy.title="테스트넷 결제 기능 준비 중";}
+ const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent="※ 현재 테스트넷 운영 중입니다. 실제 Pi가 차감되지 않는 테스트 결제이며, 결제 기능은 준비 중입니다.";
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
 }
 function closeKmonCard(){if(kmonModal)kmonModal.classList.remove("active");document.body.style.overflow="";}
