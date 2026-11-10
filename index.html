@@ -575,6 +575,16 @@ section { padding:30px 20px; }
   .intro-enter .intro-enter-label { font-size:15px; letter-spacing:.015em; }
 }
 
+/* 카카오톡 인앱 브라우저에서만 인트로를 화면 너비에 맞춤. Pi Browser는 변경 없음. */
+@media (max-width:767px) {
+  html.kmon-kakao-browser .intro-art {
+    width:100vw;
+    max-width:100vw;
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+}
+
 /* 움직임 줄이기 설정 */
 @media (prefers-reduced-motion:reduce) {
   .intro-enter::after,.intro-enter::before,.button-sparkle,.petal,
@@ -890,6 +900,12 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 .kmon-collection-group{margin:28px 0 38px}.kmon-collection-group h2{font-size:22px;color:#202b4b;margin-bottom:14px}
 @media(max-width:600px){.kmon-card-grid{gap:7px}.kmon-card-item h3{font-size:11px}.kmon-card-item p{font-size:10px}.kmon-card-item img{border-radius:5px}#card-collection-page{padding:26px 12px 80px}}
 </style>
+<script>
+/* 카카오톡 인앱 브라우저만 구분해 별도 인트로 너비 적용 */
+if (/KAKAOTALK/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add("kmon-kakao-browser");
+}
+</script>
 </head>
 <body class="intro-active">
 
