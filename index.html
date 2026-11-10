@@ -549,7 +549,18 @@ section { padding:30px 20px; }
   .intro-screen::before { background-image:url("KMON_intro_final_optimized.webp"); }
   /* 원본 이미지 중앙의 한글 입장 버튼 위치에 맞춘 투명 클릭 영역 */
   .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
-  .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
+  /* 원본 버튼의 테두리·좌우 금빛 다이아몬드는 보존하고 글씨 영역만 교체 */
+  .intro-enter .intro-enter-label {
+    opacity:1;
+    inset:12% 10%;
+    border:0;
+    border-radius:2px;
+    background:#fff2d1;
+    color:#bd8296;
+    font:800 clamp(11px,3.45vw,32px) Arial,sans-serif;
+    letter-spacing:-.025em;
+    text-shadow:none;
+  }
   /* 원본 버튼을 가리지 않고 금빛 테두리와 빛의 이동을 강조 */
   .intro-enter {
     animation:mobile-enter-halo 2.8s ease-in-out infinite;
@@ -968,8 +979,8 @@ if (/Android/i.test(navigator.userAgent) &&
       <span class="petal"></span><span class="petal"></span>
       <span class="petal"></span><span class="petal"></span>
     </div>
-    <button class="intro-enter" id="intro-enter" type="button" aria-label="KMON WORLD ENTER">
-      <span class="intro-enter-label">KMON WORLD ENTER</span>
+    <button class="intro-enter" id="intro-enter" type="button" aria-label="ENTER KMON WORLD">
+      <span class="intro-enter-label">ENTER KMON WORLD →</span>
       <span class="button-sparkle left"></span>
       <span class="button-sparkle right"></span>
     </button>
