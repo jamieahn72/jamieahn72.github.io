@@ -1,0 +1,2212 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F7F2E9">
+<title>KMON - Korean Monster Universe</title>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+  <script>
+  Pi.init({ version: "2.0", sandbox: true });
+</script>
+<style>
+* { box-sizing: border-box; }
+
+/* 카드 썸네일 */
+.sero-card-preview {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.sero-card-preview img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.sero-card-preview:hover img {
+  transform: scale(1.04);
+}
+
+/* 프리미엄 카드 상세 팝업 */
+.sero-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100vw;
+  padding: 20px;
+  background: rgba(20, 27, 46, 0.82);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+
+.sero-modal.active {
+  display: flex;
+}
+
+.sero-modal-content {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 12px 28px;
+  width: 100%;
+  max-width: 760px;
+  min-width: 0;
+  box-sizing: border-box;
+  max-height: 90vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-wrap: anywhere;
+  padding: 38px;
+  border: 2px solid #c9a24e;
+  box-shadow: 0 0 0 3px rgba(201, 162, 78, 0.15), 0 24px 70px rgba(0, 0, 0, 0.35);
+  border-radius: 22px;
+  background: linear-gradient(145deg, #fffdf8, #f2eadb);
+  color: var(--text);
+  text-align: left;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.sero-modal-card-art{grid-column:1;grid-row:1 / span 6;min-width:0}
+.sero-modal-content .sero-card-preview-note{margin:10px 0 0;color:#737d91;font-size:12px;line-height:1.5;text-align:center}
+.sero-modal-content img {
+  display: block;
+  width: 100%;
+  max-height: 68vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 12px 28px rgba(32, 43, 75, 0.2);
+}
+
+.sero-modal-close {
+  position: absolute;
+  top: 12px;
+  right: 18px;
+  z-index: 2;
+  border: none;
+  background: transparent;
+  color: var(--navy);
+  font-size: 32px;
+  cursor: pointer;
+}
+
+.sero-modal-content h2 {
+  margin: 10px 0 0;
+  color: var(--navy);
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.sero-modal-content h3 {
+  margin: 8px 0;
+  color: var(--text);
+  font-size: 19px;
+}
+
+.sero-modal-content p {
+  margin: 5px 0;
+  color: #596176;
+  line-height: 1.7;
+}
+
+.sero-modal-rarity {
+  color: #b58a35 !important;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+
+.sero-modal-guide {
+  grid-column: 2;
+  min-width: 0;
+  margin-top: 14px;
+  padding: 16px 18px;
+  border-left: 3px solid #c9a24e;
+  border-radius: 8px;
+  background: rgba(201, 162, 78, 0.09);
+}
+
+.sero-modal-guide p {
+  margin: 0 0 9px;
+  color: #596176;
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.sero-modal-guide p:last-child {
+  margin-bottom: 0;
+}
+
+.sero-modal-notice {
+  margin-top: 18px !important;
+  color: #9299a8 !important;
+  font-size: 12px;
+}
+
+.sero-buy-button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 16px;
+  border: 1px solid #f5bd72;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f2a64e, #d97920);
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  box-shadow: 0 6px 0 #b9651d, 0 10px 20px rgba(190, 105, 29, 0.2);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+@media (max-width: 600px) {
+  .sero-modal {
+    padding: 12px;
+  }
+
+  .sero-modal-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 420px;
+    max-height: 90vh;
+    padding: 28px 22px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .sero-modal-card-art{grid-column:1;grid-row:auto}
+  .sero-modal-content img {
+    grid-column: 1;
+    grid-row: auto;
+    width: 78%;
+    height: auto;
+    max-height: none;
+    aspect-ratio: 5 / 7;
+    object-fit: contain;
+    margin: 8px auto;
+    flex-shrink: 0;
+  }
+
+  .sero-modal-content h2 {
+    font-size: 24px;
+  }
+
+  .sero-modal-content h3 {
+    font-size: 19px;
+  }
+
+  .sero-modal-content p {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  .sero-modal-guide {
+    grid-column: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    text-align: left;
+  }
+
+  .sero-modal-guide p {
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  .sero-modal-notice {
+    font-size: 13px !important;
+  }
+
+  .sero-buy-button {
+    grid-column: 1;
+  }
+}
+/* Mobile card detail redesign: square, full-width, consistent typography */
+.kmon-symbol-guide{display:none}
+@media(max-width:600px){
+  .sero-modal{padding:0;align-items:stretch;background:#fffaf2;backdrop-filter:none}
+  .sero-modal-content{display:flex;flex-direction:column;align-items:stretch;gap:0;width:100%;max-width:none;max-height:100dvh;min-height:100dvh;overflow-y:auto;padding:56px 22px 30px;border:0;border-radius:0;box-shadow:none;background:#fffaf2;text-align:center}
+  .sero-modal-close{position:fixed;top:12px;right:17px;font-size:34px;line-height:1;z-index:5}
+  .sero-modal-card-art{width:100%;margin:0}
+  .sero-modal-content .sero-modal-card-art img{display:block;width:min(70%,270px);height:auto;max-height:none;aspect-ratio:5/7;object-fit:contain;margin:0 auto;border-radius:0}
+  .sero-modal-content .sero-card-preview-note{margin:12px 0 0;font-size:12px;line-height:1.5;text-align:center;color:#737d91}
+  .sero-modal-content h2{margin:17px 0 0;font-size:28px;line-height:1.3;font-weight:900;color:var(--navy);text-align:center}
+  .sero-modal-content .sero-modal-rarity{margin:7px 0 0;font-size:13px;line-height:1.4;letter-spacing:2px;text-align:center;font-weight:800}
+  .sero-modal-content h3{margin:20px 0 0;padding-top:17px;border-top:1px solid #d6b66e;font-size:21px;line-height:1.35;font-weight:800;text-align:center;color:var(--text)}
+  .sero-modal-content > p:not(.sero-modal-rarity):not(.sero-modal-notice){margin:9px 0 0;font-size:15px;line-height:1.65;text-align:left;word-break:keep-all;color:#34405a}
+  .sero-modal-content .sero-modal-guide{display:none}
+  .sero-modal-content .kmon-symbol-guide{display:block;margin:22px 0 0;padding:16px;text-align:left;border:1px solid #d6b66e;border-radius:0;background:#fbf4e7}
+  .kmon-symbol-guide-title{font-size:16px;line-height:1.4;font-weight:800;color:#865819}
+  .sero-modal-content .kmon-symbol-guide-description{margin:7px 0 0;font-size:14px;line-height:1.65;color:#34405a;word-break:keep-all;text-align:left}
+  .sero-modal-content .sero-buy-button{display:block;width:100%;margin:24px 0 0;padding:15px 10px;border:0;border-radius:0;background:var(--navy);box-shadow:none;opacity:1;color:#fff;font-size:16px;line-height:1.4;font-weight:800;cursor:not-allowed}
+  .sero-modal-content .sero-modal-notice{order:10;margin:13px 0 0!important;font-size:12px!important;line-height:1.55;text-align:center;color:#737d91!important}
+}
+  :root {
+  --bg:#F7F2E9; --panel:#fff; --line:#e5dccd;
+  --text:#202b4b; --muted:#737d91; --orange:#E58A32; --navy:#5276a5;
+}
+html { scroll-behavior:smooth; scroll-padding-top:20px; }
+body {
+  margin:0; background:var(--bg); color:var(--text);
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  padding-bottom:76px; overflow-x:hidden;
+}
+body.intro-active { padding:0; overflow:hidden; }
+a { color:inherit; text-decoration:none; }
+main { width:100%; max-width:900px; margin:0 auto; }
+section { padding:30px 20px; }
+
+/* 인트로 */
+.intro-screen {
+  position:fixed; inset:0; z-index:1000;
+  display:flex; align-items:center; justify-content:center;
+  width:100%; height:100vh; height:100dvh;
+  overflow:hidden; background:#17131c;
+}
+.intro-screen::before {
+  content:"";
+  position:absolute;
+  inset:-28px;
+  background:url("KMON_intro_final.webp") center center / cover no-repeat;
+  filter:blur(22px) brightness(.72);
+  pointer-events:none;
+}
+.intro-art {
+  position:relative;
+  width:min(100vw, calc(100dvh * 942 / 1670));
+  height:min(100dvh, calc(100vw * 1670 / 942));
+  aspect-ratio:942 / 1670;
+  flex:0 0 auto;
+  overflow:hidden;
+}
+.intro-art picture { display:block; width:100%; height:100%; }
+.intro-image {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+.effect-layer {
+  position:absolute; inset:0; overflow:hidden;
+  pointer-events:none; z-index:2;
+}
+
+/* 번개 */
+.lightning-layer {
+  position:absolute; inset:0; width:100%; height:100%;
+  z-index:3; pointer-events:none; overflow:visible;
+}
+.lightning-glow, .lightning-bolt {
+  fill:none; stroke-linecap:round; stroke-linejoin:round;
+  opacity:0;
+}
+.lightning-glow {
+  stroke:#c7a0ff; stroke-width:1.15;
+  filter:blur(3.2px);
+}
+.lightning-glow .main-glow {
+  stroke:#e3d1ff; stroke-width:1.75; opacity:.78;
+  filter:blur(2.5px);
+}
+.lightning-glow .branch {
+  stroke:#d9c2ff; stroke-width:.72; opacity:.38;
+  filter:blur(2.8px);
+}
+.lightning-bolt {
+  stroke:#fffaff; stroke-width:.24;
+  filter:drop-shadow(0 0 1px rgba(255,255,255,.9))
+         drop-shadow(0 0 2.8px rgba(214,170,255,.72))
+         drop-shadow(0 0 5px rgba(152,98,242,.48));
+}
+.bolt-one,.glow-one { animation:storm-flash-one 8.7s infinite; }
+.bolt-two,.glow-two { animation:storm-flash-two 11.3s infinite; }
+.bolt-three,.glow-three { animation:storm-flash-three 9.9s infinite; }
+
+/* 구름 반사광 */
+.cloud-light {
+  opacity:0; fill:#b78cff; filter:blur(12px);
+  mix-blend-mode:screen;
+}
+.cloud-light-one { animation:cloud-flash-one 8.7s infinite; }
+.cloud-light-two { animation:cloud-flash-two 11.3s infinite; }
+.cloud-light-three { animation:cloud-flash-three 9.9s infinite; }
+
+@keyframes storm-flash-one {
+  0%,18%,100% { opacity:0; }
+  18.22% { opacity:1; }
+  18.38% { opacity:.08; }
+  18.52% { opacity:.9; }
+  18.78%,19.1% { opacity:0; }
+}
+@keyframes storm-flash-two {
+  0%,43%,100% { opacity:0; }
+  43.2% { opacity:1; }
+  43.36% { opacity:.06; }
+  43.5% { opacity:.82; }
+  43.76%,44.1% { opacity:0; }
+}
+@keyframes storm-flash-three {
+  0%,31%,100% { opacity:0; }
+  31.2% { opacity:.95; }
+  31.36% { opacity:.06; }
+  31.5% { opacity:.78; }
+  31.76%,32.1% { opacity:0; }
+}
+@keyframes cloud-flash-one {
+  0%,18%,100% { opacity:0; }
+  18.25% { opacity:.28; }
+  18.5% { opacity:.08; }
+  18.62% { opacity:.2; }
+  18.9% { opacity:0; }
+}
+@keyframes cloud-flash-two {
+  0%,43%,100% { opacity:0; }
+  43.23% { opacity:.24; }
+  43.48% { opacity:.06; }
+  43.6% { opacity:.17; }
+  43.9% { opacity:0; }
+}
+@keyframes cloud-flash-three {
+  0%,31%,100% { opacity:0; }
+  31.23% { opacity:.25; }
+  31.48% { opacity:.06; }
+  31.6% { opacity:.17; }
+  31.9% { opacity:0; }
+}
+
+/* 성 반사광 */
+.castle-flash {
+  position:absolute; pointer-events:none; z-index:2; opacity:0;
+  mix-blend-mode:screen;
+  background:linear-gradient(90deg,
+    rgba(210,220,255,0) 0%,
+    rgba(225,230,255,.2) 35%,
+    rgba(245,246,255,.42) 52%,
+    rgba(205,216,255,.12) 78%,
+    rgba(210,220,255,0) 100%);
+}
+.castle-flash.spire {
+  left:7%; top:27%; width:10%; height:5%;
+  transform:rotate(-24deg); filter:blur(3px);
+  animation:castle-reflect-one 8.7s infinite;
+}
+.castle-flash.wall {
+  left:2%; top:34%; width:17%; height:2.5%;
+  transform:rotate(-3deg); filter:blur(4px);
+  animation:castle-reflect-one 8.7s infinite;
+}
+.castle-flash.spire-two {
+  left:12%; top:25%; width:8%; height:4%;
+  transform:rotate(18deg); filter:blur(3px);
+  animation:castle-reflect-two 11.3s infinite;
+}
+.castle-flash.wall-two {
+  left:5%; top:36%; width:13%; height:2%;
+  transform:rotate(2deg); filter:blur(4px);
+  animation:castle-reflect-two 11.3s infinite;
+}
+@keyframes sky-flash-one {
+  0%,18%,100% { opacity:0; }
+  18.25% { opacity:.52; }
+  18.42% { opacity:.04; }
+  18.58% { opacity:.34; }
+  18.82% { opacity:0; }
+  19.05% { opacity:.12; }
+  19.18% { opacity:0; }
+}
+@keyframes castle-reflect-one {
+  0%,18%,100% { opacity:0; }
+  18.25% { opacity:.8; }
+  18.42% { opacity:.08; }
+  18.58% { opacity:.52; }
+  18.82% { opacity:0; }
+  19.05% { opacity:.18; }
+  19.18% { opacity:0; }
+}
+@keyframes castle-reflect-two {
+  0%,43%,100% { opacity:0; }
+  43.2% { opacity:.7; }
+  43.38% { opacity:.06; }
+  43.55% { opacity:.42; }
+  43.78% { opacity:0; }
+  44% { opacity:.15; }
+  44.12% { opacity:0; }
+}
+
+/* 화면 전체의 약한 섬광 */
+.effect-layer::after {
+  content:""; position:absolute; inset:-2%; z-index:1;
+  pointer-events:none; opacity:0;
+  background:linear-gradient(24deg,
+    rgba(175,190,255,.04),
+    rgba(232,237,255,.17) 48%,
+    rgba(180,194,255,.05));
+  mix-blend-mode:screen;
+  animation:sky-flash-two 11.3s infinite;
+}
+
+/* 벚꽃잎 */
+.petal {
+  position:absolute; top:-8%; width:12px; height:17px;
+  border-radius:80% 10% 80% 10%;
+  background:linear-gradient(135deg,#fff0fa,#ffb6d8 55%,#ed78b4);
+  box-shadow:0 0 5px rgba(255,180,220,.35);
+  opacity:0; animation:petal-fall linear infinite;
+}
+.petal:nth-child(7) { left:72%; animation-duration:9s; animation-delay:0s; }
+.petal:nth-child(8) { left:87%; width:9px; height:13px; animation-duration:11s; animation-delay:2s; }
+.petal:nth-child(9) { left:94%; animation-duration:8s; animation-delay:4s; }
+.petal:nth-child(10) { left:78%; width:8px; height:12px; animation-duration:10s; animation-delay:5s; }
+.petal:nth-child(11) { left:98%; animation-duration:12s; animation-delay:1s; }
+.petal:nth-child(12) { left:67%; width:10px; height:14px; animation-duration:9.5s; animation-delay:3s; }
+.petal:nth-child(13) { left:83%; animation-duration:13s; animation-delay:6s; }
+.petal:nth-child(14) { left:91%; width:7px; height:11px; animation-duration:10.5s; animation-delay:7s; }
+
+@keyframes petal-fall {
+  0% { transform:translate3d(0,-5vh,0) rotate(0deg); opacity:0; }
+  10% { opacity:.9; }
+  50% { transform:translate3d(-24px,52vh,0) rotate(240deg); opacity:.85; }
+  90% { opacity:.7; }
+  100% { transform:translate3d(25px,112vh,0) rotate(560deg); opacity:0; }
+}
+
+/* 입장 버튼 효과 */
+.intro-enter {
+  position:absolute; z-index:5;
+  left:23.1%; top:40.0%;
+  width:53.8%; height:5.8%;
+  min-height:0; padding:0;
+  border:0; border-radius:999px; background:transparent;
+  overflow:hidden; isolation:isolate; cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+/* 인트로 이미지에 포함된 기존 버튼 문구를 덮고 공통 영어 문구를 표시 */
+.intro-enter .intro-enter-label {
+  position:absolute; inset:0; z-index:1;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:inherit;
+  background:linear-gradient(180deg,#f8d487 0%,#e9a94e 48%,#c9812d 100%);
+  border:2px solid #ffe3a1;
+  color:#372414;
+  font:800 clamp(13px,3.1vw,21px) Arial,sans-serif;
+  letter-spacing:.045em;
+  text-shadow:0 1px 1px rgba(255,248,215,.7);
+  white-space:nowrap;
+}
+.intro-enter::before {
+  content:""; position:absolute; inset:0; z-index:2;
+  border:2px solid rgba(255,237,178,.55);
+  border-radius:inherit;
+  box-shadow:inset 0 0 8px rgba(255,244,198,.25),0 0 7px rgba(255,208,92,.35);
+  animation:button-golden-glow 2.8s ease-in-out infinite;
+  pointer-events:none;
+}
+/* 이동하는 빛줄기 대신 버튼 전체의 부드러운 발광 */
+.intro-enter::after {
+  content:""; position:absolute; z-index:2; top:0; bottom:0;
+  left:-55%; width:42%; border-radius:inherit;
+  background:linear-gradient(100deg,
+    rgba(255,255,245,0) 0%,
+    rgba(255,255,239,.12) 18%,
+    rgba(255,255,238,.68) 38%,
+    rgba(255,255,255,.95) 50%,
+    rgba(255,255,238,.68) 62%,
+    rgba(255,255,239,.12) 82%,
+    rgba(255,255,245,0) 100%);
+  filter:brightness(1.12);
+  animation:gold-shine 3.1s ease-in-out infinite;
+  pointer-events:none;
+}
+@keyframes gold-shine {
+  0%,12% { left:-55%; }
+  68%,100% { left:115%; }
+}
+@keyframes button-golden-glow {
+  0%,100% { border-color:rgba(255,237,178,.45); box-shadow:inset 0 0 5px rgba(255,244,198,.18),0 0 5px rgba(255,208,92,.25); }
+  50% { border-color:rgba(255,251,221,1); box-shadow:inset 0 0 14px rgba(255,250,212,.75),0 0 12px rgba(255,218,120,.8),0 0 25px rgba(255,198,72,.4); }
+}
+.button-sparkle {
+  position:absolute; z-index:3; top:50%; width:8px; height:8px;
+  opacity:0; transform:translateY(-50%) scale(.35) rotate(45deg);
+  background:#fff9df;
+  clip-path:polygon(50% 0,62% 38%,100% 50%,62% 62%,50% 100%,38% 62%,0 50%,38% 38%);
+  filter:drop-shadow(0 0 3px #fff0b5);
+  animation:button-star 3.1s ease-in-out infinite;
+  pointer-events:none;
+}
+.button-sparkle.left { left:7%; }
+.button-sparkle.right { right:7%; animation-delay:1.55s; }
+@keyframes button-star {
+  0%,100% { opacity:0; transform:translateY(-50%) scale(.3) rotate(0deg); }
+  43% { opacity:.95; transform:translateY(-50%) scale(1) rotate(45deg); }
+  60% { opacity:.12; transform:translateY(-50%) scale(.45) rotate(80deg); }
+}
+.intro-screen.hide {
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .55s ease,visibility .55s ease;
+}
+/* 모바일은 최종 이미지 속 한글 버튼을 그대로 보여주고 투명 클릭 영역만 사용 */
+@media (max-width:767px) {
+  /* 최종 모바일 인트로 원본 비율을 보존하여 캐릭터 잘림과 왜곡 방지 */
+  .intro-art {
+    width:100vw;
+    max-width:100vw;
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+  .intro-screen::before { background-image:url("KMON_intro_final_approved.webp"); }
+  /* 원본 이미지 중앙의 한글 입장 버튼 위치에 맞춘 투명 클릭 영역 */
+  .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
+  /* 버튼 글씨는 새 이미지에 포함되어 있으므로 별도 텍스트를 표시하지 않음 */
+  .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
+  /* 원본 버튼을 가리지 않고 금빛 테두리와 빛의 이동을 강조 */
+  .intro-enter {
+    animation:mobile-enter-halo 2.8s ease-in-out infinite;
+  }
+  .intro-enter::before {
+    border:2px solid rgba(255,244,177,.72);
+    box-shadow:inset 0 0 10px rgba(255,244,190,.42);
+  }
+  .intro-enter::after { opacity:.78; animation-duration:2.6s; }
+  .button-sparkle { width:11px; height:11px; filter:drop-shadow(0 0 5px #fff0b5); }
+}
+@keyframes mobile-enter-halo {
+  0%,100% { box-shadow:0 0 7px 2px rgba(255,211,74,.48),0 0 17px 4px rgba(255,188,55,.25); }
+  50% { box-shadow:0 0 13px 4px rgba(255,238,143,.82),0 0 29px 9px rgba(255,199,57,.46); }
+}
+@media (max-width:767px) and (prefers-reduced-motion:reduce) {
+  .intro-enter { animation:none; box-shadow:0 0 12px 3px rgba(255,222,110,.6); }
+}
+@media (min-width:768px) {
+  .intro-art { width:min(520px,100vw,calc(100dvh * 874 / 1799)); height:auto; aspect-ratio:874 / 1799; }
+  .intro-screen::before { background-image:url("KMON_intro_final_approved.webp"); }
+  .intro-enter { left:17.7%; top:44.4%; width:63.6%; height:5.55%; }
+  .intro-enter .intro-enter-label { opacity:0; background:transparent; border:0; }
+}
+
+/* 카카오톡 인앱 브라우저에서만 인트로를 화면 너비에 맞춤. Pi Browser는 변경 없음. */
+@media (max-width:767px) {
+  html.kmon-kakao-browser .intro-art {
+    width:100vw;
+    max-width:100vw;
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+}
+
+/* 모바일 Chrome에서만 인트로를 화면 너비에 맞춤. Pi Browser 및 카카오톡은 기존 설정 유지. */
+@media (max-width:767px) {
+  html.kmon-mobile-chrome .intro-art {
+    width:100vw;
+    max-width:100vw;
+    height:auto;
+    aspect-ratio:874 / 1799;
+  }
+}
+
+/* 움직임 줄이기 설정 */
+@media (prefers-reduced-motion:reduce) {
+  .intro-enter::after,.intro-enter::before,.button-sparkle,.petal,
+  .lightning-bolt,.lightning-glow,.cloud-light { animation:none; }
+}
+
+/* 홈페이지 */
+#home-page { display:none; }
+.world-banner {
+  width:100%; max-width:900px; aspect-ratio:2.5 / 1;
+  margin:0 auto; padding:0; overflow:hidden;
+}
+.world-banner img {
+  display:block; width:100%; height:100%;
+  object-fit:cover; object-position:center;
+}
+/* Kmon 세계관 상세페이지 안내 버튼: 기존 배너 위에 추가 */
+.world-banner { position:relative; }
+.world-detail-button {
+  position:absolute; right:clamp(12px,3%,28px); bottom:clamp(12px,5%,24px);
+  z-index:2; display:inline-flex; align-items:center; gap:8px;
+  padding:11px 17px; border:2px solid #E58A32;
+  border-radius:999px; background:#FFFDF8; color:#202B4B;
+  font-family:inherit; font-size:clamp(11px,1.7vw,14px); font-weight:700;
+  box-shadow:0 4px 14px rgba(0,0,0,.22); cursor:pointer;
+}
+.world-detail-button:hover { background:#F7F2E9; }
+.world-detail-button:focus-visible { outline:3px solid #E58A32; outline-offset:3px; }
+
+.bestiary-toolbar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid rgba(32,43,75,.12); }
+.bestiary-brand { flex:0 0 auto; color:var(--navy); font:900 15px Arial,sans-serif; letter-spacing:-.5px; white-space:nowrap; }
+.bestiary-brand span { color:#65718d; font-size:9px; font-weight:700; letter-spacing:.5px; }
+.bestiary-toolbar-actions { display:flex; align-items:center; justify-content:flex-end; gap:7px; min-width:0; }
+@media (max-width:600px) {
+  .bestiary-title-row { display:block; }
+  .bestiary-title { display:flex; width:100%; min-width:0; overflow:visible; white-space:normal; }
+  .bestiary-title .title-text { overflow-wrap:anywhere; font-size:clamp(20px,6.5vw,30px); }
+  .bestiary-toolbar .language-button,.bestiary-toolbar .pi-login-button { padding:7px 8px; font-size:11px; }
+}
+.bestiary-heading { margin:0; line-height:1; }
+  /* 언어 선택 버튼 */
+.bestiary-title-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+/* 모바일: 번역된 도감 제목 전체 표시, 버튼은 아래 오른쪽 */
+@media (max-width: 600px) {
+  .bestiary-title-row { flex-wrap:wrap; justify-content:flex-end; gap:8px; }
+  .bestiary-title { flex:0 0 100%; width:100%; min-width:0; overflow:visible; white-space:nowrap; }
+  .bestiary-title .title-k { flex:0 0 auto; font-size:clamp(28px, 7.5vw, 39px); }
+  .bestiary-title .title-text { flex:0 1 auto; min-width:0; font-size:clamp(16px, 5.6vw, 30px); letter-spacing:-1.3px; }
+}
+.language-selector {
+  position:relative;
+  flex:0 0 auto;
+}
+
+.language-button {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 11px;
+  border:2px solid var(--orange);
+  border-radius:9px;
+  background:var(--bg);
+  color:var(--navy);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.language-button:focus-visible,
+.language-option:focus-visible {
+  outline:2px solid var(--navy);
+  outline-offset:3px;
+}
+  .pi-login-button {
+  flex:0 0 auto;
+  padding:8px 11px;
+  border:2px solid var(--navy);
+  border-radius:9px;
+  background:var(--navy);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.language-menu {
+  position:absolute;
+  top:calc(100% + 7px);
+  right:0;
+  z-index:30;
+  display:none;
+  min-width:125px;
+  padding:5px;
+  border:2px solid var(--orange);
+  border-radius:9px;
+  background:var(--bg);
+  box-shadow:0 4px 12px rgba(32,43,75,.12);
+}
+
+.language-menu.open {
+  display:block;
+}
+
+.language-option {
+  display:block;
+  width:100%;
+  padding:9px 10px;
+  border:0;
+  border-radius:5px;
+  background:transparent;
+  color:var(--navy);
+  text-align:left;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+
+.language-option:hover {
+  background:rgba(82,118,165,.1);
+}
+.label {
+  color:#65718d; font-size:10px; font-weight:700;
+  letter-spacing:1.5px; line-height:1; margin-bottom:2px;
+}
+.bestiary-title {
+  display:flex; align-items:baseline; margin:0;
+  padding:0; line-height:1; white-space:nowrap;
+}
+.bestiary-title .title-k {
+  color:var(--orange); font-family:Arial,sans-serif;
+  font-size:39px; font-weight:900; letter-spacing:-2px;
+  line-height:1; margin-right:1px;
+}
+.bestiary-title .title-text,
+.section-title {
+  color:var(--navy);
+  font-family:Arial,"Noto Sans KR",sans-serif;
+  font-size:30px;
+  font-weight:900;
+  letter-spacing:-1.5px;
+  line-height:1;
+}
+.section-title { margin:0; padding:0; }
+.intro { color:var(--muted); line-height:1.3; font-size:13px; margin:2px 0 0; }
+
+/* 에피소드 가로형 영상 */
+.episode-video {
+  width:min(100%,640px);
+  aspect-ratio:16 / 9;
+  margin:16px auto 0;
+  overflow:hidden;
+  border-radius:12px;
+  background:#17131c;
+}
+.episode-video video {
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+}
+
+/* 도감 */
+.cards {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px; margin-top:20px;
+}
+.card {
+  min-width:0; padding:10px; border:1px solid var(--line);
+  border-radius:12px; background:var(--panel); color:var(--text);
+}
+.card-link { display:block; transition:transform .15s ease; }
+.card-link:active { transform:scale(.98); }
+.card-art {
+  width:100%; aspect-ratio:1 / 1; display:flex;
+  align-items:center; justify-content:center; overflow:hidden;
+  margin-bottom:10px; border-radius:8px; background:#eee8df;
+  color:var(--muted); font-size:11px; text-align:center;
+}
+.card-art img { display:block; width:100%; height:100%; object-fit:contain; }
+.card h3 { margin:8px 0; font-size:15px; color:var(--navy); }
+.card p { margin:0; color:var(--muted); font-size:12px; line-height:1.6; }
+.preparing-home { text-align:center; border-style:dashed; background:rgba(255,255,255,.55); }
+.preparing-home .preparing-label { aspect-ratio:1/1; display:flex; align-items:center; justify-content:center; color:var(--muted); font-weight:700; }
+.feature {
+  padding:20px; border:1px solid var(--line); border-radius:12px;
+  background:var(--panel); color:var(--muted); font-size:14px; line-height:1.7;
+}
+footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
+
+/* 전체 몬스터 도감 */
+.more-monsters-wrap { text-align:center; margin-top:22px; }
+.more-monsters-button {
+  display:inline-block; padding:12px 28px; border-radius:999px;
+  background:var(--navy); color:#fff; font-size:14px; font-weight:700;
+}
+#monster-index-page { display:none; min-height:80vh; padding:28px 20px 45px; }
+.index-grid {
+  display:grid; grid-template-columns:repeat(3,minmax(0,1fr));
+  grid-template-rows:repeat(4,auto); gap:10px; margin-top:20px;
+}
+.index-card {
+  min-width:0; padding:8px; border:1px solid var(--line);
+  border-radius:10px; background:#fff; text-align:center;
+}
+.index-card .card-art { margin-bottom:7px; }
+.index-card h3 {
+  margin:6px 0 3px;
+  font-size:13px;
+  color:var(--navy);
+}
+.index-card p { margin:0; color:var(--muted); font-size:10px; line-height:1.4; }
+.index-card.preparing {
+  min-height:100%; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; color:var(--muted);
+  background:rgba(255,255,255,.55); border-style:dashed;
+}
+.index-card.preparing .preparing-label {
+  display:flex; width:100%; aspect-ratio:1/1;
+  align-items:center; justify-content:center; font-size:13px; font-weight:700;
+}
+.pagination {
+  display:flex; justify-content:center; align-items:center;
+  flex-wrap:wrap; gap:8px; margin-top:20px;
+}
+.pagination button {
+  min-width:36px; padding:8px 11px; border:1px solid var(--line);
+  border-radius:8px; background:#fff; color:var(--text); font-weight:700;
+}
+.pagination button[aria-current="page"] { background:var(--navy); color:#fff; }
+@media (min-width:700px) {
+  .index-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}
+
+/* 하단 메뉴 */
+.bottom-nav {
+  position:fixed; bottom:0; left:0; right:0; z-index:20;
+  display:grid; grid-template-columns:repeat(4,1fr);
+  padding:9px 4px calc(9px + env(safe-area-inset-bottom));
+  background:#fff; border-top:1px solid var(--line);
+}
+.bottom-nav a {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:4px; min-height:48px;
+  color:var(--muted); font-size:11px;
+}
+.bottom-nav .nav-icon { font-size:20px; }
+.bottom-nav a:hover,.bottom-nav a:focus { color:var(--navy); }
+
+/* 캐릭터 상세 */
+.character-detail { display:none; min-height:80vh; padding:24px 20px 40px; }
+.detail-back {
+  display:inline-flex; align-items:center; gap:7px; margin-bottom:24px;
+  padding:10px 15px; border:1px solid var(--line); border-radius:20px;
+  background:#fff; color:var(--navy); font-size:13px; font-weight:700;
+}
+.detail-heading { margin-bottom:22px; }
+.detail-heading .label { margin-bottom:8px; }
+.detail-heading h1 { margin:0; color:var(--navy); font-size:32px; font-weight:900; }
+.detail-intro { margin:9px 0 0; color:var(--muted); font-size:14px; line-height:1.6; }
+.character-gallery { display:flex; flex-direction:column; gap:18px; }
+.character-gallery img {
+  display:block; width:100%; height:auto; border-radius:12px; background:#eee8df;
+}
+.character-description {
+  padding:16px; border:1px solid var(--line); border-radius:12px;
+  background:#fff; color:var(--text); font-size:15px;
+  line-height:1.5; white-space:pre-line;
+}
+.character-description .legend-ability-title {
+  display:block; margin-top:1.5em; font-weight:800;
+}
+.character-description .legend-ability-label { color:#a64a18; }
+.character-description .legend-ability-separator { color:var(--text); font-weight:800; }
+.character-description .legend-ability-name { color:#777b80; }
+.character-description .legend-ability-text { display:block; margin-top:0; }
+.detail-bottom { margin-top:28px; text-align:center; }
+.detail-bottom .detail-back { margin-bottom:0; }
+@media (min-width:700px) {
+  section { padding:42px 30px; }
+  .bottom-nav { left:50%; right:auto; width:min(100%,900px); transform:translateX(-50%); }
+  .character-detail { padding:35px 30px 50px; }
+  .character-gallery { gap:24px; }
+}
+@media (max-width:380px) {
+  .bestiary-title .title-k { font-size:36px; }
+  .bestiary-title .title-text,
+  .section-title { font-size:27px; }
+}
+
+/* KMON digital card collection */
+.kmon-collection-back{display:inline-flex;align-items:center;gap:7px;margin-bottom:24px;padding:10px 15px;border:1px solid var(--line);border-radius:20px;background:#fff;color:var(--navy);font-size:13px;font-weight:700;text-decoration:none}
+.kmon-collection-back:hover{background:#edf1f7}
+
+.kmon-rarity-normal{color:#7A8493!important;font-weight:800}
+.kmon-rarity-rare{color:#2378C5!important;font-weight:800}
+.kmon-rarity-epic{color:#8B42CB!important;font-weight:800}
+.kmon-rarity-legend{color:#B58A35!important;font-weight:800}
+
+.kmon-mobile-break{display:none}
+@media(max-width:600px){.kmon-mobile-break{display:inline}.kmon-desktop-space{display:none}}
+.kmon-card-tagline{color:#B75C12;font-size:18px;font-weight:600;line-height:1.6;margin:12px 0 0;word-break:keep-all}
+@media(max-width:600px){.kmon-card-tagline{font-size:16px}}
+.kmon-card-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-top:20px}
+/* Home: show four random cards as two large cards per row. Collection retains four per row on desktop. */
+#kmon-home-cards{grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px;margin-left:auto;margin-right:auto;gap:22px}
+@media(max-width:767px){
+  #kmon-home-cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  #kmon-collection-cards .kmon-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.kmon-card-item{min-width:0;text-align:center}
+.kmon-card-item button{display:block;width:100%;padding:0;border:0;background:transparent;cursor:pointer}
+.kmon-card-item img{display:block;width:100%;aspect-ratio:5/7;object-fit:contain;border-radius:9px;box-shadow:0 5px 15px #202b4b25}
+.kmon-card-item h3{font-size:14px;margin:9px 0 3px}.kmon-card-item p{font-size:12px;margin:0;color:#596176}
+#card-collection-page{display:none;max-width:1150px;margin:0 auto;padding:45px 24px 90px;min-height:100vh}
+.kmon-collection-group{margin:28px 0 38px}.kmon-collection-group h2{font-size:22px;color:#202b4b;margin-bottom:14px}
+@media(max-width:600px){.kmon-card-grid{gap:7px}.kmon-card-item h3{font-size:11px}.kmon-card-item p{font-size:10px}.kmon-card-item img{border-radius:5px}#card-collection-page{padding:26px 12px 80px}}
+</style>
+<script>
+/* 카카오톡 인앱 브라우저만 구분해 별도 인트로 너비 적용 */
+if (/KAKAOTALK/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add("kmon-kakao-browser");
+}
+/* Android Chrome만 적용하며 Pi Browser의 UA는 제외 */
+if (/Android/i.test(navigator.userAgent) &&
+    /Chrome\/\d+/i.test(navigator.userAgent) &&
+    !/KAKAOTALK|PiBrowser|Pi Browser|MinePi|EdgA|OPR\/|SamsungBrowser|wv\)/i.test(navigator.userAgent)) {
+  document.documentElement.classList.add("kmon-mobile-chrome");
+}
+</script>
+</head>
+<body class="intro-active">
+
+<!-- 인트로 -->
+<div class="intro-screen" id="intro-screen">
+  <div class="intro-art">
+    <picture>
+      <source media="(max-width: 767px)" srcset="KMON_intro_final_approved.webp?v=20261110-1">
+      <img class="intro-image" src="KMON_intro_final_approved.webp?v=20261110-2" alt="Kmon 인트로">
+    </picture>
+    <div class="effect-layer" aria-hidden="true">
+      <svg class="lightning-layer" viewBox="0 0 100 177.16" preserveAspectRatio="none">
+        <ellipse class="cloud-light cloud-light-one" cx="20" cy="24" rx="15" ry="14"/>
+        <ellipse class="cloud-light cloud-light-two" cx="28" cy="38" rx="14" ry="16"/>
+        <ellipse class="cloud-light cloud-light-three" cx="16" cy="52" rx="13" ry="15"/>
+        <g class="glow-one lightning-glow">
+          <path class="main-glow" d="M20 13 L17.5 17.4 L13.2 16.8 L16.4 20.5 L12.8 24.2 L19.1 25.4 L21.8 31.2 L19.3 37.1 L23.1 42.3 L20.2 49.1 L24.8 54.2 L22.1 60"/>
+          <path class="branch" d="M17.5 17.4 L18.4 13.2 L21.5 10.2 M16.4 20.5 L10.8 20.2 L8.1 22.1 M19.1 25.4 L24.8 22.9 L27.6 19.4 M21.8 31.2 L27.4 29.5 L30.8 26.2 M23.1 42.3 L28.1 39.7"/>
+        </g>
+        <g class="bolt-one lightning-bolt">
+          <path d="M20 13 L17.5 17.4 L13.2 16.8 L16.4 20.5 L12.8 24.2 L19.1 25.4 L21.8 31.2 L19.3 37.1 L23.1 42.3 L20.2 49.1 L24.8 54.2 L22.1 60"/>
+        </g>
+        <g class="glow-two lightning-glow">
+          <path class="main-glow" d="M30 27 L26.3 31.2 L22.5 30.4 L27.1 35.1 L23.4 39.3 L29.8 40.4 L32.1 46.2 L28.4 52.1 L31.8 57.3 L29.1 64"/>
+          <path class="branch" d="M26.3 31.2 L25.6 26.1 L28.8 22.2 M27.1 35.1 L21.2 34.4 L18.3 36.8 M29.8 40.4 L35.2 37.8 L38.8 34.2 M32.1 46.2 L37.2 44.5"/>
+        </g>
+        <g class="bolt-two lightning-bolt">
+          <path d="M30 27 L26.3 31.2 L22.5 30.4 L27.1 35.1 L23.4 39.3 L29.8 40.4 L32.1 46.2 L28.4 52.1 L31.8 57.3 L29.1 64"/>
+        </g>
+        <g class="glow-three lightning-glow">
+          <path class="main-glow" d="M16 44 L13.3 48.2 L9.4 47.5 L14.1 52.2 L11.2 56.3 L17.1 58.4 L19.2 64.2 L16.4 70.1 L20 75"/>
+          <path class="branch" d="M13.3 48.2 L14.1 43.5 L17.8 39.2 M14.1 52.2 L8.7 53.5 L6.1 56 M17.1 58.4 L22.3 55.8 L25.8 52.4"/>
+        </g>
+        <g class="bolt-three lightning-bolt">
+          <path d="M16 44 L13.3 48.2 L9.4 47.5 L14.1 52.2 L11.2 56.3 L17.1 58.4 L19.2 64.2 L16.4 70.1 L20 75"/>
+        </g>
+      </svg>
+      <span class="castle-flash spire"></span>
+      <span class="castle-flash wall"></span>
+      <span class="castle-flash spire-two"></span>
+      <span class="castle-flash wall-two"></span>
+      <span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span>
+      <span class="petal"></span><span class="petal"></span>
+    </div>
+    <button class="intro-enter" id="intro-enter" type="button" aria-label="ENTER KMON WORLD">
+      <span class="intro-enter-label">ENTER KMON WORLD →</span>
+      <span class="button-sparkle left"></span>
+      <span class="button-sparkle right"></span>
+    </button>
+  </div>
+</div>
+
+<!-- 홈페이지 -->
+<main id="home-page">
+  <section class="world-banner" id="world">
+    <img src="kmon-world.webp" alt="Kmon의 세계">
+    <button class="world-detail-button" type="button" onclick="window.location.href='kmon-world-story.html'">Kmon의 세계 알아보기 <span aria-hidden="true">→</span></button>
+  </section>
+  <section id="bestiary">
+    <div class="bestiary-heading">
+  <div class="bestiary-toolbar">
+    <span class="bestiary-brand">KMON <span>WORLD</span></span>
+    <div class="bestiary-toolbar-actions">
+    <div class="language-selector">
+      <button
+        class="language-button"
+        id="language-button"
+        type="button"
+        aria-expanded="false"
+        aria-controls="language-menu"
+      >
+        한국어
+        <span aria-hidden="true">⌄</span>
+      </button>
+
+      <div class="language-menu" id="language-menu">
+        <button class="language-option" type="button" data-lang="ko">한국어</button>
+        <button class="language-option" type="button" data-lang="en">English</button>
+        <button class="language-option" type="button" data-lang="zh">简体中文</button>
+        <button class="language-option" type="button" data-lang="ja">日本語</button>
+        <button class="language-option" type="button" data-lang="vi">Tiếng Việt</button>
+            </div>
+    </div>
+
+    <button
+      class="pi-login-button"
+      id="pi-login-button"
+      type="button"
+    >Pi 로그인</button>
+    </div>
+  </div>
+  <div class="label">DISCOVER THE UNKNOWN</div>
+  <div class="bestiary-title-row">
+    <h2 class="bestiary-title">
+      <span class="title-k">K</span>
+      <span class="title-text">몬스터 도감</span>
+    </h2>
+  </div>
+
+  <p class="intro">Kmon의 존재들을 하나씩 만나 보세요.</p>
+</div>
+    <div class="cards">
+      <article class="card">
+        <a class="card-link" href="#sero">
+          <div class="card-art"><img src="sero_thumbnail_1.webp" alt="세로(Sero)"></div>
+          <h3>세로(Sero)</h3>
+          <p>Kmon팀의 리더(저승사자)</p>
+        </a>
+      </article>
+      <article class="card">
+        <a class="card-link" href="#chesy">
+          <div class="card-art"><img src="chesy_thumbnail_1.webp" alt="체시(Chesy)"></div>
+          <h3>체시(Chesy)</h3>
+          <p>Kmon팀소속, 세자매의 맏언니(처녀귀신)</p>
+        </a>
+      </article>
+      <article class="card">
+        <a class="card-link" href="#chery">
+          <div class="card-art"><img src="chery_thumbnail_1.webp" alt="체리(Chery)"></div>
+          <h3>체리(Chery)</h3>
+          <p>Kmon 캐릭터</p>
+        </a>
+      </article>
+      <article class="card">
+        <a class="card-link" href="#chemi">
+          <div class="card-art"><img src="chemi_thumbnail_1.webp" alt="체미(Chemi)"></div>
+          <h3>체미(Chemi)</h3>
+          <p>Kmon팀소속, 세자매의 막내(처녀귀신)</p>
+        </a>
+      </article>
+      <article class="card">
+        <a class="card-link" href="#dumboo">
+          <div class="card-art"><img src="dumboo_thumbnail_1.webp" alt="덤부(Dumboo)"></div>
+          <h3>덤부(Dumboo)</h3>
+          <p>Kmon팀소속, 몽달귀신(총각귀신)</p>
+        </a>
+      </article>
+      <article class="card">
+        <a class="card-link" href="#ddboaq">
+          <div class="card-art"><img src="ddboaq_thumbnail_1.webp" alt="뚱보아귀(Hungry Monster)"></div>
+          <h3>뚱보아귀(Hungry Monster)</h3>
+          <p>악귀 : 뚱보아귀</p>
+        </a>
+      </article>
+    </div>
+    <div class="more-monsters-wrap">
+      <a class="more-monsters-button" href="#monster-index">몬스터 더보기</a>
+    </div>
+  </section>
+
+  <section id="videos">
+    <div class="label">WATCH KMON</div>
+    <h2 class="section-title">에피소드 영상</h2>
+    <div class="episode-video">
+      <video controls playsinline preload="metadata">
+        <source src="ddboaq_vod_1.mp4" type="video/mp4">
+        브라우저에서 영상을 재생할 수 없습니다.
+      </video>
+    </div>
+  </section>
+
+  <section id="cards">
+    <div class="label">COLLECT YOUR WORLD</div>
+    <h2 class="section-title">디지털 카드</h2>
+    <p class="kmon-card-tagline">당신에게 필요한 특별한 힘,<span class="kmon-mobile-break"><br></span><span class="kmon-desktop-space"> </span>KMON 카드에서 만나보세요.</p>
+    <div class="kmon-card-grid" id="kmon-home-cards"></div>
+    <div class="more-monsters-wrap"><a class="more-monsters-button" href="#card-collection">전체 카드 더보기</a></div>
+  </section>
+
+  <!-- 세로 카드 상세 팝업 -->
+  <div id="sero-card-modal" class="sero-modal">
+    <div class="sero-modal-content">
+      <button type="button" id="sero-card-close" class="sero-modal-close">×</button>
+      <div class="sero-modal-card-art"><img src="sero_legend_thumbnail_1.webp" alt="세로 LEGEND 카드 미리보기"><p class="sero-card-preview-note">※ 카드 이미지는 미리보기용입니다.</p></div>
+      <h2>세로 (Sero)</h2>
+      <p class="sero-modal-rarity">LEGEND</p>
+      <h3>절대 소유물 수호</h3>
+            <p>내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다.</p>
+
+      <div class="kmon-symbol-guide" aria-label="고유 심볼 안내"><div class="kmon-symbol-guide-title">고유 심볼 안내</div><p class="kmon-symbol-guide-description">세로의 고유 심볼은 ‘소유와 보호’를 의미하며, 소중한 것을 지키는 힘을 상징합니다.</p></div>
+      <div class="sero-modal-guide">
+        <p>혹시, 물건을 잘 잃어버리거나 없어지나요?</p>
+        <p>이 카드를 소유하는 순간, 캐릭터에 깃든 특별한 능력이 사용자에게 이어집니다.</p>
+        <p>이러한 특별한 경험은 캐릭터 카드마다 고유 심볼을 부여했기에 가능합니다.</p>
+        <p>Kmon의 고유 심볼은 한국의 전통 민속신앙을 바탕으로 창작되었으며, 각 캐릭터만의 고유한 의미와 능력을 상징합니다.</p>
+      </div>
+
+      <p class="sero-modal-notice">카드 구매 및 정식 원본 다운로드 기능은 준비 중입니다.</p>
+      <button type="button" class="sero-buy-button" disabled>Pi로 구매하기 · 준비 중</button>
+    </div>
+  </div>
+
+</main>
+
+<!-- KMON 전체 디지털 카드 컬렉션 -->
+<main id="card-collection-page">
+  <a class="kmon-collection-back" href="#world">← 메인으로 돌아가기</a>
+  <div class="label">KMON CARD COLLECTION</div>
+  <h1>디지털 카드 컬렉션</h1>
+  <p>캐릭터 순서 · <span class="kmon-rarity-normal">NORMAL</span> → <span class="kmon-rarity-rare">RARE</span> → <span class="kmon-rarity-epic">EPIC</span> → <span class="kmon-rarity-legend">LEGEND</span></p>
+  <div id="kmon-collection-cards"></div>
+</main>
+
+<!-- 동자 상세 -->
+<main id="dong_boy-detail" class="character-detail"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a><div class="detail-heading"><div class="label">KMON CHARACTER</div><h1>동자(Ghost of a Little Boy)</h1><p class="detail-intro">요괴 : 동자</p></div><div class="character-gallery" id="dong_boy-gallery"></div><div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div></main>
+<!-- 빼빼아귀 상세 -->
+<main id="bbeaq-detail" class="character-detail"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a><div class="detail-heading"><div class="label">KMON CHARACTER</div><h1>빼빼아귀(Skinny Hungry Monster)</h1><p class="detail-intro">악귀 : 빼빼아귀</p></div><div class="character-gallery" id="bbeaq-gallery"></div><div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div></main>
+<!-- 동녀 상세 -->
+<main id="dong_girl-detail" class="character-detail"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a><div class="detail-heading"><div class="label">KMON CHARACTER</div><h1>동녀(Ghost of a Little Girl)</h1><p class="detail-intro">요괴 : 동녀</p></div><div class="character-gallery" id="dong_girl-gallery"></div><div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div></main>
+<!-- 물귀신 상세 -->
+<main id="water_ghost-detail" class="character-detail"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a><div class="detail-heading"><div class="label">KMON CHARACTER</div><h1>물귀신(Water Ghost)</h1><p class="detail-intro">악귀 : 물귀신</p></div><div class="character-gallery" id="water_ghost-gallery"></div><div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div></main>
+<!-- 전체 몬스터 도감 -->
+<main id="monster-index-page">
+  <a class="detail-back" href="#bestiary">← 메인으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON BESTIARY</div>
+    <h1>몬스터 도감</h1>
+    <p class="detail-intro">Kmon의 존재들을 하나씩 만나 보세요.</p>
+  </div>
+  <div class="index-grid" id="monster-index-grid"></div>
+  <div class="pagination" id="monster-pagination" aria-label="도감 페이지"></div>
+</main>
+
+<!-- 달걀귀신 상세 -->
+<main id="egg-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>달걀귀</h1>
+    <p class="detail-intro">악귀 : 달걀귀신</p>
+  </div>
+  <div class="character-gallery" id="egg-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 체미 상세 -->
+<main id="chemi-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>체미(Chemi)</h1>
+    <p class="detail-intro">Kmon팀소속, 세자매의 막내(처녀귀신)</p>
+  </div>
+  <div class="character-gallery" id="chemi-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 덤부 상세 -->
+<main id="dumboo-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>덤부(Dumboo)</h1>
+    <p class="detail-intro">Kmon팀소속, 몽달귀신(총각귀신)</p>
+  </div>
+  <div class="character-gallery" id="dumboo-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 뚱보아귀 상세 -->
+<main id="ddboaq-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>뚱보아귀(Hungry Monster)</h1>
+    <p class="detail-intro">악귀 : 뚱보아귀</p>
+  </div>
+  <div class="character-gallery" id="ddboaq-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 세로 상세 -->
+<main id="sero-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>세로(Sero)</h1>
+    <p class="detail-intro">Kmon팀의 리더(저승사자)</p>
+  </div>
+  <div class="character-gallery" id="sero-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 체리 상세 -->
+<main id="chery-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>체리(Chery)</h1>
+<p class="detail-intro" data-i18n="chery_intro">처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 공주병 기질을 가진 사랑스러운 귀신이다. 언제나 자신이 가장 예쁘고 특별하다고 생각하며 관심과 칭찬을 즐긴다. Kmon의 팀원으로서 다른 네 명의 팀원 사이를 이어주는 가교 역할을 하며, 팀의 조화와 화합에 중요한 역할을 한다.</p>
+</div>
+  <div class="character-gallery" id="chery-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<!-- 체시 상세 -->
+<main id="chesy-detail" class="character-detail">
+  <a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a>
+  <div class="detail-heading">
+    <div class="label">KMON CHARACTER</div>
+    <h1>체시(Chesy)</h1>
+    <p class="detail-intro">Kmon팀소속, 세자매의 맏언니(처녀귀신)</p>
+  </div>
+  <div class="character-gallery" id="chesy-gallery"></div>
+  <div class="detail-bottom"><a class="detail-back" href="#monster-index">← 도감으로 돌아가기</a></div>
+</main>
+
+<footer id="page-footer">© Kmon · Discover Korean Monsters</footer>
+
+<nav class="bottom-nav" id="bottom-nav" aria-label="주요 메뉴">
+  <a href="#world"><span class="nav-icon">⌂</span><span>홈</span></a>
+  <a href="#bestiary"><span class="nav-icon">♧</span><span>도감</span></a>
+  <a href="#videos"><span class="nav-icon">▷</span><span>영상</span></a>
+  <a href="#cards"><span class="nav-icon">▤</span><span>카드·스토리</span></a>
+</nav>
+
+<script>
+const seroImages = ["sero_1.webp","sero_2.webp","sero_3.webp"];
+const chesyImages = ["chesy_0.webp","chesy_1.webp","chesy_2.webp","chesy_3.webp"];
+const cheryImages = ["chery_1.webp","chery_2.webp","chery_3.webp"];
+const chemiImages = ["chemi_1.webp"];
+const eggImages = ["eggghost_1.webp","eggghost_2.webp","eggghost_3.webp","egg_1.webp"];
+const dumbooImages = ["dumboo_1.webp","dumboo_2.webp"];
+const bbeaqImages = ["bbeaq_1.webp","bbeaq_2.webp","bbeaq_3.webp"];
+const bbeaqDescription = "뚱보아귀의 뱃속에 몰래 숨어 사는, 교활하고 영악한 기생 아귀 빼빼아귀!\n\n삐쩍 마른 몸에 힘도 약하지만, 남의 것을 이용해 살아가는 데는 누구보다 뛰어난 재주를 가진 악귀다.\n\n뚱보아귀의 배에 달린 거대한 입속에 숨어 지내며, 뚱보아귀가 먹어 치우는 음식을 몰래 가로채 배를 채운다. 정작 뚱보아귀는 자신의 뱃속에 누군가 살고 있다는 사실조차 모른다.\n\n뚱보아귀가 배불리 먹고 깊은 잠에 빠지면 슬그머니 밖으로 나와 자유로운 시간을 즐기기도 한다. 하지만 뚱보아귀가 깨어나기 전에는 반드시 돌아와야 한다.\n\n그런데 빼빼아귀는 자신의 보금자리를 잃지 않기 위해, 뚱보아귀가 위험에 처하면 몰래 힘을 보태기도 한다.\n\n과연 빼빼아귀는 언제까지 뚱보아귀 몰래 살아갈 수 있을까?";
+const dong_boyImages = ["dong_boy_1.webp","dong_boy_2.webp","dong_boy_3.webp"];
+const dong_boyDescription = "귀여운 얼굴 뒤에 500년 묵은 심술을 감춘, 장난감에 약한 장난꾸러기 동자!\n\n어린아이 같은 앙증맞은 외모와 달리, 500살이 훌쩍 넘은 동자는 변덕이 심하고 제멋대로인 심술쟁이 요괴다. 특히 남들이 사이좋게 지내는 모습을 참지 못한다.\n\n다정한 연인들을 보면 괜히 심술이 나서, 교묘한 거짓말과 이간질로 서로를 오해하게 만든다. 두 사람의 관계가 틀어지는 모습을 지켜보며 혼자 즐거워하는 짓궂은 성격의 소유자다.\n\n하지만 이런 동자에게도 치명적인 약점이 있으니, 바로 장난감이다. 500년 넘게 살아왔어도 사탕과 과자를 좋아하고, 마음에 드는 장난감 앞에서는 영락없는 어린아이가 되어 방금 전까지 부리던 심술도 잊어버린다.\n\n500살 심술쟁이 동자의 마음을 움직이는 비결? 장난감 하나면 충분하다!";
+const dong_girlImages = ["dong_girl_1.webp","dong_girl_2.webp","dong_girl_3.webp"];
+const dong_girlDescription = "귀여운 얼굴 뒤에 500년 묵은 심술을 감춘, 사탕에 약한 장난꾸러기 동녀!\n\n앙증맞은 외모와 달리 500살이 훌쩍 넘은 동녀는 변덕이 심하고 제멋대로인 심술쟁이 요괴다. 특히 남들이 사이좋게 지내는 모습을 참지 못해 온갖 장난을 꾸민다.\n\n교묘한 거짓말과 이간질로 서로를 오해하게 만들고, 다투는 모습을 지켜보며 혼자 즐거워한다. 귀여운 얼굴에 속아 방심했다가는 어느새 동녀의 장난에 휘말리기 십상이다.\n\n하지만 이런 동녀에게도 치명적인 약점이 있으니, 바로 사탕과 과자다. 500년 넘게 살아왔어도 달콤한 간식 앞에서는 영락없는 어린아이가 되어, 방금 전까지 부리던 심술도 잊고 무엇이든 들어주려 한다.\n\n500살 심술쟁이를 다루는 비결? 주머니 속 사탕 한 알이면 충분하다!";
+const water_ghostImages = ["water_ghost_1.webp","water_ghost_2.webp","water_ghost_3.webp","water_ghost_4.webp"];
+const water_ghostDescription = "물속에 숨어 장난칠 기회만 노리는, 짓궂은 악동 물귀신!\n\n물귀신은 제주도에서 스쿠버다이빙을 즐기던 중 불의의 사고를 당해 귀신이 되었다. 지금은 주로 물속에 숨어 지내며, 사람들을 깜짝 놀라게 하거나 골탕 먹이는 장난을 즐긴다.\n\n물귀신의 가장 특별한 무기는 입에서 강력한 물줄기를 발사하는 ‘입물총’이다. 별다른 무기 없이도 강력한 물줄기로 상대를 공격할 수 있으며, 이 능력을 이용해 온갖 짓궂은 장난을 벌인다.\n\n특히 Kmon팀의 덤부를 놀리는 것을 가장 좋아한다. 달리기에 서툰 덤부가 자신을 잡으려고 힘겹게 쫓아오는 모습을 보면 더욱 신이 나 장난을 멈추지 않는다.";
+const ddboaqImages = ["ddboaq_1.webp","ddboaq_2.webp","ddboaq_3.webp"];
+
+const seroDescription = "저승의 명령을 수행하는 고독한 사신, Kmon팀의 리더 세로.\n\n세로는 귀신들을 관장하는 저승사자이자 Kmon팀을 이끄는 리더다. 염라대왕의 명을 받아 한국 곳곳에 숨어 있는 악귀들을 소탕하는 임무를 맡고 있다.\n\n하지만 임무는 생각처럼 쉽지 않다. 함께하는 팀원 체시, 체리, 체미, 덤부는 저마다 개성이 넘치지만 정작 악귀를 소탕할 때는 그다지 도움이 되지 않는다. 결국 중요한 순간마다 세로가 직접 나서서 일을 해결해야 한다.\n\n늘 무표정하고 과묵한 세로는 시끌벅적한 팀원들 사이에서도 혼자 있는 시간을 좋아한다. 고독을 즐기는 성격 탓에 좀처럼 속마음을 드러내지 않지만, 누구보다 자신의 임무에 충실하다.\n\n세로의 망토 안에는 언제든 꺼내 사용할 수 있는 권총이 숨겨져 있다. 평소에는 조용히 모습을 감추고 있지만, 악귀를 상대해야 할 순간이 오면 망토 속 권총과 함께 냉철한 저승사자의 본모습을 드러낸다.\n\n고유 능력 | 절대 소유물 수호\n내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다.";
+
+const chesyDescription = "엄격한 규율 속에 따뜻한 마음을 숨긴, Kmon팀의 든든한 맏언니 체시.\n\n처녀귀신 세자매의 맏언니인 체시는 Kmon팀에서 기숙사 사감 같은 존재다. 언제나 흐트러짐 없는 태도로 팀원들을 관리하며, 규칙과 질서를 중요하게 생각한다.\n\n평소에는 작은 실수도 그냥 넘어가지 않는 깐깐한 규율부장처럼 행동한다. 제멋대로인 팀원들에게 잔소리를 늘어놓기도 하지만, 사실 그 속에는 누구보다 동료들을 아끼는 따뜻한 마음이 숨어 있다.\n\n무뚝뚝한 말투와 엄격한 행동 때문에 차갑게 보일 때도 있지만, 정작 누군가 어려움에 처하면 누구보다 먼저 나서서 챙겨주는 츤데레 같은 성격의 소유자다.\n\nKmon팀의 안살림을 책임지는 체시는 개성 강한 팀원들이 함께 지낼 수 있도록 중심을 잡아주는 든든한 맏언니다. 때로는 잔소리꾼, 때로는 보호자처럼 팀을 지탱하는 없어서는 안 될 존재다.";
+
+const cheryDescription = "자신이 세상에서 가장 예쁘다고 믿는, Kmon팀의 사랑스러운 공주님.\n\n처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 남다른 공주병 기질을 가진 귀신이다. 관심과 칭찬을 받는 것을 무엇보다 좋아하며, 주목받지 못하면 금세 시무룩해지는 귀여운 성격의 소유자다.\n\n하지만 밝고 다정한 성격 덕분에 개성 강한 Kmon팀의 동료들 사이를 이어주는 가교 역할도 한다. 때로는 제멋대로인 작은 공주님이지만, 팀의 분위기를 부드럽게 만들고 화합을 이끄는 없어서는 안 될 존재다.";
+
+const chemiDescription = "말괄량이지만 실력만큼은 최고! Kmon팀의 작은 해결사 체미.\n\n처녀귀신 세자매의 막내인 체미는 호기심 많고 장난기 넘치는 말괄량이 귀신이다. 언제나 좌충우돌하며 크고 작은 소동을 일으키지만, 특유의 재빠른 몸놀림과 행동력으로 위기의 순간마다 놀라운 활약을 펼친다.\n\n악귀 소탕에서는 누구보다 앞장서는 Kmon팀의 일등공신이다. 평소에는 사고뭉치처럼 보이지만, 임무를 수행할 때만큼은 누구보다 믿음직한 존재로, 과묵한 리더 세로가 가장 신임하는 팀원이기도 하다.";
+
+const eggDescription = "작은 몸집에 번개 같은 스피드를 지닌, 촐싹대는 악동 달걀귀신!\n\n불우한 환경의 닭장에서 태어난 달걀귀신은 평범한 달걀과는 전혀 다른 운명을 타고난 요괴다. 작고 연약해 보이는 외모와 달리, 누구도 쉽게 따라잡을 수 없을 만큼 빠른 몸놀림을 자랑한다.\n\n잠시도 가만히 있지 못하는 촐싹거리는 성격으로, 이리저리 뛰어다니며 주변을 정신없게 만든다. 생각보다 행동이 앞서는 탓에 엉뚱한 소동을 일으키기도 하지만, 위험한 순간에는 놀라운 순발력으로 재빨리 위기를 벗어난다.\n\n어디로 튈지 모르는 달걀귀신! 작다고 얕봤다가는 눈 깜짝할 사이에 놓쳐버릴지도 모른다.\n\n고유 능력 | 잠재력 개화\n시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 가장 맑고 예리하게 깨워, 자신의 잠재력과 실력을 최대한 발휘하고 기대 이상의 결과를 얻을 수 있도록 도와준다.";
+
+const dumbooDescription = "느리지만 힘만큼은 누구에게도 지지 않는, Kmon팀의 괴력 담당 덤부!\n\n몽달귀신(총각귀신)인 덤부는 살아생전 이성에게 인기가 없는 외모 때문에 번번이 사랑에 실패했다. 101번째 프러포즈마저 실패한 뒤 집으로 돌아가던 길에 교통사고를 당해 귀신이 되었다.\n\n지금은 Kmon팀의 일원이 되어 악귀 소탕에 힘쓰고 있다. 행동이 굼뜨고 달리기도 서툴러 동료들에게 뒤처지기 일쑤지만, 힘만큼은 누구에게도 밀리지 않는다.\n\n평소에는 어수룩하고 느릿느릿한 덤부지만, 강한 힘이 필요한 순간에는 누구보다 든든한 팀원이 된다.";
+
+const ddboaqDescription = "먹어도 먹어도 배가 고픈, 끝없는 식욕의 괴물 뚱보아귀!\n\n뚱보아귀는 악귀들 중에서도 가장 거대한 몸집과 끝없는 식욕을 가진 괴물이다. 눈에 보이는 음식은 무엇이든 먹어 치우며, 배가 터질 듯이 먹고도 금세 또다시 배고픔을 느낀다.\n\n도대체 왜 이렇게 배가 고픈 걸까? 아무리 먹어도 허기가 사라지지 않는 이유는 누구도 알지 못한다. 뚱보아귀 자신조차 그 이유를 모른 채 오늘도 먹을 것을 찾아 헤맨다.\n\n그런데 이 끝없는 배고픔에는 우리가 아직 알지 못하는 비밀이 숨어 있는 것은 아닐까?";
+
+/* 캐릭터 이미지 목록 불러오기: JSON 파일 사용 */
+function renderCharacterDescription(element, description, characterName) {
+  if (!element) return;
+  element.textContent = description;
+  if (characterName !== "sero" && characterName !== "egg") return;
+  const lines = description.split("\n");
+  const abilityIndex = lines.findIndex(line => /^(고유 능력|Special Ability|专属能力|固有能力|Năng lực đặc biệt)\s*\|/.test(line));
+  if (abilityIndex < 0) return;
+  element.textContent = lines.slice(0, abilityIndex).join("\n").trimEnd();
+  const title = document.createElement("strong");
+  title.className = "legend-ability-title";
+  const parts = lines[abilityIndex].split("|");
+  const label = document.createElement("span");
+  label.className = "legend-ability-label";
+  label.textContent = parts[0].trim();
+  const separator = document.createElement("span");
+  separator.className = "legend-ability-separator";
+  separator.textContent = " | ";
+  const name = document.createElement("span");
+  name.className = "legend-ability-name";
+  name.textContent = parts.slice(1).join("|").trim();
+  title.append(label, separator, name);
+  element.appendChild(title);
+  if (lines.length > abilityIndex + 1) {
+    const abilityText = document.createElement("span");
+    abilityText.className = "legend-ability-text";
+    abilityText.textContent = lines.slice(abilityIndex + 1).join("\n");
+    element.appendChild(abilityText);
+  }
+}
+
+async function createGallery(galleryId, images, description) {
+  const gallery = document.getElementById(galleryId);
+  if (!gallery) return;
+
+  const characterName = galleryId.replace("-gallery", "");
+  let imageFiles = images;
+
+  try {
+    const response = await fetch(
+      `${characterName}_images.json?t=${Date.now()}`
+    );
+
+    if (!response.ok) {
+      throw new Error("이미지 목록 파일을 불러오지 못했습니다.");
+    }
+
+    const loadedImages = await response.json();
+
+    if (!Array.isArray(loadedImages) || loadedImages.length === 0) {
+      throw new Error("이미지 목록 형식이 올바르지 않습니다.");
+    }
+
+    imageFiles = loadedImages;
+  } catch (error) {
+    console.error("갤러리 이미지 목록 오류:", characterName, error);
+  }
+
+  gallery.innerHTML = "";
+
+  imageFiles.forEach((fileName, index) => {
+    const image = document.createElement("img");
+    image.src = fileName;
+    image.alt = "캐릭터 이미지 " + (index + 1);
+    image.loading = "lazy";
+    gallery.appendChild(image);
+
+    if (index === 0 && description) {
+      const descriptionBox = document.createElement("div");
+      descriptionBox.className = "character-description";
+      renderCharacterDescription(descriptionBox, description, characterName);
+      gallery.appendChild(descriptionBox);
+    }
+  });
+  const localized = (pageTranslations[activeLanguage] || pageTranslations.ko).details[characterName];
+  const descriptionElement = gallery.querySelector(".character-description");
+  if (localized && descriptionElement) renderCharacterDescription(descriptionElement, localized[2], characterName);
+}
+
+createGallery("sero-gallery",seroImages,seroDescription);
+createGallery("chesy-gallery",chesyImages,chesyDescription);
+createGallery("chery-gallery",cheryImages,cheryDescription);
+createGallery("chemi-gallery",chemiImages,chemiDescription);
+createGallery("egg-gallery",eggImages,eggDescription);
+createGallery("dumboo-gallery",dumbooImages,dumbooDescription);
+createGallery("ddboaq-gallery",ddboaqImages,ddboaqDescription);
+createGallery("water_ghost-gallery",water_ghostImages,water_ghostDescription);
+createGallery("dong_girl-gallery",dong_girlImages,dong_girlDescription);
+createGallery("bbeaq-gallery",bbeaqImages,bbeaqDescription);
+createGallery("dong_boy-gallery",dong_boyImages,dong_boyDescription);
+
+/* 전체 몬스터 도감 데이터: 등록 순서대로 추가 */
+const monsters = [
+  {name:"세로(Sero)", description:"Kmon팀의 리더(저승사자)", thumbnail:"sero_thumbnail_1.webp", hash:"#sero"},
+  {name:"체시(Chesy)", description:"Kmon팀소속, 세자매의 맏언니(처녀귀신)", thumbnail:"chesy_thumbnail_1.webp", hash:"#chesy"},
+  {name:"체리(Chery)", description:"Kmon팀소속, 처녀귀신 세자매의 둘째", thumbnail:"chery_thumbnail_1.webp", hash:"#chery"},
+  {name:"체미(Chemi)", description:"Kmon팀소속, 세자매의 막내(처녀귀신)", thumbnail:"chemi_thumbnail_1.webp", hash:"#chemi"},
+  {name:"덤부(Dumboo)", description:"Kmon팀소속, 몽달귀신(총각귀신)", thumbnail:"dumboo_thumbnail_1.webp", hash:"#dumboo"},
+  {name:"뚱보아귀(Hungry Monster)", description:"악귀 : 뚱보아귀", thumbnail:"ddboaq_thumbnail_1.webp", hash:"#ddboaq"},
+  {name:"물귀신(Water Ghost)", description:"악귀 : 물귀신", thumbnail:"water_ghost_thumbnail_1.webp", hash:"#water_ghost"},
+  {name:"동녀(Ghost of a Little Girl)", description:"요괴 : 동녀", thumbnail:"dong_girl_thumbnail_1.webp", hash:"#dong_girl"},
+  {name:"달걀귀", description:"악귀 : 달걀귀신", thumbnail:"egg_1_updated.webp", hash:"#egg"},
+  {name:"빼빼아귀(Skinny Hungry Monster)", description:"악귀 : 빼빼아귀", thumbnail:"bbeaq_thumbnail_1.webp", hash:"#bbeaq"},
+  {name:"동자(Ghost of a Little Boy)", description:"요괴 : 동자", thumbnail:"dong_boy_thumbnail_1.webp", hash:"#dong_boy"}
+];
+const MONSTERS_PER_PAGE = 12;
+let monsterIndexPage = 1;
+
+function renderMonsterIndex(page=1) {
+  const grid = document.getElementById("monster-index-grid");
+  const pagination = document.getElementById("monster-pagination");
+  if (!grid || !pagination) return;
+  const pageCount = Math.max(1,Math.ceil(monsters.length/MONSTERS_PER_PAGE));
+  monsterIndexPage = Math.min(Math.max(1,page),pageCount);
+  grid.innerHTML = "";
+  const start = (monsterIndexPage-1)*MONSTERS_PER_PAGE;
+  const visible = monsters.slice(start,start+MONSTERS_PER_PAGE);
+
+  visible.forEach((monster, visibleIndex) => {
+    const monsterDataIndex = start + visibleIndex;
+    const localizedMonster = (pageTranslations[activeLanguage] || pageTranslations.ko).monsters[monsterDataIndex] || [monster.name, monster.description || ""];
+    if (monster.placeholder) {
+      const card = document.createElement("div");
+      card.className = "index-card preparing";
+      const label = document.createElement("div");
+      label.className = "preparing-label";
+      label.textContent = (pageTranslations[activeLanguage] || pageTranslations.ko).preparing;
+      card.appendChild(label);
+      grid.appendChild(card);
+      return;
+    }
+    const card = document.createElement("article");
+    card.className = "index-card";
+    const content = monster.hash ? document.createElement("a") : document.createElement("div");
+    content.className = "card-link";
+    if (monster.hash) content.href = monster.hash;
+    const art = document.createElement("div");
+    art.className = "card-art";
+    const image = document.createElement("img");
+    image.src = monster.thumbnail;
+    image.alt = localizedMonster[0];
+    image.loading = "lazy";
+    art.appendChild(image);
+    const title = document.createElement("h3");
+    title.textContent = localizedMonster[0];
+    const description = document.createElement("p");
+    description.textContent = localizedMonster[1];
+    content.append(art,title,description);
+    card.appendChild(content);
+    grid.appendChild(card);
+  });
+
+  for (let i=visible.length;i<MONSTERS_PER_PAGE;i++) {
+    const card = document.createElement("div");
+    card.className = "index-card preparing";
+    const label = document.createElement("div");
+    label.className = "preparing-label";
+    label.textContent = "준비중";
+    card.appendChild(label);
+    grid.appendChild(card);
+  }
+
+  pagination.innerHTML = "";
+  for (let i=1;i<=pageCount;i++) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = String(i);
+    if (i===monsterIndexPage) button.setAttribute("aria-current","page");
+    button.addEventListener("click",()=>renderMonsterIndex(i));
+    pagination.appendChild(button);
+  }
+}
+
+  /* 메인 홈페이지 번역 */
+// Randomize only the homepage monster previews; keep the full bestiary order unchanged.
+(function showRandomHomeMonsters() {
+  const grid = document.querySelector("#bestiary .cards");
+  if (!grid) return;
+  const eligible = monsters.map((monster, index) => ({monster, index})).filter(({monster}) => !monster.placeholder && monster.thumbnail && monster.hash);
+  for (let i = eligible.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [eligible[i], eligible[j]] = [eligible[j], eligible[i]];
+  }
+  grid.replaceChildren(...eligible.slice(0, 6).map(({monster, index}) => {
+    const card = document.createElement("article");
+    card.className = "card";
+    card.dataset.monsterIndex = String(index);
+    const link = document.createElement("a");
+    link.className = "card-link";
+    link.href = monster.hash;
+    const art = document.createElement("div");
+    art.className = "card-art";
+    const img = document.createElement("img");
+    img.src = monster.thumbnail;
+    img.alt = monster.name;
+    art.appendChild(img);
+    const heading = document.createElement("h3");
+    heading.textContent = monster.name;
+    const description = document.createElement("p");
+    description.textContent = monster.description || "";
+    link.append(art, heading, description);
+    card.appendChild(link);
+    return card;
+  }));
+})();
+
+function applyTranslations(language) {
+  const translations = {
+    ko: {
+      title: "몬스터 도감",
+      intro: "Kmon의 존재들을 하나씩 만나 보세요.",
+      monsters: [
+        ["세로(Sero)", "Kmon팀의 리더(저승사자)"],
+        ["체시(Chesy)", "Kmon팀소속, 세자매의 맏언니(처녀귀신)"],
+        ["체리(Chery)", "Kmon 캐릭터"],
+        ["체미(Chemi)", "Kmon팀소속, 세자매의 막내(처녀귀신)"],
+        ["덤부(Dumboo)", "Kmon팀소속, 몽달귀신(총각귀신)"],
+        ["뚱보아귀(Hungry Monster)", "악귀 : 뚱보아귀"]
+      ],
+      more: "몬스터 더보기",
+      videos: "에피소드 영상",
+      cards: "디지털 카드",
+      cardTitle1: "캐릭터 카드",
+      cardText1: "좋아하는 Kmon 캐릭터를 만나 보세요.",
+      cardTitle2: "특별한 이야기",
+      cardText2: "캐릭터들의 숨겨진 이야기를 탐험하세요.",
+      nav: ["홈", "도감", "영상", "카드·스토리"]
+    },
+    en: {
+      title: "Monster Bestiary",
+      intro: "Meet the mysterious beings of Kmon, one by one.",
+      monsters: [
+        ["Sero", "Leader of the Kmon team (Grim Reaper)"],
+        ["Chesy", "Eldest of the three sisters (Virgin Ghost)"],
+        ["Chery", "Kmon team member, second of the three virgin ghost sisters"],
+        ["Chemi", "Youngest of the three sisters (Virgin Ghost)"],
+        ["Dumboo", "Kmon team member (Bachelor Ghost)"],
+        ["Hungry Monster", "Evil spirit: Hungry Monster"]
+      ],
+      more: "Discover More Monsters",
+      videos: "Episode Videos",
+      cards: "Digital Cards",
+      cardTitle1: "Character Cards",
+      cardText1: "Meet your favorite Kmon characters.",
+      cardTitle2: "Special Stories",
+      cardText2: "Explore the hidden stories of the characters.",
+      nav: ["Home", "Bestiary", "Videos", "Cards & Stories"]
+    },
+    zh: {
+      title: "怪物图鉴",
+      intro: "逐一认识 Kmon 世界中的神秘生物。",
+      monsters: [
+        ["Sero", "Kmon团队的领导者（死神）"],
+        ["Chesy", "三姐妹中的大姐（处女鬼）"],
+        ["Chery","三姐妹中的二姐（处女鬼）"],
+        ["Chemi", "三姐妹中的小妹（处女鬼）"],
+        ["Dumboo", "Kmon团队成员（单身鬼）"],
+        ["Hungry Monster", "恶鬼：贪食怪物"]
+      ],
+      more: "查看更多怪物",
+      videos: "剧集视频",
+      cards: "数字卡片",
+      cardTitle1: "角色卡片",
+      cardText1: "认识你喜欢的Kmon角色。",
+      cardTitle2: "特别故事",
+      cardText2: "探索角色们隐藏的故事。",
+      nav: ["首页", "图鉴", "视频", "卡片与故事"]
+    },
+    ja: {
+      title: "モンスター図鑑",
+      intro: "Kmonの不思議な仲間たちに出会いましょう。",
+      monsters: [
+        ["Sero", "Kmonチームのリーダー（死神）"],
+        ["Chesy", "三姉妹の長女（処女幽霊）"],
+        ["Chery", "Kmonキャラクター"],
+        ["Chemi", "三姉妹の末っ子（処女幽霊）"],
+        ["Dumboo", "Kmonチームのメンバー（独身幽霊）"],
+        ["Hungry Monster", "悪霊：大食いモンスター"]
+      ],
+      more: "もっとモンスターを見る",
+      videos: "エピソード動画",
+      cards: "デジタルカード",
+      cardTitle1: "キャラクターカード",
+      cardText1: "お気に入りのKmonキャラクターに会いましょう。",
+      cardTitle2: "特別な物語",
+      cardText2: "キャラクターたちの隠された物語を探検しましょう。",
+      nav: ["ホーム", "図鑑", "動画", "カード・ストーリー"]
+    },
+    vi: {
+      title: "Bách khoa quái vật",
+      intro: "Khám phá từng sinh vật bí ẩn trong thế giới Kmon.",
+      monsters: [
+        ["Sero", "Thủ lĩnh đội Kmon (Thần chết)"],
+        ["Chesy", "Chị cả trong ba chị em (Ma nữ)"],
+        ["Chery", "Nhân vật Kmon"],
+        ["Chemi", "Em út trong ba chị em (Ma nữ)"],
+        ["Dumboo", "Thành viên đội Kmon (Ma nam)"],
+        ["Hungry Monster", "Ác quỷ: Quái vật háu ăn"]
+      ],
+      more: "Khám phá thêm quái vật",
+      videos: "Video tập phim",
+      cards: "Thẻ kỹ thuật số",
+      cardTitle1: "Thẻ nhân vật",
+      cardText1: "Gặp gỡ nhân vật Kmon yêu thích của bạn.",
+      cardTitle2: "Câu chuyện đặc biệt",
+      cardText2: "Khám phá những câu chuyện ẩn giấu của các nhân vật.",
+      nav: ["Trang chủ", "Bách khoa", "Video", "Thẻ & Câu chuyện"]
+    }
+  };
+
+  const t = translations[language] || translations.ko;
+
+  document.querySelector(".title-text").textContent = t.title;
+  document.querySelector("#bestiary .intro").textContent = t.intro;
+
+  const monsterCards = document.querySelectorAll("#bestiary .cards .card");
+
+  monsterCards.forEach((card) => {
+    const index = Number(card.dataset.monsterIndex);
+    const monster = (pageTranslations[language] || pageTranslations.ko).monsters[index] || [monsters[index]?.name, monsters[index]?.description || ""];
+    if (!monster) return;
+    card.querySelector("h3").textContent = monster[0];
+    card.querySelector("p").textContent = monster[1];
+  });
+
+  document.querySelector(".more-monsters-button").textContent = t.more;
+  document.querySelector("#videos .section-title").textContent = t.videos;
+  document.querySelector("#cards .section-title").textContent = t.cards;
+
+  document.querySelectorAll("#bottom-nav a span:last-child")
+    .forEach((item, index) => {
+      item.textContent = t.nav[index];
+    });
+}
+
+/* 전체 페이지 다국어 지원: 메인 외 도감/상세/카드/로그인 문구 */
+const pageTranslations = {
+  ko: {
+    mainBack:"← 메인으로 돌아가기", indexBack:"← 도감으로 돌아가기",
+    indexTitle:"몬스터 도감", intro:"Kmon의 존재들을 하나씩 만나 보세요.",
+    preparing:"준비중", pageLabel:"도감 페이지", characterLabel:"KMON CHARACTER",
+    piLogin:"Pi 로그인", piLoginTitle:"Pi 계정으로 로그인합니다.",
+    logoutConfirm:"Kmon에서 로그아웃하시겠습니까?", logoutAlert:"로그아웃되었습니다.",
+    loginSuccess:"Pi 로그인이 완료되었습니다!", loginFail:"Pi 로그인에 실패했습니다. 다시 시도해 주세요.",
+    cardTitle2:"세로 (Sero)", cardRarity:"LEGEND · 절대 소유물 수호", modalPower:"절대 소유물 수호",
+    modalPromise:"내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다.",
+    guide:["혹시, 물건을 잘 잃어버리거나 없어지나요?","이 카드를 소유하는 순간, 캐릭터에 깃든 특별한 능력이 사용자에게 이어집니다.","이러한 특별한 경험은 캐릭터 카드마다 고유 심볼을 부여했기에 가능합니다.","Kmon의 고유 심볼은 한국의 전통 민속신앙을 바탕으로 창작되었으며, 각 캐릭터만의 고유한 의미와 능력을 상징합니다."],
+    notice:"카드 구매 및 정식 원본 다운로드 기능은 준비 중입니다.", buy:"Pi로 구매하기 · 준비 중",
+    monsters:[["세로(Sero)","Kmon팀의 리더(저승사자)"],["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)"],["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째"],["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)"],["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)"],["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀"],["물귀신(Water Ghost)","악귀 : 물귀신"],["동녀(Ghost of a Little Girl)","요괴 : 동녀"],["달걀귀","악귀 : 달걀귀신"],["빼빼아귀(Skinny Hungry Monster)","악귀 : 빼빼아귀"],["동자(Ghost of a Little Boy)","요괴 : 동자"]],
+    details:{
+      dong_boy:["동자(Ghost of a Little Boy)","요괴 : 동자","귀여운 얼굴 뒤에 500년 묵은 심술을 감춘, 장난감에 약한 장난꾸러기 동자!\n\n어린아이 같은 앙증맞은 외모와 달리, 500살이 훌쩍 넘은 동자는 변덕이 심하고 제멋대로인 심술쟁이 요괴다. 특히 남들이 사이좋게 지내는 모습을 참지 못한다.\n\n다정한 연인들을 보면 괜히 심술이 나서, 교묘한 거짓말과 이간질로 서로를 오해하게 만든다. 두 사람의 관계가 틀어지는 모습을 지켜보며 혼자 즐거워하는 짓궂은 성격의 소유자다.\n\n하지만 이런 동자에게도 치명적인 약점이 있으니, 바로 장난감이다. 500년 넘게 살아왔어도 사탕과 과자를 좋아하고, 마음에 드는 장난감 앞에서는 영락없는 어린아이가 되어 방금 전까지 부리던 심술도 잊어버린다.\n\n500살 심술쟁이 동자의 마음을 움직이는 비결? 장난감 하나면 충분하다!"],
+      bbeaq:["빼빼아귀(Skinny Hungry Monster)","악귀 : 빼빼아귀","뚱보아귀의 뱃속에 몰래 숨어 사는, 교활하고 영악한 기생 아귀 빼빼아귀!\n\n삐쩍 마른 몸에 힘도 약하지만, 남의 것을 이용해 살아가는 데는 누구보다 뛰어난 재주를 가진 악귀다.\n\n뚱보아귀의 배에 달린 거대한 입속에 숨어 지내며, 뚱보아귀가 먹어 치우는 음식을 몰래 가로채 배를 채운다. 정작 뚱보아귀는 자신의 뱃속에 누군가 살고 있다는 사실조차 모른다.\n\n뚱보아귀가 배불리 먹고 깊은 잠에 빠지면 슬그머니 밖으로 나와 자유로운 시간을 즐기기도 한다. 하지만 뚱보아귀가 깨어나기 전에는 반드시 돌아와야 한다.\n\n그런데 빼빼아귀는 자신의 보금자리를 잃지 않기 위해, 뚱보아귀가 위험에 처하면 몰래 힘을 보태기도 한다.\n\n과연 빼빼아귀는 언제까지 뚱보아귀 몰래 살아갈 수 있을까?"],
+      dong_girl:["동녀(Ghost of a Little Girl)","요괴 : 동녀","귀여운 얼굴 뒤에 500년 묵은 심술을 감춘, 사탕에 약한 장난꾸러기 동녀!\n\n앙증맞은 외모와 달리 500살이 훌쩍 넘은 동녀는 변덕이 심하고 제멋대로인 심술쟁이 요괴다. 특히 남들이 사이좋게 지내는 모습을 참지 못해 온갖 장난을 꾸민다.\n\n교묘한 거짓말과 이간질로 서로를 오해하게 만들고, 다투는 모습을 지켜보며 혼자 즐거워한다. 귀여운 얼굴에 속아 방심했다가는 어느새 동녀의 장난에 휘말리기 십상이다.\n\n하지만 이런 동녀에게도 치명적인 약점이 있으니, 바로 사탕과 과자다. 500년 넘게 살아왔어도 달콤한 간식 앞에서는 영락없는 어린아이가 되어, 방금 전까지 부리던 심술도 잊고 무엇이든 들어주려 한다.\n\n500살 심술쟁이를 다루는 비결? 주머니 속 사탕 한 알이면 충분하다!"],
+      water_ghost:["물귀신(Water Ghost)","악귀 : 물귀신","물속에 숨어 장난칠 기회만 노리는, 짓궂은 악동 물귀신!\n\n물귀신은 제주도에서 스쿠버다이빙을 즐기던 중 불의의 사고를 당해 귀신이 되었다. 지금은 주로 물속에 숨어 지내며, 사람들을 깜짝 놀라게 하거나 골탕 먹이는 장난을 즐긴다.\n\n물귀신의 가장 특별한 무기는 입에서 강력한 물줄기를 발사하는 ‘입물총’이다. 별다른 무기 없이도 강력한 물줄기로 상대를 공격할 수 있으며, 이 능력을 이용해 온갖 짓궂은 장난을 벌인다.\n\n특히 Kmon팀의 덤부를 놀리는 것을 가장 좋아한다. 달리기에 서툰 덤부가 자신을 잡으려고 힘겹게 쫓아오는 모습을 보면 더욱 신이 나 장난을 멈추지 않는다."],
+      sero:["세로(Sero)","Kmon팀의 리더(저승사자)","저승의 명령을 수행하는 고독한 사신, Kmon팀의 리더 세로.\n\n세로는 귀신들을 관장하는 저승사자이자 Kmon팀을 이끄는 리더다. 염라대왕의 명을 받아 한국 곳곳에 숨어 있는 악귀들을 소탕하는 임무를 맡고 있다.\n\n하지만 임무는 생각처럼 쉽지 않다. 함께하는 팀원 체시, 체리, 체미, 덤부는 저마다 개성이 넘치지만 정작 악귀를 소탕할 때는 그다지 도움이 되지 않는다. 결국 중요한 순간마다 세로가 직접 나서서 일을 해결해야 한다.\n\n늘 무표정하고 과묵한 세로는 시끌벅적한 팀원들 사이에서도 혼자 있는 시간을 좋아한다. 고독을 즐기는 성격 탓에 좀처럼 속마음을 드러내지 않지만, 누구보다 자신의 임무에 충실하다.\n\n세로의 망토 안에는 언제든 꺼내 사용할 수 있는 권총이 숨겨져 있다. 평소에는 조용히 모습을 감추고 있지만, 악귀를 상대해야 할 순간이 오면 망토 속 권총과 함께 냉철한 저승사자의 본모습을 드러낸다.\n\n고유 능력 | 절대 소유물 수호\n내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다."],
+      chesy:["체시(Chesy)","Kmon팀소속, 세자매의 맏언니(처녀귀신)","엄격한 규율 속에 따뜻한 마음을 숨긴, Kmon팀의 든든한 맏언니 체시.\n\n처녀귀신 세자매의 맏언니인 체시는 Kmon팀에서 기숙사 사감 같은 존재다. 언제나 흐트러짐 없는 태도로 팀원들을 관리하며, 규칙과 질서를 중요하게 생각한다.\n\n평소에는 작은 실수도 그냥 넘어가지 않는 깐깐한 규율부장처럼 행동한다. 제멋대로인 팀원들에게 잔소리를 늘어놓기도 하지만, 사실 그 속에는 누구보다 동료들을 아끼는 따뜻한 마음이 숨어 있다.\n\n무뚝뚝한 말투와 엄격한 행동 때문에 차갑게 보일 때도 있지만, 정작 누군가 어려움에 처하면 누구보다 먼저 나서서 챙겨주는 츤데레 같은 성격의 소유자다.\n\nKmon팀의 안살림을 책임지는 체시는 개성 강한 팀원들이 함께 지낼 수 있도록 중심을 잡아주는 든든한 맏언니다. 때로는 잔소리꾼, 때로는 보호자처럼 팀을 지탱하는 없어서는 안 될 존재다."],
+      chery:["체리(Chery)","Kmon팀소속, 처녀귀신 세자매의 둘째","자신이 세상에서 가장 예쁘다고 믿는, Kmon팀의 사랑스러운 공주님.\n\n처녀귀신 세자매의 둘째인 체리는 귀여운 외모와 남다른 공주병 기질을 가진 귀신이다. 관심과 칭찬을 받는 것을 무엇보다 좋아하며, 주목받지 못하면 금세 시무룩해지는 귀여운 성격의 소유자다.\n\n하지만 밝고 다정한 성격 덕분에 개성 강한 Kmon팀의 동료들 사이를 이어주는 가교 역할도 한다. 때로는 제멋대로인 작은 공주님이지만, 팀의 분위기를 부드럽게 만들고 화합을 이끄는 없어서는 안 될 존재다."],
+      chemi:["체미(Chemi)","Kmon팀소속, 세자매의 막내(처녀귀신)","말괄량이지만 실력만큼은 최고! Kmon팀의 작은 해결사 체미.\n\n처녀귀신 세자매의 막내인 체미는 호기심 많고 장난기 넘치는 말괄량이 귀신이다. 언제나 좌충우돌하며 크고 작은 소동을 일으키지만, 특유의 재빠른 몸놀림과 행동력으로 위기의 순간마다 놀라운 활약을 펼친다.\n\n악귀 소탕에서는 누구보다 앞장서는 Kmon팀의 일등공신이다. 평소에는 사고뭉치처럼 보이지만, 임무를 수행할 때만큼은 누구보다 믿음직한 존재로, 과묵한 리더 세로가 가장 신임하는 팀원이기도 하다."],
+      egg:["달걀귀","악귀 : 달걀귀신","작은 몸집에 번개 같은 스피드를 지닌, 촐싹대는 악동 달걀귀신!\n\n불우한 환경의 닭장에서 태어난 달걀귀신은 평범한 달걀과는 전혀 다른 운명을 타고난 요괴다. 작고 연약해 보이는 외모와 달리, 누구도 쉽게 따라잡을 수 없을 만큼 빠른 몸놀림을 자랑한다.\n\n잠시도 가만히 있지 못하는 촐싹거리는 성격으로, 이리저리 뛰어다니며 주변을 정신없게 만든다. 생각보다 행동이 앞서는 탓에 엉뚱한 소동을 일으키기도 하지만, 위험한 순간에는 놀라운 순발력으로 재빨리 위기를 벗어난다.\n\n어디로 튈지 모르는 달걀귀신! 작다고 얕봤다가는 눈 깜짝할 사이에 놓쳐버릴지도 모른다.\n\n고유 능력 | 잠재력 개화\n시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 가장 맑고 예리하게 깨워, 자신의 잠재력과 실력을 최대한 발휘하고 기대 이상의 결과를 얻을 수 있도록 도와준다."],
+      dumboo:["덤부(Dumboo)","Kmon팀소속, 몽달귀신(총각귀신)","느리지만 힘만큼은 누구에게도 지지 않는, Kmon팀의 괴력 담당 덤부!\n\n몽달귀신(총각귀신)인 덤부는 살아생전 이성에게 인기가 없는 외모 때문에 번번이 사랑에 실패했다. 101번째 프러포즈마저 실패한 뒤 집으로 돌아가던 길에 교통사고를 당해 귀신이 되었다.\n\n지금은 Kmon팀의 일원이 되어 악귀 소탕에 힘쓰고 있다. 행동이 굼뜨고 달리기도 서툴러 동료들에게 뒤처지기 일쑤지만, 힘만큼은 누구에게도 밀리지 않는다.\n\n평소에는 어수룩하고 느릿느릿한 덤부지만, 강한 힘이 필요한 순간에는 누구보다 든든한 팀원이 된다."],
+      ddboaq:["뚱보아귀(Hungry Monster)","악귀 : 뚱보아귀","먹어도 먹어도 배가 고픈, 끝없는 식욕의 괴물 뚱보아귀!\n\n뚱보아귀는 악귀들 중에서도 가장 거대한 몸집과 끝없는 식욕을 가진 괴물이다. 눈에 보이는 음식은 무엇이든 먹어 치우며, 배가 터질 듯이 먹고도 금세 또다시 배고픔을 느낀다.\n\n도대체 왜 이렇게 배가 고픈 걸까? 아무리 먹어도 허기가 사라지지 않는 이유는 누구도 알지 못한다. 뚱보아귀 자신조차 그 이유를 모른 채 오늘도 먹을 것을 찾아 헤맨다.\n\n그런데 이 끝없는 배고픔에는 우리가 아직 알지 못하는 비밀이 숨어 있는 것은 아닐까?"]
+    }
+  },
+  en: {
+    mainBack:"← Back to Home", indexBack:"← Back to Bestiary", indexTitle:"Monster Bestiary",
+    intro:"Meet the mysterious beings of Kmon, one by one.", preparing:"Coming Soon",
+    pageLabel:"Bestiary pages", characterLabel:"KMON CHARACTER", piLogin:"Pi Login",
+    piLoginTitle:"Sign in with your Pi account.", logoutConfirm:"Log out of Kmon?",
+    logoutAlert:"You have been logged out.", loginSuccess:"Pi login successful!",
+    loginFail:"Pi login failed. Please try again.", cardTitle2:"Sero", cardRarity:"LEGEND · Guardian of treasured possessions",
+    modalPower:"Guardian of treasured possessions",
+    modalPromise:"Protects the precious things you own so they are not lost or taken away, whatever happens.",
+    guide:["Do you often lose or misplace your belongings?","When you own this card, the special ability within the character is passed on to you.","This special experience is made possible by the unique symbol assigned to each character card.","Kmon's unique symbols are inspired by traditional Korean folk beliefs and represent each character's individual meaning and abilities."],
+    notice:"Card purchases and downloads of the official original are coming soon.", buy:"Buy with Pi · Coming Soon",
+    monsters:[["Sero","Leader of the Kmon team (Grim Reaper)"],["Chesy","Eldest of the three sisters (Virgin Ghost)"],["Chery","Second of the three virgin-ghost sisters"],["Chemi","Youngest of the three sisters (Virgin Ghost)"],["Dumboo","Kmon team member (Bachelor Ghost)"],["Hungry Monster","Evil spirit: Hungry Monster"],["Water Ghost","Evil spirit: Water Ghost"],["Dongnyeo (Ghost of a Little Girl)","Yokai: Dongnyeo"],["Egg Ghost","Evil spirit: Egg Ghost"],["Skinny Hungry Monster","Evil spirit: Skinny Hungry Monster"],["Dongja (Ghost of a Little Boy)","Yokai: Dongja"]],
+    details:{
+      dong_boy:["Dongja (Ghost of a Little Boy)","Yokai: Dongja","A mischievous little spirit hiding 500 years of spite behind a cute face—and a weakness for toys!\n\nDespite his adorable, childlike appearance, Dongja is a willful, moody yokai more than 500 years old. He especially cannot stand seeing people getting along.\n\nThe sight of affectionate couples makes him jealous, so he uses clever lies and manipulation to turn them against each other. Watching their relationship unravel gives this little troublemaker secret delight.\n\nBut Dongja has a fatal weakness: toys. Even after more than five centuries, he still loves candy and cookies, and a toy he really likes turns him into an ordinary little boy who forgets all about his mischief.\n\nThe secret to winning over this 500-year-old prankster? Just one toy!"],
+      bbeaq:["Skinny Hungry Monster","Evil spirit: Skinny Hungry Monster","A sly, cunning parasite secretly living inside Hungry Monster—Skinny Hungry Monster!\n\nSkinny and physically weak, this evil spirit has an unmatched talent for surviving by taking advantage of others.\n\nHe hides inside the enormous mouth on Hungry Monster's belly, secretly stealing the food his host swallows. Hungry Monster has no idea that someone is living inside him.\n\nWhen Hungry Monster eats his fill and falls into a deep sleep, Skinny Hungry Monster sneaks outside to enjoy some freedom. But he must return before Hungry Monster wakes up.\n\nAnd when Hungry Monster is in danger, Skinny Hungry Monster sometimes lends a secret hand—not out of kindness, but to protect the home he depends on.\n\nHow long can Skinny Hungry Monster keep living there without Hungry Monster finding out?"],
+      dong_girl:["Dongnyeo (Ghost of a Little Girl)","Yokai: Dongnyeo","A mischievous little spirit hiding 500 years of spite behind an adorable face—and a weakness for candy!\n\nDespite her tiny, charming appearance, the Little Girl Ghost is over 500 years old. Moody, willful, and full of mischief, she simply cannot stand seeing others getting along.\n\nWith clever lies and whispered rumors, she turns friends against each other, then watches their arguments with delight. Anyone fooled by her innocent face may soon find themselves caught in one of her schemes.\n\nBut even this troublemaker has a fatal weakness: candy and cookies. Though she has lived for more than five centuries, sweet treats turn her into an ordinary little child. She forgets her mischief and becomes eager to grant almost any request.\n\nThe secret to handling a 500-year-old prankster? Just keep a piece of candy in your pocket!"],
+      water_ghost:["Water Ghost","Evil spirit: Water Ghost","A mischievous troublemaker lurking underwater, always waiting for a chance to play a prank—Water Ghost!\n\nWater Ghost became a ghost after an unexpected accident while scuba diving in Jeju Island. Now he spends most of his time hiding underwater, delighting in startling people and playing tricks on them.\n\nHis most distinctive weapon is his “mouth water gun,” which fires a powerful jet of water straight from his mouth. Without needing any other weapon, he can attack opponents with the forceful stream—and uses it for all kinds of naughty pranks.\n\nHis favorite target is Dumboo of the Kmon team. Watching the slow-running Dumboo struggle to chase him only makes Water Ghost more excited, and he just cannot stop teasing him."],
+      sero:["Sero","Leader of the Kmon team (Grim Reaper)","A solitary reaper carrying out the orders of the underworld, Sero leads the Kmon team.\n\nSero is a grim reaper who oversees ghosts. Under orders from the King of the Underworld, he is tasked with eliminating evil spirits lurking throughout Korea.\n\nBut the mission is far from easy. His teammates Chesy, Chery, Chemi, and Dumboo each have their own strong personalities, yet they are rarely much help when it comes to hunting evil spirits. In the end, Sero often has to handle the crucial moments himself.\n\nQuiet and usually expressionless, Sero prefers solitude even amid his noisy teammates. He rarely reveals his feelings, but remains devoted to his duty.\n\nA pistol is concealed beneath his cloak, ready to be drawn when needed. Usually reserved, Sero reveals the cold, decisive side of a true grim reaper when facing evil spirits.\n\nSpecial Ability | Guardian of treasured possessions\nProtects the precious things you own so they are not lost or taken away, whatever happens."],
+      chesy:["Chesy","Eldest of the three sisters (Virgin Ghost)","The dependable eldest sister of the Kmon team, Chesy hides a warm heart beneath her strict rules.\n\nThe eldest of three ghost sisters, Chesy is like a stern dormitory supervisor within the Kmon team. She keeps everyone in line and values order and discipline.\n\nShe acts like a demanding prefect who overlooks no small mistake. She often scolds her unruly teammates, but beneath those sharp words lies genuine affection for them.\n\nHer blunt manner and strict behavior can make her seem cold. Yet whenever someone is in trouble, she is the first to look after them—a true tsundere at heart.\n\nResponsible for the team's day-to-day affairs, Chesy keeps its strong-willed members together. Sometimes a nag, sometimes a guardian, she is an indispensable big sister to the Kmon team."],
+      chery:["Chery","Kmon team member, second of the three virgin ghost sisters","The Kmon team's lovable princess, Chery believes she is the prettiest in the world.\n\nThe middle of three ghost sisters, Chery is an adorable ghost with a princess-like personality. She loves attention and compliments more than anything, and quickly sulks when nobody notices her.\n\nYet her cheerful, caring nature makes her a bridge between the Kmon team's strong-willed members. Though sometimes a spoiled little princess, she softens the mood and helps keep the team together."],
+      chemi:["Chemi","Youngest of the three sisters (Virgin Ghost)","A mischievous troublemaker with remarkable skills! Chemi is the Kmon team's little problem-solver.\n\nThe youngest of the three ghost sisters, Chemi is curious, playful, and always causing a commotion. Yet her incredible speed and quick reactions allow her to shine whenever danger strikes.\n\nShe leads the charge in hunting down evil spirits and is one of the team's greatest assets. She may seem like a troublemaker, but on missions she is exceptionally dependable—and the teammate whom quiet leader Sero trusts most."],
+      egg:["Egg Ghost","Evil spirit: Egg Ghost","Small in size but lightning-fast—the restless little troublemaker, Egg Ghost!\n\nBorn in a chicken coop under harsh conditions, Egg Ghost was destined for a life unlike that of any ordinary egg. Despite looking small and fragile, this spirit moves so quickly that hardly anyone can catch up.\n\nUnable to sit still, Egg Ghost darts around and keeps everyone on their toes. Acting before thinking sometimes causes unexpected trouble, but in dangerous moments, those astonishing reflexes allow a swift escape.\n\nYou never know where Egg Ghost will dash next! Underestimate this little spirit and it may vanish in the blink of an eye.\n\nSpecial Ability | Awakened Potential\nWhen facing a competitive situation such as an exam or election, helps awaken your clearest, sharpest mind so you can fully realize your potential and achieve results beyond expectations."],
+      dumboo:["Dumboo","Kmon team member (Bachelor Ghost)","Slow on his feet but second to none in strength—Dumboo, the powerhouse of the Kmon team!\n\nDumboo is a bachelor ghost who struggled to find love in life because of his looks. After his 101st proposal was rejected, he was killed in a traffic accident on his way home and became a ghost.\n\nNow a member of the Kmon team, he devotes himself to hunting evil spirits. His movements are sluggish and he is a poor runner, often falling behind his teammates, but no one can match his strength.\n\nDumboo may be clumsy and slow, yet whenever sheer power is needed, he becomes one of the team's most dependable members."],
+      ddboaq:["Hungry Monster","Evil spirit: Hungry Monster","Always hungry, no matter how much he eats—the monster with an endless appetite, Hungry Monster!\n\nHungry Monster is the largest of the evil spirits, with an appetite that knows no bounds. He devours any food he sees, yet even after eating until he feels ready to burst, hunger soon returns.\n\nWhy is he always so hungry? No one knows why his hunger never fades, no matter how much he eats. Even Hungry Monster himself has no idea, and he wanders in search of his next meal.\n\nCould there be a secret behind this endless hunger that no one has discovered yet?"]
+    }
+  },
+  zh: {
+    mainBack:"← 返回主页", indexBack:"← 返回图鉴", indexTitle:"怪物图鉴",
+    intro:"逐一认识 Kmon 世界中的神秘生物。", preparing:"敬请期待",
+    pageLabel:"图鉴页面", characterLabel:"KMON 角色", piLogin:"Pi 登录",
+    piLoginTitle:"使用 Pi 账户登录。", logoutConfirm:"要退出 Kmon 吗？",
+    logoutAlert:"已退出登录。", loginSuccess:"Pi 登录成功！", loginFail:"Pi 登录失败，请重试。",
+    cardTitle2:"Sero", cardRarity:"LEGEND · 珍贵物品守护者", modalPower:"珍贵物品守护者",
+    modalPromise:"无论发生什么，都会守护你珍视的物品，避免遗失或被夺走。",
+    guide:["你是否经常弄丢东西？","拥有这张卡片后，角色所蕴含的特殊能力将传递给用户。","每张角色卡都有独特的专属符号，因此才能带来这样的特别体验。","Kmon 的专属符号以韩国传统民间信仰为灵感，象征每个角色独有的意义与能力。"],
+    notice:"卡片购买及正式原版下载功能正在准备中。", buy:"使用 Pi 购买 · 即将推出",
+    monsters:[["Sero","Kmon 团队的首领（死神）"],["Chesy","三姐妹中的大姐（处女鬼）"],["Chery","Kmon 角色"],["Chemi","三姐妹中的小妹（处女鬼）"],["Dumboo","Kmon 团队成员（单身鬼）"],["Hungry Monster","恶鬼：贪食怪物"],["水鬼(Water Ghost)","恶鬼：水鬼"],["童女 (Ghost of a Little Girl)","妖怪：童女"],["蛋鬼","恶鬼：蛋鬼"],["瘦瘦饿鬼 (Skinny Hungry Monster)","恶鬼：瘦瘦饿鬼"],["童子 (Ghost of a Little Boy)","妖怪：童子"]],
+    details:{
+      dong_boy:["童子 (Ghost of a Little Boy)","妖怪：童子","可爱面孔下藏着五百年的坏心眼——偏偏抵挡不住玩具诱惑的淘气童子！\n\n童子看起来像个天真可爱的小男孩，实际上却是活了五百多年的妖怪。他喜怒无常、任性又爱捣蛋，尤其看不得别人和睦相处。\n\n看到恩爱的情侣，他就会莫名生出嫉妒，用巧妙的谎言和挑拨离间让两人互相误解，再独自欣赏他们感情破裂的样子。\n\n不过，童子也有致命的弱点——玩具。活了五百多年，他仍然喜欢糖果和点心。一旦遇到心爱的玩具，就会像个普通小孩一样，忘记刚才的坏心眼。\n\n想打动这个五百岁的小捣蛋鬼？一个玩具就够了！"],
+      bbeaq:["瘦瘦饿鬼 (Skinny Hungry Monster)","恶鬼：瘦瘦饿鬼","偷偷住在胖胖饿鬼肚子里的狡猾寄生饿鬼——瘦瘦饿鬼！\n\n他瘦骨嶙峋、力气又小，却特别擅长利用别人来维持自己的生活。\n\n他藏在胖胖饿鬼腹部的巨口之中，偷偷截走对方吞下的食物，填饱自己的肚子。而胖胖饿鬼根本不知道自己的肚子里还住着另一个家伙。\n\n等胖胖饿鬼吃饱后沉沉睡去，他就悄悄溜到外面，享受片刻自由。但他必须赶在胖胖饿鬼醒来之前回去。\n\n不过，为了不失去自己的安身之所，当胖胖饿鬼遇到危险时，他有时也会暗中出手相助。\n\n瘦瘦饿鬼究竟还能瞒着胖胖饿鬼生活多久呢？"],
+      dong_girl:["童女 (Ghost of a Little Girl)","妖怪：童女","可爱的脸蛋下藏着五百年的坏心眼——却偏偏抵挡不住糖果诱惑的淘气童女！\n\n童女虽然长着一副娇小可爱的模样，实际上却已经活了五百多年。她喜怒无常、任性又爱捣蛋，尤其看不得别人和睦相处。\n\n她会用巧妙的谎言挑拨离间，让人们互相误解，再独自欣赏他们争吵的场面。若被她天真的外表迷惑，一不留神就会掉进她的恶作剧里。\n\n不过，这个小捣蛋鬼也有致命弱点——糖果和点心。即使活了五百多年，一见到甜食，她仍会变得像个普通小孩，忘掉刚才的坏心眼，甚至愿意答应各种请求。\n\n对付五百岁小捣蛋鬼的秘诀？口袋里备上一颗糖就够了！"],
+      water_ghost:["水鬼(Water Ghost)","恶鬼：水鬼","躲在水里伺机恶作剧的调皮捣蛋鬼——水鬼！\n\n水鬼生前在济州岛享受水肺潜水时遭遇意外，从此变成了鬼魂。如今他大多躲在水中，最喜欢突然吓人一跳，或用各种恶作剧捉弄别人。\n\n他最特别的武器是能从嘴里喷射强劲水柱的“嘴巴水枪”。不需要任何其他武器，他就能用强力水流攻击对手，还经常用这项本领搞各种调皮的恶作剧。\n\n他尤其喜欢捉弄 Kmon 团队的 Dumboo。每当看到不擅长跑步的 Dumboo 拼命追赶自己，他就越发兴奋，怎么也停不下恶作剧。"],
+      sero:["Sero","Kmon 团队的首领（死神）","奉冥界之命行动的孤独死神——Kmon 团队的首领 Sero。\n\nSero 是掌管鬼魂的死神，也是 Kmon 团队的领袖。他奉阎罗大王之命，负责清除潜藏在韩国各地的恶鬼。\n\n然而任务并不轻松。队友 Chesy、Chery、Chemi 和 Dumboo 虽然个性鲜明，但在消灭恶鬼时往往帮不上太多忙。关键时刻，最终还是得由 Sero 亲自解决问题。\n\nSero 总是面无表情、沉默寡言。即使身处吵闹的队友之间，他也更喜欢独处。他很少表露内心，却始终忠于自己的使命。\n\n他的斗篷下藏着一把随时可以拔出的手枪。平时沉默低调的他，一旦面对恶鬼，便会展现出冷静果断的死神本色。\n\n专属能力 | 绝对守护所有物\n无论发生什么，都守护你珍贵的物品，避免遗失或被夺走。"],
+      chesy:["Chesy","三姐妹中的大姐（处女鬼）","Kmon 团队可靠的大姐 Chesy，在严格的规矩之下藏着一颗温暖的心。\n\n身为幽灵三姐妹中的大姐，Chesy 在 Kmon 团队里就像一位严厉的宿舍管理员。她时刻约束队员，十分重视纪律与秩序。\n\n平日里，她像个连小错误都不放过的纪律委员，经常唠叨那些随心所欲的队友。但在严厉的言语背后，藏着比谁都关心伙伴的温柔。\n\n她说话直率、行事严格，有时显得冷淡。可一旦有人遇到困难，她总会第一个伸出援手，是个典型的傲娇性格。\n\nChesy 负责 Kmon 团队的日常事务，让个性鲜明的成员们能够和睦相处。她时而唠叨，时而像守护者一样照顾大家，是团队不可或缺的可靠大姐。"],
+      chery:["Chery","三姐妹中的二姐（处女鬼）","坚信自己是世界上最美丽的存在，Chery 是 Kmon 团队可爱的小公主。\n\n身为幽灵三姐妹中的二姐，Chery 外表可爱，带着十足的公主脾气。她最喜欢得到关注和赞美，一旦没人注意她，就会立刻闷闷不乐。\n\n不过，她开朗又体贴，能够在个性鲜明的 Kmon 队员之间充当桥梁。虽然偶尔像个任性的小公主，但她总能缓和气氛，促进团队的团结。"],
+      chemi:["Chemi","三姐妹中的小妹（处女鬼）","虽然调皮捣蛋，实力却是一流！Chemi 是 Kmon 团队的小小行动派。\n\n作为幽灵三姐妹中的小妹，Chemi 好奇心旺盛，活泼淘气，总是横冲直撞，惹出各种小乱子。但凭借敏捷的身手和迅速的行动，她总能在危急时刻大显身手。\n\n清除恶鬼时，她总是冲在最前面，是 Kmon 团队的头号功臣。平时看似是个捣蛋鬼，执行任务时却格外可靠，也是沉默寡言的队长 Sero 最信赖的队员。"],
+      egg:["蛋鬼","恶鬼：蛋鬼","个头虽小，速度却快如闪电——冒冒失失的淘气蛋鬼！\n\n蛋鬼出生在环境艰苦的鸡舍里，注定拥有与普通鸡蛋截然不同的命运。别看他身材娇小、外表脆弱，动作却快得惊人，几乎没人追得上。\n\n他一刻也闲不住，总是四处乱窜，让周围的人应接不暇。常常行动快于思考，惹出意想不到的麻烦，但遇到危险时，又能凭惊人的反应速度迅速脱身。\n\n谁也猜不到蛋鬼下一秒会蹦向哪里！可别因为他个头小就轻视他，转眼间他就可能消失得无影无踪。\n\n专属能力 | 潜能绽放\n面对考试或选举等竞争场合时，帮助唤醒最清醒敏锐的思维，充分发挥潜力与实力，获得超出预期的成果。"],
+      dumboo:["Dumboo","Kmon 团队成员（单身鬼）","动作虽慢，力气却无人能敌！Dumboo 是 Kmon 团队的大力士！\n\nDumboo 是一只单身男鬼。生前因为外貌不受异性欢迎，他在爱情中屡屡碰壁。第101次求婚再次失败后，他在回家途中遭遇车祸，变成了鬼魂。\n\n如今，他成为 Kmon 团队的一员，专心清除恶鬼。他行动迟缓，也不擅长跑步，常常落在队友后面，但论力气却绝不输给任何人。\n\n平时的 Dumboo 看起来憨厚又慢吞吞，可一旦需要强大力量，他就会成为团队中最可靠的伙伴之一。"],
+      ddboaq:["贪食怪物","恶鬼：贪食怪物","吃了又吃，却永远填不饱肚子——拥有无尽食欲的怪物，胖胖饿鬼！\n\n胖胖饿鬼是恶鬼中体型最庞大、食欲最旺盛的怪物。只要看见食物，他就会统统吞下。即使吃到肚子快要撑破，没过多久又会感到饥饿。\n\n他为什么总是这么饿呢？无论吃多少，饥饿感都不会消失，谁也不知道原因。就连胖胖饿鬼自己也不明白，只能每天四处寻找食物。\n\n这永无止境的饥饿背后，是否隐藏着一个尚未被发现的秘密？"]
+    }
+  },
+  ja: {
+    mainBack:"← メインに戻る", indexBack:"← 図鑑に戻る", indexTitle:"モンスター図鑑",
+    intro:"Kmonの不思議な仲間たちに出会いましょう。", preparing:"準備中",
+    pageLabel:"図鑑ページ", characterLabel:"KMON キャラクター", piLogin:"Pi ログイン",
+    piLoginTitle:"Piアカウントでログインします。", logoutConfirm:"Kmonからログアウトしますか？",
+    logoutAlert:"ログアウトしました。", loginSuccess:"Piログインが完了しました！", loginFail:"Piログインに失敗しました。もう一度お試しください。",
+    cardTitle2:"Sero", cardRarity:"LEGEND · 大切な所有物の守護者", modalPower:"大切な所有物の守護者",
+    modalPromise:"どんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。",
+    guide:["物をよくなくしたり、見失ったりしませんか？","このカードを所有すると、キャラクターに宿る特別な能力がユーザーに受け継がれます。","キャラクターカードごとに固有のシンボルが与えられているからこそ、特別な体験が可能になります。","Kmonの固有シンボルは韓国の伝統的な民間信仰をもとに創作され、各キャラクター独自の意味と能力を表しています。"],
+    notice:"カード購入および正式版ダウンロード機能は準備中です。", buy:"Piで購入 · 準備中",
+    monsters:[["Sero","Kmonチームのリーダー（死神）"],["Chesy","三姉妹の長女（処女幽霊）"],["Chery","三姉妹の次女（処女幽霊）"],["Chemi","三姉妹の末っ子（処女幽霊）"],["Dumboo","Kmonチームのメンバー（独身幽霊）"],["Hungry Monster","悪霊：大食いモンスター"],["水鬼(Water Ghost)","悪霊：水鬼"],["童女 (Ghost of a Little Girl)","妖怪：童女"],["卵鬼","悪霊：卵鬼"],["やせっぽち餓鬼 (Skinny Hungry Monster)","悪霊：やせっぽち餓鬼"],["童子 (Ghost of a Little Boy)","妖怪：童子"]],
+    details:{
+      dong_boy:["童子 (Ghost of a Little Boy)","妖怪：童子","かわいい顔の裏に500年分の意地悪を隠した、おもちゃに弱いいたずら好きの童子！\n\n幼い男の子のような愛らしい見た目とは裏腹に、童子は500歳をとうに超えた気まぐれでわがままな妖怪だ。特に、他人が仲良くしている姿が気に入らない。\n\n仲むつまじい恋人たちを見ると、つい意地悪をしたくなり、巧みな嘘や仲たがいを誘う言葉で二人に誤解を生じさせる。関係がこじれていく様子を一人で楽しむ、いたずら好きな性格だ。\n\nそんな童子にも致命的な弱点がある。それはおもちゃだ。500年以上生きていても飴やお菓子が大好きで、気に入ったおもちゃを前にすると、さっきまでの意地悪を忘れて普通の子どもに戻ってしまう。\n\n500歳のいたずらっ子の心を動かす秘訣？ おもちゃ一つで十分！"],
+      bbeaq:["やせっぽち餓鬼 (Skinny Hungry Monster)","悪霊：やせっぽち餓鬼","太っちょ餓鬼のお腹にこっそり住みつく、ずる賢い寄生餓鬼・やせっぽち餓鬼！\n\nガリガリに痩せて力も弱いが、他人を利用して生き延びることにかけては誰にも負けない悪鬼だ。\n\n太っちょ餓鬼のお腹にある巨大な口の中に隠れ、食べられたものをこっそり横取りして腹を満たしている。太っちょ餓鬼自身は、お腹の中に誰かが住んでいることすら知らない。\n\n太っちょ餓鬼が満腹になって深く眠ると、そっと外に出て自由な時間を楽しむこともある。ただし、目を覚ます前に必ず戻らなければならない。\n\nそれでも、自分の住みかを失わないために、太っちょ餓鬼が危険に陥るとひそかに力を貸すこともある。\n\nやせっぽち餓鬼は、いつまで気づかれずに暮らし続けられるのだろうか？"],
+      dong_girl:["童女 (Ghost of a Little Girl)","妖怪：童女","かわいい顔の裏に500年分の意地悪を隠した、お菓子に弱いいたずら好きの童女！\n\n愛らしい見た目とは裏腹に、童女は500歳をとうに超えた気まぐれでわがままな妖怪だ。特に、誰かが仲良くしている姿を見ると、いたずらせずにはいられない。\n\n巧みな嘘や仲たがいを誘う言葉で互いに誤解させ、けんかする様子を見て一人で楽しんでいる。かわいい顔に油断すると、いつの間にか彼女の策略に巻き込まれてしまう。\n\nそんな童女にも致命的な弱点がある。それは飴とお菓子だ。500年以上生きていても、甘いものを前にするとすっかり普通の子どもに戻り、さっきまでの意地悪も忘れて何でも聞いてくれそうになる。\n\n500歳のいたずらっ子を手なずける秘訣？ ポケットに飴を一粒入れておけば十分！"],
+      water_ghost:["水鬼(Water Ghost)","悪霊：水鬼","水の中に隠れていたずらの機会をうかがう、やんちゃな水鬼！\n\n水鬼は済州島でスキューバダイビングを楽しんでいたとき、不慮の事故に遭って幽霊になった。今は主に水中に潜み、人を驚かせたり困らせたりするいたずらを楽しんでいる。\n\n最大の武器は、口から勢いよく水を噴き出す「口水鉄砲」だ。ほかの武器がなくても強力な水流で相手を攻撃でき、その力を使ってさまざまないたずらを仕掛ける。\n\n特にKmonチームのダンブーをからかうのが大好き。走るのが苦手なダンブーが必死に追いかけてくる姿を見ると、ますます調子に乗っていたずらをやめられなくなる。"],
+      sero:["Sero","Kmonチームのリーダー（死神）","冥界の命令を遂行する孤独な死神、Kmonチームのリーダー・セロ。\n\nセロは幽霊たちを取り仕切る死神であり、Kmonチームを率いるリーダーだ。閻魔大王の命を受け、韓国各地に潜む悪霊を退治する任務を担っている。\n\nしかし任務は一筋縄ではいかない。仲間のチェシ、チェリ、チェミ、ダンブーはそれぞれ個性豊かだが、悪霊退治となるとあまり頼りにならない。結局、肝心な場面ではセロ自身が動かなければならない。\n\nいつも無表情で寡黙なセロは、にぎやかな仲間たちの中でも一人の時間を好む。感情をめったに表に出さないが、誰よりも任務に忠実だ。\n\nそのマントの内側には、いつでも取り出せる拳銃が隠されている。普段は静かなセロも、悪霊と対峙する瞬間には、冷静で容赦のない死神としての本性を見せる。\n\n固有能力 | 大切な持ち物の絶対守護\nどんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。"],
+      chesy:["Chesy","三姉妹の長女（処女幽霊）","厳しい規律の奥に温かな心を隠した、Kmonチームの頼れる長女・チェシ。\n\n幽霊三姉妹の長女チェシは、Kmonチームではまるで寮の厳しい管理人のような存在だ。いつも仲間たちをきちんとまとめ、規則と秩序を大切にしている。\n\n普段は小さなミスも見逃さない風紀委員のように振る舞い、自由奔放な仲間たちに小言を言うことも多い。しかし、その厳しさの裏には誰よりも仲間を思う優しさが隠れている。\n\nぶっきらぼうな口調と厳しい態度で冷たく見えることもあるが、誰かが困っていると真っ先に世話を焼く、ツンデレな性格の持ち主だ。\n\nチームの身の回りのことを担うチェシは、個性豊かな仲間たちを支える頼もしいお姉さん。時には口うるさく、時には保護者のように皆を見守る、なくてはならない存在だ。"],
+      chery:["Chery","三姉妹の次女（処女幽霊）","自分が世界でいちばんかわいいと信じる、Kmonチームの愛らしいお姫様・チェリ。\n\n幽霊三姉妹の次女チェリは、かわいらしい見た目とお姫様気質を持つ幽霊だ。注目されたり褒められたりすることが何より好きで、誰にも構ってもらえないとすぐにしょんぼりしてしまう。\n\nけれど明るく思いやりのある性格で、個性豊かなKmonチームの仲間たちをつなぐ架け橋でもある。時にはわがままな小さなお姫様だが、場を和ませ、チームの絆を深める欠かせない存在だ。"],
+      chemi:["Chemi","三姉妹の末っ子（処女幽霊）","おてんばだけど実力はピカイチ！Kmonチームの小さな切り込み隊長、チェミ。\n\n幽霊三姉妹の末っ子チェミは、好奇心旺盛でいたずら好きなおてんば幽霊。いつもあちこちで騒動を起こすが、持ち前の素早い身のこなしと行動力で、ピンチのたびに目覚ましい活躍を見せる。\n\n悪霊退治では誰よりも先頭に立つ、Kmonチームの一番の功労者だ。普段はトラブルメーカーに見えても、任務では誰より頼りになる存在で、寡黙なリーダーのセロが最も信頼する仲間でもある。"],
+      egg:["卵鬼","悪霊：卵鬼","小さな体に稲妻のような速さを秘めた、落ち着きのないいたずらっ子・卵鬼！\n\n恵まれない環境の鶏小屋で生まれた卵鬼は、普通の卵とはまったく違う運命を背負った妖怪だ。小さくか弱そうな見た目に反して、誰も簡単には追いつけないほど素早く動く。\n\nじっとしていられない性格で、あちこち駆け回って周囲を振り回す。考えるより先に動いて騒動を起こすこともあるが、危険なときには驚くべき反射神経で素早く逃げ切る。\n\n次にどこへ飛び出すか分からない卵鬼！ 小さいからと油断すると、あっという間に見失ってしまうかもしれない。\n\n固有能力 | 潜在能力の開花\n試験や選挙などの競争の場面で、心を最も明晰かつ鋭敏な状態に導き、潜在能力と実力を最大限に発揮して期待以上の成果を得られるよう助けます。"],
+      dumboo:["Dumboo","Kmonチームのメンバー（独身幽霊）","動きは遅くても、力なら誰にも負けない！Kmonチームの怪力担当、ダンブー！\n\nモンダル鬼（独身男性の幽霊）のダンブーは、生前、容姿のせいで異性に好かれず、恋に何度も失敗していた。101回目のプロポーズにも失敗し、帰宅途中に交通事故に遭って幽霊になった。\n\n今はKmonチームの一員として悪霊退治に励んでいる。動きが鈍く、走るのも苦手で仲間に遅れがちだが、力の強さでは誰にも引けを取らない。\n\n普段は少し不器用でのんびりしたダンブーだが、強い力が必要なときには、誰よりも頼もしい仲間になる。"],
+      ddboaq:["Hungry Monster","悪霊：大食いモンスター","食べても食べてもお腹がすく、底なしの食欲を持つ怪物・太っちょ餓鬼！\n\n太っちょ餓鬼は悪鬼の中でもひときわ大きな体と、尽きることのない食欲を持つ怪物だ。目に入った食べ物は何でも平らげ、お腹がはち切れそうなほど食べても、すぐにまた空腹になる。\n\nどうしてこんなにお腹がすくのだろう？ どれほど食べても空腹が消えない理由は、誰にも分からない。本人さえ理由を知らず、今日も食べ物を探してさまよっている。\n\nこの終わりのない空腹には、まだ誰も知らない秘密が隠されているのだろうか？"]
+    }
+  },
+  vi: {
+    mainBack:"← Về trang chủ", indexBack:"← Quay lại Bách khoa", indexTitle:"Bách khoa quái vật",
+    intro:"Khám phá từng sinh vật bí ẩn trong thế giới Kmon.", preparing:"Sắp ra mắt",
+    pageLabel:"Trang bách khoa", characterLabel:"NHÂN VẬT KMON", piLogin:"Đăng nhập Pi",
+    piLoginTitle:"Đăng nhập bằng tài khoản Pi.", logoutConfirm:"Bạn có muốn đăng xuất khỏi Kmon không?",
+    logoutAlert:"Bạn đã đăng xuất.", loginSuccess:"Đăng nhập Pi thành công!", loginFail:"Đăng nhập Pi thất bại. Vui lòng thử lại.",
+    cardTitle2:"Sero", cardRarity:"LEGEND · Người bảo vệ vật sở hữu quý giá", modalPower:"Người bảo vệ vật sở hữu quý giá",
+    modalPromise:"Bảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào.",
+    guide:["Bạn có thường làm thất lạc đồ đạc không?","Khi sở hữu thẻ này, năng lực đặc biệt của nhân vật sẽ được truyền đến người dùng.","Trải nghiệm đặc biệt này có được nhờ mỗi thẻ nhân vật mang một biểu tượng riêng.","Các biểu tượng riêng của Kmon được sáng tạo dựa trên tín ngưỡng dân gian truyền thống Hàn Quốc, tượng trưng cho ý nghĩa và năng lực riêng của từng nhân vật."],
+    notice:"Tính năng mua thẻ và tải bản gốc chính thức đang được chuẩn bị.", buy:"Mua bằng Pi · Sắp ra mắt",
+    monsters:[["Sero","Thủ lĩnh đội Kmon (Thần chết)"],["Chesy","Chị cả trong ba chị em (Ma nữ)"],["Chery","Chị thứ hai trong ba chị em ma nữ"],["Chemi","Em út trong ba chị em (Ma nữ)"],["Dumboo","Thành viên đội Kmon (Ma nam)"],["Hungry Monster","Ác quỷ: Quái vật háu ăn"],["Ma Nước (Water Ghost)","Ác quỷ: Ma Nước"],["Đồng Nữ (Ghost of a Little Girl)","Yêu quái: Đồng Nữ"],["Ma trứng","Ác quỷ: Ma trứng"],["Quái Vật Đói Gầy (Skinny Hungry Monster)","Ác quỷ: Quái Vật Đói Gầy"],["Đồng Tử (Ghost of a Little Boy)","Yêu quái: Đồng Tử"]],
+    details:{
+      dong_boy:["Đồng Tử (Ghost of a Little Boy)","Yêu quái: Đồng Tử","Đằng sau gương mặt đáng yêu là 500 năm tinh quái—cậu bé yêu quái có điểm yếu là đồ chơi!\n\nDù mang dáng vẻ nhỏ nhắn như một đứa trẻ, Đồng Tử là yêu quái hơn 500 tuổi, thất thường và bướng bỉnh. Cậu đặc biệt không chịu nổi cảnh mọi người hòa thuận với nhau.\n\nThấy các cặp đôi tình cảm, cậu bỗng nổi tính tinh nghịch, dùng lời nói dối khéo léo và trò chia rẽ khiến họ hiểu lầm nhau. Cậu khoái chí đứng nhìn mối quan hệ của họ rạn nứt.\n\nNhưng Đồng Tử cũng có một điểm yếu chí mạng: đồ chơi. Dù đã sống hơn năm thế kỷ, cậu vẫn thích kẹo bánh, và khi thấy món đồ chơi ưng ý, cậu lại như một đứa trẻ bình thường, quên ngay mọi trò quậy phá vừa bày ra.\n\nBí quyết chinh phục cậu nhóc tinh quái 500 tuổi? Chỉ cần một món đồ chơi!"],
+      bbeaq:["Quái Vật Đói Gầy (Skinny Hungry Monster)","Ác quỷ: Quái Vật Đói Gầy","Lén sống trong bụng Quái Vật Háu Ăn, kẻ ký sinh xảo quyệt—Quái Vật Đói Gầy!\n\nThân hình gầy nhẳng, sức lực yếu ớt, nhưng con ác quỷ này lại có tài lợi dụng người khác để sinh tồn hơn bất kỳ ai.\n\nHắn ẩn náu trong cái miệng khổng lồ trên bụng Quái Vật Háu Ăn, lén lấy thức ăn mà chủ nhà nuốt vào để no bụng. Quái Vật Háu Ăn hoàn toàn không biết có kẻ đang sống bên trong mình.\n\nKhi Quái Vật Háu Ăn ăn no rồi ngủ say, hắn lẻn ra ngoài tận hưởng chút thời gian tự do. Nhưng hắn nhất định phải quay lại trước khi chủ nhà tỉnh giấc.\n\nThế nhưng, để không mất nơi trú ngụ, đôi khi hắn cũng âm thầm giúp sức mỗi khi Quái Vật Háu Ăn gặp nguy hiểm.\n\nLiệu Quái Vật Đói Gầy có thể tiếp tục sống lén lút như thế được bao lâu?"],
+      dong_girl:["Đồng Nữ (Ghost of a Little Girl)","Yêu quái: Đồng Nữ","Đằng sau gương mặt đáng yêu là 500 năm tinh quái—cô bé ma nghịch ngợm lại yếu lòng trước kẹo ngọt!\n\nDù có vẻ ngoài bé nhỏ dễ thương, Ma Bé Gái đã hơn 500 tuổi. Cô bé thất thường, bướng bỉnh và rất thích quậy phá, nhất là khi thấy người khác hòa thuận với nhau.\n\nBằng những lời nói dối khéo léo và trò chia rẽ, cô khiến mọi người hiểu lầm rồi cãi vã, còn mình thì đứng nhìn khoái chí. Ai mất cảnh giác trước gương mặt ngây thơ ấy rất dễ mắc bẫy.\n\nNhưng cô bé tinh quái này cũng có một điểm yếu chí mạng: kẹo và bánh ngọt. Dù đã sống hơn năm thế kỷ, cứ gặp đồ ngọt là cô lại như một đứa trẻ, quên ngay những trò nghịch ngợm vừa bày ra và sẵn sàng chiều theo mọi lời nhờ vả.\n\nBí quyết đối phó với cô bé 500 tuổi? Chỉ cần một viên kẹo trong túi!"],
+      water_ghost:["Ma Nước (Water Ghost)","Ác quỷ: Ma Nước","Kẻ tinh nghịch ẩn mình dưới nước, luôn chờ cơ hội bày trò—Ma Nước!\n\nMa Nước trở thành hồn ma sau một tai nạn bất ngờ khi đang lặn biển bằng bình dưỡng khí ở đảo Jeju. Giờ đây, hắn thường ẩn mình dưới nước, thích làm mọi người giật mình và bày đủ trò trêu chọc.\n\nVũ khí đặc biệt nhất của hắn là “súng nước bằng miệng”, có thể phun một tia nước cực mạnh ngay từ miệng. Chẳng cần vũ khí nào khác, hắn vẫn có thể tấn công đối thủ bằng dòng nước dữ dội và thường dùng khả năng ấy để nghịch ngợm.\n\nHắn đặc biệt thích trêu Dumboo của đội Kmon. Nhìn Dumboo vốn chạy chậm phải vất vả đuổi theo mình, Ma Nước càng khoái chí và chẳng chịu dừng trò đùa."],
+      sero:["Sero","Thủ lĩnh đội Kmon (Thần chết)","Sero, thần chết cô độc thực thi mệnh lệnh của âm giới, là thủ lĩnh đội Kmon.\n\nSero là thần chết cai quản các linh hồn và dẫn dắt đội Kmon. Theo lệnh Diêm Vương, anh có nhiệm vụ tiêu diệt những ác quỷ ẩn náu khắp Hàn Quốc.\n\nNhưng nhiệm vụ không hề dễ dàng. Các đồng đội Chesy, Chery, Chemi và Dumboo đều có cá tính riêng, song lại chẳng giúp được bao nhiêu khi săn lùng ác quỷ. Đến những thời khắc quan trọng, Sero thường phải tự mình giải quyết mọi chuyện.\n\nÍt nói và luôn giữ vẻ mặt lạnh lùng, Sero thích ở một mình ngay cả giữa những đồng đội ồn ào. Anh hiếm khi bộc lộ cảm xúc nhưng luôn tận tụy với nhiệm vụ.\n\nBên dưới áo choàng của Sero giấu một khẩu súng ngắn, sẵn sàng rút ra khi cần. Bình thường anh lặng lẽ, nhưng khi đối mặt ác quỷ, anh bộc lộ bản lĩnh lạnh lùng và quyết đoán của một thần chết thực thụ.\n\nNăng lực đặc biệt | Bảo vệ tuyệt đối vật sở hữu\nBảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào."],
+      chesy:["Chesy","Chị cả trong ba chị em (Ma nữ)","Chesy, người chị cả đáng tin cậy của đội Kmon, giấu trái tim ấm áp sau vẻ ngoài nghiêm khắc.\n\nLà chị cả trong ba chị em ma nữ, Chesy giống như một quản lý ký túc xá nghiêm nghị của đội Kmon. Cô luôn giữ mọi người trong khuôn phép và coi trọng trật tự, kỷ luật.\n\nHằng ngày, cô hành xử như một trưởng ban kỷ luật khó tính, không bỏ qua cả những lỗi nhỏ. Cô thường cằn nhằn các đồng đội bướng bỉnh, nhưng đằng sau những lời nghiêm khắc ấy là sự quan tâm chân thành.\n\nCách nói chuyện thẳng thừng khiến cô đôi khi có vẻ lạnh lùng. Thế nhưng, khi ai đó gặp khó khăn, Chesy luôn là người đầu tiên đến chăm sóc—đúng kiểu ngoài lạnh trong nóng.\n\nPhụ trách mọi việc nội bộ của đội Kmon, Chesy giúp các thành viên cá tính mạnh gắn bó với nhau. Đôi khi hay càm ràm, đôi khi như một người bảo hộ, cô là người chị cả không thể thiếu của cả đội."],
+      chery:["Chery","Chị thứ hai trong ba chị em ma nữ","Chery, nàng công chúa đáng yêu của đội Kmon, luôn tin mình là người xinh đẹp nhất thế giới.\n\nLà người chị thứ hai trong ba chị em ma nữ, Chery có vẻ ngoài dễ thương và tính cách điệu đà như công chúa. Cô thích được chú ý và khen ngợi hơn bất cứ điều gì, và nhanh chóng xị mặt khi không ai để ý đến mình.\n\nTuy nhiên, tính cách vui vẻ và ân cần giúp cô trở thành cầu nối giữa các thành viên cá tính mạnh của đội Kmon. Dù đôi lúc hơi đỏng đảnh, nàng công chúa nhỏ này luôn biết cách làm dịu bầu không khí và gắn kết cả đội."],
+      chemi:["Chemi","Em út trong ba chị em (Ma nữ)","Tinh nghịch nhưng tài năng xuất sắc! Chemi là cô nàng giải quyết rắc rối bé nhỏ của đội Kmon.\n\nLà em út trong ba chị em ma nữ, Chemi rất tò mò, hiếu động và thích nghịch ngợm. Cô thường gây ra đủ chuyện náo loạn, nhưng nhờ sự nhanh nhẹn và khả năng hành động tức thì, cô luôn tỏa sáng vào những lúc nguy cấp.\n\nTrong các cuộc truy quét ác quỷ, Chemi luôn xông lên trước và là một trong những người lập công lớn nhất của đội Kmon. Dù thường trông như một cô nàng chuyên gây rắc rối, khi làm nhiệm vụ cô lại vô cùng đáng tin cậy và chính là thành viên được thủ lĩnh ít nói Sero tin tưởng nhất."],
+      egg:["Ma trứng","Ác quỷ: Ma trứng","Nhỏ bé nhưng nhanh như chớp—Ma Trứng, kẻ tinh nghịch chẳng lúc nào chịu ngồi yên!\n\nSinh ra trong một chuồng gà có điều kiện khắc nghiệt, Ma Trứng mang số phận hoàn toàn khác những quả trứng bình thường. Dù trông nhỏ bé và mong manh, cậu di chuyển nhanh đến mức khó ai đuổi kịp.\n\nKhông thể ngồi yên dù chỉ một lát, Ma Trứng chạy khắp nơi khiến mọi người quay cuồng. Vì thường hành động trước khi suy nghĩ, cậu đôi khi gây ra những rắc rối bất ngờ, nhưng khi gặp nguy hiểm, phản xạ đáng kinh ngạc giúp cậu thoát thân trong chớp mắt.\n\nKhông ai biết Ma Trứng sẽ lao đi đâu tiếp theo! Đừng xem thường vóc dáng nhỏ bé ấy, kẻo chỉ chớp mắt là đã mất dấu.\n\nNăng lực đặc biệt | Khai mở tiềm năng\nTrong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp đánh thức sự minh mẫn và nhạy bén tối đa, phát huy hết tiềm năng và năng lực để đạt kết quả vượt mong đợi."],
+      dumboo:["Dumboo","Thành viên đội Kmon (Ma nam)","Chậm chạp nhưng sức mạnh chẳng thua ai! Dumboo là chàng lực sĩ của đội Kmon!\n\nDumboo là một hồn ma trai độc thân. Khi còn sống, vì ngoại hình không được người khác giới yêu thích, anh liên tục thất bại trong tình yêu. Sau khi lời cầu hôn thứ 101 lại bị từ chối, anh gặp tai nạn giao thông trên đường về nhà và trở thành ma.\n\nGiờ đây, anh là thành viên đội Kmon, hết lòng tham gia truy quét ác quỷ. Anh di chuyển chậm chạp, chạy cũng không giỏi nên thường tụt lại phía sau đồng đội, nhưng về sức mạnh thì chẳng thua kém ai.\n\nBình thường Dumboo có vẻ vụng về và chậm rãi, nhưng mỗi khi cần đến sức mạnh, anh lại trở thành một trong những đồng đội đáng tin cậy nhất."],
+      ddboaq:["Hungry Monster","Ác quỷ: Quái vật háu ăn","Ăn mãi vẫn đói—quái vật với cơn thèm ăn vô tận, Hungry Monster!\n\nHungry Monster là con quỷ có thân hình đồ sộ nhất và cơn thèm ăn không đáy. Hễ thấy thức ăn là hắn nuốt sạch, vậy mà dù đã ăn đến căng bụng, chẳng bao lâu sau hắn lại thấy đói.\n\nTại sao hắn luôn đói như vậy? Không ai biết vì sao cơn đói chẳng bao giờ biến mất, dù hắn ăn bao nhiêu đi nữa. Ngay cả Hungry Monster cũng không hiểu nguyên nhân, nên ngày ngày vẫn lang thang tìm thức ăn.\n\nLiệu đằng sau cơn đói bất tận ấy có ẩn giấu một bí mật mà chưa ai khám phá ra?"]
+    }
+  }
+};
+
+let activeLanguage = "ko";
+function applyPageTranslations(language) {
+  const t = pageTranslations[language] || pageTranslations.ko;
+  activeLanguage = pageTranslations[language] ? language : "ko";
+  const setText = (selector, value) => document.querySelectorAll(selector).forEach(el => { el.textContent = value; });
+  document.querySelectorAll(".detail-back").forEach(el => {
+    el.textContent = ["#bestiary", "#world", "#cards"].includes(el.getAttribute("href")) ? t.mainBack : t.indexBack;
+  });
+  const index = document.querySelector("#monster-index-page .detail-heading");
+  if (index) {
+    index.querySelector("h1").textContent = t.indexTitle;
+    index.querySelector(".detail-intro").textContent = t.intro;
+  }
+  setText("#monster-index-page .preparing-label", t.preparing);
+  const pagination = document.getElementById("monster-pagination");
+  if (pagination) pagination.setAttribute("aria-label", t.pageLabel);
+  Object.entries(t.details).forEach(([id, data]) => {
+    const page = document.getElementById(id + "-detail");
+    if (!page) return;
+    const heading = page.querySelector(".detail-heading");
+    if (!heading) return;
+    heading.querySelector("h1").textContent = data[0];
+    const intro = heading.querySelector(".detail-intro");
+    if (intro) intro.textContent = data[1];
+    const gallery = page.querySelector(".character-gallery");
+    const description = gallery && gallery.querySelector(".character-description");
+    if (description) renderCharacterDescription(description, data[2], id);
+    const label = heading.querySelector(".label");
+    if (label) label.textContent = t.characterLabel;
+  });
+  const login = document.getElementById("pi-login-button");
+  if (login && !sessionStorage.getItem("pi_username")) {
+    login.textContent = t.piLogin;
+    login.title = t.piLoginTitle;
+  }
+  const modal = document.getElementById("sero-card-modal");
+  if (modal) {
+    if (window.kmonCardsReady && kmonSelectedCard) {
+      openKmonCard(kmonSelectedCard);
+    }
+    modal.querySelectorAll(".sero-modal-guide p").forEach((p, i) => {
+      if (i > 0 && t.guide[i]) p.textContent = t.guide[i];
+    });
+    const notice = modal.querySelector(".sero-modal-notice");
+    const buy = modal.querySelector(".sero-buy-button");
+    if (notice) notice.textContent = t.notice;
+    if (buy) buy.textContent = t.buy;
+  }
+  if (window.kmonCardsReady) renderKmonCards();
+  if (typeof renderMonsterIndex === "function" && location.hash === "#monster-index") {
+    renderMonsterIndex(monsterIndexPage);
+  }
+}
+
+/* 다국어 설정 */
+const languageButton = document.getElementById("language-button");
+const languageMenu = document.getElementById("language-menu");
+
+const languageNames = {
+  ko: "한국어",
+  en: "English",
+  zh: "简体中文",
+  ja: "日本語",
+  vi: "Tiếng Việt"
+};
+
+function setLanguage(language) {
+  if (!languageNames[language]) return;
+
+  const worldButton = document.querySelector(".world-detail-button");
+  if (worldButton) {
+    const worldLabels = {ko:"Kmon의 세계 알아보기",en:"Explore Kmon's World",zh:"探索Kmon的世界",ja:"Kmonの世界を知る",vi:"Khám phá thế giới Kmon"};
+    worldButton.textContent = worldLabels[language] + " →";
+  }
+
+  // 선택한 언어 기억
+  localStorage.setItem("kmon-language", language);
+
+  // 홈페이지 언어 설정
+  document.documentElement.lang = language;
+
+  // 버튼 글자 변경
+  languageButton.innerHTML =
+    languageNames[language] + ' <span aria-hidden="true">⌄</span>';
+
+  // 메뉴 닫기
+  languageMenu.classList.remove("open");
+  languageButton.setAttribute("aria-expanded", "false");
+
+  // 번역 적용 함수가 준비되면 실행
+  if (typeof applyTranslations === "function") {
+    applyTranslations(language);
+  }
+  applyPageTranslations(language);
+}
+
+// 언어 메뉴 열기 및 닫기
+languageButton.addEventListener("click", (event) => {
+  event.stopPropagation();
+
+  const isOpen = languageMenu.classList.toggle("open");
+  languageButton.setAttribute("aria-expanded", String(isOpen));
+});
+
+// 언어 선택
+languageMenu.addEventListener("click", (event) => {
+  const option = event.target.closest(".language-option");
+  if (!option) return;
+
+  setLanguage(option.dataset.lang);
+});
+
+// 메뉴 바깥을 누르면 닫기
+document.addEventListener("click", (event) => {
+  if (!event.target.closest(".language-selector")) {
+    languageMenu.classList.remove("open");
+    languageButton.setAttribute("aria-expanded", "false");
+  }
+});
+
+// 저장된 언어 불러오기
+const savedLanguage = localStorage.getItem("kmon-language") || "ko";
+setLanguage(savedLanguage);
+/* 입장 버튼 */
+const introScreen = document.getElementById("intro-screen");
+const introEnter = document.getElementById("intro-enter");
+
+function enterKmonWorld() {
+  sessionStorage.setItem("kmon_intro_entered", "1");
+  introScreen.classList.add("hide");
+  document.body.classList.remove("intro-active");
+  document.getElementById("home-page").style.display = "block";
+  document.getElementById("bottom-nav").style.display = "grid";
+  document.getElementById("page-footer").style.display = "block";
+  history.replaceState(null,"","#world");
+  window.scrollTo(0,0);
+}
+introEnter.addEventListener("click",enterKmonWorld);
+// 이미 입장한 페이지를 새로고침하면 인트로를 건너뛰고 현재 위치를 유지한다.
+const isPageReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
+const returningFromWorld = new URLSearchParams(window.location.search).get("from") === "world" || sessionStorage.getItem("kmon_world_return") === "1" || (isPageReload && sessionStorage.getItem("kmon_intro_entered") === "1");
+const existingPageHash = window.location.hash;
+if (returningFromWorld || existingPageHash) {
+  sessionStorage.removeItem("kmon_world_return");
+  introScreen.classList.add("hide");
+  document.body.classList.remove("intro-active");
+  document.getElementById("home-page").style.display = "block";
+  document.getElementById("bottom-nav").style.display = "grid";
+  document.getElementById("page-footer").style.display = "block";
+  if (returningFromWorld && !existingPageHash) {
+    history.replaceState(null, "", window.location.pathname + "#world");
+  }
+}
+
+/* 페이지 전환 */
+function updatePage() {
+  const hash = window.location.hash;
+  const pages = {
+    "#sero":"sero-detail",
+    "#chesy":"chesy-detail",
+    "#chery":"chery-detail",
+    "#chemi":"chemi-detail",
+    "#egg":"egg-detail",
+    "#dumboo":"dumboo-detail",
+    "#ddboaq":"ddboaq-detail",
+    "#water_ghost":"water_ghost-detail",
+    "#dong_girl":"dong_girl-detail",
+    "#bbeaq":"bbeaq-detail",
+    "#dong_boy":"dong_boy-detail"
+  };
+  const selectedPage = pages[hash] || null;
+  const isDetailPage = selectedPage !== null;
+
+  if (document.body.classList.contains("intro-active")) {
+    document.getElementById("home-page").style.display = "none";
+    document.getElementById("sero-detail").style.display = "none";
+    document.getElementById("chesy-detail").style.display = "none";
+    document.getElementById("chery-detail").style.display = "none";
+    document.getElementById("chemi-detail").style.display = "none";
+    document.getElementById("egg-detail").style.display = "none";
+    document.getElementById("dumboo-detail").style.display = "none";
+    document.getElementById("ddboaq-detail").style.display = "none";
+    document.getElementById("water_ghost-detail").style.display = "none";
+    document.getElementById("dong_girl-detail").style.display = "none";
+    document.getElementById("bbeaq-detail").style.display = "none";
+    document.getElementById("dong_boy-detail").style.display = "none";
+    document.getElementById("monster-index-page").style.display = "none";
+    document.getElementById("card-collection-page").style.display = "none";
+    document.getElementById("page-footer").style.display = "none";
+    document.getElementById("bottom-nav").style.display = "none";
+    return;
+  }
+
+  const isIndexPage = hash === "#monster-index";
+  const isCardCollection = hash === "#card-collection";
+  const showHome = !isDetailPage && !isIndexPage && !isCardCollection;
+  document.getElementById("home-page").style.display = showHome ? "block" : "none";
+  document.getElementById("monster-index-page").style.display = isIndexPage ? "block" : "none";
+  document.getElementById("card-collection-page").style.display = isCardCollection ? "block" : "none";
+  document.getElementById("sero-detail").style.display = selectedPage === "sero-detail" ? "block" : "none";
+  document.getElementById("chesy-detail").style.display = selectedPage === "chesy-detail" ? "block" : "none";
+  document.getElementById("chery-detail").style.display = selectedPage === "chery-detail" ? "block" : "none";
+  document.getElementById("chemi-detail").style.display = selectedPage === "chemi-detail" ? "block" : "none";
+  document.getElementById("egg-detail").style.display = selectedPage === "egg-detail" ? "block" : "none";
+  document.getElementById("dumboo-detail").style.display = selectedPage === "dumboo-detail" ? "block" : "none";
+  document.getElementById("ddboaq-detail").style.display = selectedPage === "ddboaq-detail" ? "block" : "none";
+  document.getElementById("water_ghost-detail").style.display = selectedPage === "water_ghost-detail" ? "block" : "none";
+  document.getElementById("dong_girl-detail").style.display = selectedPage === "dong_girl-detail" ? "block" : "none";
+  document.getElementById("bbeaq-detail").style.display = selectedPage === "bbeaq-detail" ? "block" : "none";
+  document.getElementById("dong_boy-detail").style.display = selectedPage === "dong_boy-detail" ? "block" : "none";
+  document.getElementById("page-footer").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "block";
+  document.getElementById("bottom-nav").style.display = (isDetailPage || isIndexPage || isCardCollection) ? "none" : "grid";
+  if (isIndexPage) renderMonsterIndex(monsterIndexPage);
+  if (hash === "#bestiary" || hash === "#cards") {
+    requestAnimationFrame(() => {
+      const section = document.querySelector(hash);
+      if (section) section.scrollIntoView({block:"start",behavior:"instant"});
+    });
+  } else {
+    window.scrollTo(0,0);
+  }
+}
+window.addEventListener("hashchange",updatePage);
+updatePage();
+// Pi Sign-In 설정
+const PI_CLIENT_ID = "K7O4VU2cn5KRldwhdI0NZGwRhqiS-lHYYh7GR4qAP0I";
+const PI_REDIRECT_URI = "https://jamieahn72.github.io/";
+
+const piLoginButton = document.getElementById("pi-login-button");
+
+function updatePiLoginButton(username) {
+  if (!piLoginButton) return;
+
+  const t = pageTranslations[activeLanguage] || pageTranslations.ko;
+  piLoginButton.textContent = username ? "@" + username : t.piLogin;
+  piLoginButton.title = username
+    ? "@" + username + " · " + t.logoutConfirm
+    : t.piLoginTitle;
+}
+
+function clearPiLogin() {
+  sessionStorage.removeItem("pi_access_token");
+  sessionStorage.removeItem("pi_username");
+  sessionStorage.removeItem("pi_login_state");
+  updatePiLoginButton(null);
+}
+
+if (piLoginButton) {
+  piLoginButton.addEventListener("click", async () => {
+    const savedToken = sessionStorage.getItem("pi_access_token");
+    if (savedToken) {
+      if (confirm((pageTranslations[activeLanguage] || pageTranslations.ko).logoutConfirm)) {
+        clearPiLogin();
+        alert((pageTranslations[activeLanguage] || pageTranslations.ko).logoutAlert);
+      }
+      return;
+    }
+
+    if (!window.Pi || typeof window.Pi.authenticate !== "function") {
+      alert("Pi 로그인 SDK를 불러오지 못했습니다. Pi Browser에서 다시 접속해 주세요.");
+      return;
+    }
+
+    piLoginButton.disabled = true;
+    try {
+      const auth = await window.Pi.authenticate(["username"], (payment) => {
+        console.warn("Pi 미완료 결제 확인:", payment?.identifier);
+      });
+      if (!auth?.accessToken || !auth?.user?.username) {
+        throw new Error("인증 결과가 올바르지 않습니다.");
+      }
+      sessionStorage.setItem("pi_access_token", auth.accessToken);
+      sessionStorage.setItem("pi_username", auth.user.username);
+      updatePiLoginButton(auth.user.username);
+      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
+    } catch (error) {
+      console.error("Pi 로그인 오류:", error);
+      alert("Pi 로그인에 실패했습니다. " + (error?.message || "Pi Browser와 앱 등록 설정을 확인해 주세요."));
+    } finally {
+      piLoginButton.disabled = false;
+    }
+  });
+}
+
+async function verifyPiToken(token) {
+  const response = await fetch("https://api.minepi.com/v2/me", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error("Pi 인증에 실패했습니다.");
+  }
+
+  return await response.json();
+}
+
+(async function initializePiLogin() {
+  const params = new URLSearchParams(
+    window.location.hash.replace(/^#/, "")
+  );
+
+  const accessToken = params.get("access_token");
+  const returnedState = params.get("state");
+  const savedState = sessionStorage.getItem("pi_login_state");
+
+  if (accessToken && returnedState && savedState === returnedState) {
+    sessionStorage.removeItem("pi_login_state");
+
+    try {
+      const user = await verifyPiToken(accessToken);
+
+      sessionStorage.setItem("pi_access_token", accessToken);
+      sessionStorage.setItem("pi_username", user.username);
+
+      updatePiLoginButton(user.username);
+
+      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
+
+      history.replaceState(null, "", window.location.pathname);
+      return;
+    } catch (error) {
+      console.error(error);
+      clearPiLogin();
+      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginFail);
+      return;
+    }
+  }
+
+  const savedAccessToken = sessionStorage.getItem("pi_access_token");
+
+  if (savedAccessToken) {
+    try {
+      const user = await verifyPiToken(savedAccessToken);
+
+      sessionStorage.setItem("pi_username", user.username);
+      updatePiLoginButton(user.username);
+    } catch (error) {
+      clearPiLogin();
+      console.log("Pi 로그인이 만료되었습니다.");
+    }
+    } else {
+    updatePiLoginButton(null);
+  }
+})();
+
+// KMON card catalog: add new cards here in character and rarity order.
+const kmonCards = [
+ {id:"sero-legend",character:"세로 (Sero)",rarity:"LEGEND",image:"sero_legend_thumbnail_1.webp",power:"절대 소유물 수호",description:"내가 가진 소중한 물건은 어떤 상황에서도 잃거나 빼앗기지 않도록 지켜준다."},
+ {id:"chery-normal",character:"체리 (Cherry)",rarity:"NORMAL",image:"chery_normal_thumbnail_1.webp",power:"인연의 시작",description:"새로운 사람을 만날 때 마음을 자연스럽게 열고, 서로에게 좋은 인상을 남겨 소중한 인연이 시작될 수 있도록 도와준다."},
+ {id:"chery-rare",character:"체리 (Cherry)",rarity:"RARE",image:"chery_rare_thumbnail_1.webp",power:"인연의 끌림",description:"자신과 잘 맞는 사람을 알아보고 가까워질 기회를 높이며, 이미 맺어진 인연에는 따뜻한 애정과 신뢰가 자라도록 도와준다."},
+ {id:"chery-epic",character:"체리 (Cherry)",rarity:"EPIC",image:"chery_epic_thumbnail_1.webp",power:"애정의 결속",description:"소중한 사람과의 오해를 풀고 서로의 마음을 깊이 이해하게 하며, 진심으로 이어질 좋은 인연을 놓치지 않도록 도와준다."},
+ {id:"chery-legend",character:"체리 (Cherry)",rarity:"LEGEND",image:"chery_legend_thumbnail_1.webp",power:"천생연분",description:"자신에게 가장 소중한 인연을 알아보고 깊은 사랑으로 발전시키며, 이미 맺어진 관계는 어떤 어려움 속에서도 서로를 존중하고 굳건히 지켜갈 수 있도록 도와준다."},
+ {id:"egg-normal",character:"달걀귀신 (Egg ghost)",rarity:"NORMAL",image:"egg_normal_thumbnail_1.webp",power:"정신 맑힘",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 흐트러진 정신을 맑게 하고, 자신의 실력을 제대로 발휘할 수 있도록 도와준다."},
+ {id:"egg-rare",character:"달걀귀신 (Egg ghost)",rarity:"RARE",image:"egg_rare_thumbnail_1.webp",power:"집중력 강화",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 잡념을 걷어내고 집중력을 높여, 평소보다 한층 뛰어난 실력을 발휘할 수 있도록 도와준다."},
+ {id:"egg-epic",character:"달걀귀신 (Egg ghost)",rarity:"EPIC",image:"egg_epic_thumbnail_1.webp",power:"예리한 통찰",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 맑고 예리하게 하여, 중요한 순간에 정확한 판단과 최선의 선택을 할 수 있도록 도와준다."},
+ {id:"egg-legend",character:"달걀귀신 (Egg ghost)",rarity:"LEGEND",image:"egg_legend_thumbnail_1.webp",power:"잠재력 개화",description:"시험이나 선거와 같은 경쟁 상황에 놓였을 때 정신을 가장 맑고 예리하게 깨워, 자신의 잠재력과 실력을 최대한 발휘하고 기대 이상의 결과를 얻을 수 있도록 도와준다."}
+];
+const kmonCardTranslations={"en":{"sero-legend":["Sero","Guardian of treasured possessions","Protects the precious things you own so they are not lost or taken away, whatever happens."],"egg-normal":["Egg Ghost","Clear Mind","When facing a competitive situation such as an exam or election, helps clear a distracted mind so you can perform to the best of your ability."],"egg-rare":["Egg Ghost","Enhanced Focus","When facing a competitive situation such as an exam or election, helps remove distractions and sharpen focus so you can perform even better than usual."],"egg-epic":["Egg Ghost","Keen Insight","When facing a competitive situation such as an exam or election, helps keep your mind clear and sharp so you can make sound judgments and the best choices at crucial moments."],"egg-legend":["Egg Ghost","Awakened Potential","When facing a competitive situation such as an exam or election, helps awaken your clearest, sharpest mind so you can fully realize your potential and achieve results beyond expectations."]},"zh":{"sero-legend":["塞罗（Sero）","绝对守护所有物","无论发生什么，都守护你珍贵的物品，避免遗失或被夺走。"],"egg-normal":["鸡蛋鬼","澄澈心神","面对考试或选举等竞争场合时，帮助理清纷乱的思绪，让你充分发挥自己的实力。"],"egg-rare":["鸡蛋鬼","强化专注","面对考试或选举等竞争场合时，帮助排除杂念、提高专注力，让你发挥出比平时更出色的水平。"],"egg-epic":["鸡蛋鬼","敏锐洞察","面对考试或选举等竞争场合时，帮助保持清醒敏锐的头脑，在关键时刻作出准确判断与最佳选择。"],"egg-legend":["鸡蛋鬼","潜能绽放","面对考试或选举等竞争场合时，帮助唤醒最清醒敏锐的思维，充分发挥潜力与实力，获得超出预期的成果。"]},"ja":{"sero-legend":["セロ（Sero）","大切な持ち物の絶対守護","どんな状況でも、大切な持ち物を失ったり奪われたりしないように守ります。"],"egg-normal":["卵おばけ","心を澄ます","試験や選挙などの競争の場面で、乱れた心を落ち着かせ、自分の実力を十分に発揮できるよう助けます。"],"egg-rare":["卵おばけ","集中力強化","試験や選挙などの競争の場面で、雑念を取り除いて集中力を高め、普段以上の実力を発揮できるよう助けます。"],"egg-epic":["卵おばけ","鋭い洞察","試験や選挙などの競争の場面で、頭を明晰かつ鋭敏に保ち、重要な瞬間に的確な判断と最善の選択ができるよう助けます。"],"egg-legend":["卵おばけ","潜在能力の開花","試験や選挙などの競争の場面で、心を最も明晰かつ鋭敏な状態に導き、潜在能力と実力を最大限に発揮して期待以上の成果を得られるよう助けます。"]},"vi":{"sero-legend":["Sero","Bảo vệ tuyệt đối vật sở hữu","Bảo vệ những món đồ quý giá của bạn để chúng không bị mất hoặc bị lấy đi trong bất kỳ hoàn cảnh nào."],"egg-normal":["Ma Trứng","Tinh thần minh mẫn","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp xua tan sự rối trí để bạn phát huy đúng năng lực của mình."],"egg-rare":["Ma Trứng","Tăng cường tập trung","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp loại bỏ suy nghĩ xao nhãng và tăng khả năng tập trung để bạn thể hiện tốt hơn thường lệ."],"egg-epic":["Ma Trứng","Nhận định sắc bén","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp đầu óc minh mẫn và nhạy bén để đưa ra nhận định chính xác và lựa chọn tốt nhất vào thời điểm quan trọng."],"egg-legend":["Ma Trứng","Khai mở tiềm năng","Trong những tình huống cạnh tranh như kỳ thi hoặc bầu cử, giúp đánh thức sự minh mẫn và nhạy bén tối đa, phát huy hết tiềm năng và năng lực để đạt kết quả vượt mong đợi."]}};
+const kmonCardUi={ko:{more:"전체 카드 더보기",collection:"디지털 카드 컬렉션",homeTitle:"디지털 카드",order:"캐릭터 순서 · ",guide:"Kmon 캐릭터의 특별한 능력을 만나 보세요."},en:{more:"View All Cards",collection:"Digital Card Collection",homeTitle:"Digital Cards",order:"Character order · ",guide:"Discover the special abilities of Kmon characters."},zh:{more:"查看全部卡片",collection:"数字卡片收藏",homeTitle:"数字卡片",order:"角色顺序 · ",guide:"探索 Kmon 角色的特殊能力。"},ja:{more:"すべてのカードを見る",collection:"デジタルカードコレクション",homeTitle:"デジタルカード",order:"キャラクター順 · ",guide:"Kmonキャラクターの特別な能力をご覧ください。"},vi:{more:"Xem tất cả thẻ",collection:"Bộ sưu tập thẻ kỹ thuật số",homeTitle:"Thẻ kỹ thuật số",order:"Thứ tự nhân vật · ",guide:"Khám phá năng lực đặc biệt của các nhân vật Kmon."}};
+function kmonTranslated(card){const data=(kmonCardTranslations[activeLanguage]||{})[card.id];return data?{...card,character:data[0],power:data[1],description:data[2]}:card;}
+const kmonRarityOrder={NORMAL:0,RARE:1,EPIC:2,LEGEND:3};
+const kmonCharacterOrder=["세로 (Sero)","체시 (Chesy)","체리 (Chery)","체미 (Chemi)","달걀귀신 (Egg ghost)","덤부 (Dumboo)","뚱보악귀"];
+const kmonModal=document.getElementById("sero-card-modal");
+let kmonSelectedCard=null;
+// Keep the shared modal accessible from both the home and collection pages.
+if(kmonModal)document.body.appendChild(kmonModal);
+function kmonCardNode(card){
+ card=kmonTranslated(card);
+ const article=document.createElement("article");article.className="kmon-card-item";
+ const button=document.createElement("button");button.type="button";button.setAttribute("aria-label",card.character+" "+card.rarity+" 카드 상세 보기");
+ const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity+" 카드";img.loading="lazy";button.appendChild(img);
+ button.addEventListener("click",()=>openKmonCard(card));article.appendChild(button);
+ const name=document.createElement("h3");name.textContent=card.character;article.appendChild(name);
+ const info=document.createElement("p");const rarity=document.createElement("strong");rarity.className="kmon-rarity-"+card.rarity.toLowerCase();rarity.textContent=card.rarity;info.appendChild(rarity);info.appendChild(document.createTextNode(" · "+card.power));article.appendChild(info);return article;
+}
+function openKmonCard(card){
+ if(!kmonModal)return;
+ kmonSelectedCard=kmonCards.find(c=>c.id===card.id)||card;
+ card=kmonTranslated(kmonSelectedCard);
+ const content=kmonModal.querySelector(".sero-modal-content");
+ content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" 카드";
+ content.querySelector("h2").textContent=card.character;
+ content.querySelector(".sero-modal-rarity").textContent=card.rarity;
+ content.querySelector(".sero-modal-rarity").className="sero-modal-rarity kmon-rarity-"+card.rarity.toLowerCase();
+ content.querySelector("h3").textContent=card.power;
+ const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
+ const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?(pageTranslations[activeLanguage]||pageTranslations.ko).guide[0]:kmonCardUi[activeLanguage].guide;
+ const symbolDescription=content.querySelector(".kmon-symbol-guide-description");if(symbolDescription)symbolDescription.textContent=card.id==="sero-legend"?"세로의 고유 심볼은 ‘소유와 보호’를 의미하며, 소중한 것을 지키는 힘을 상징합니다.":card.character.split(" (")[0]+"의 고유 심볼은 ‘"+card.power+"’의 의미를 담아 캐릭터의 특별한 능력을 상징합니다.";
+ const testPrices={NORMAL:29,RARE:49,EPIC:79,LEGEND:129};
+ const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" Test Pi 결제하기";buy.disabled=true;buy.title="테스트넷 결제 기능 준비 중";}
+ const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent="※ 현재 테스트넷 운영 중입니다. 실제 Pi가 차감되지 않는 테스트 결제이며, 결제 기능은 준비 중입니다.";
+ kmonModal.classList.add("active");document.body.style.overflow="hidden";
+}
+function closeKmonCard(){if(kmonModal)kmonModal.classList.remove("active");document.body.style.overflow="";}
+const kmonClose=document.getElementById("sero-card-close");if(kmonClose)kmonClose.addEventListener("click",closeKmonCard);
+if(kmonModal)kmonModal.addEventListener("click",e=>{if(e.target===kmonModal)closeKmonCard();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeKmonCard();});
+function renderKmonCards(){
+ const ui=kmonCardUi[activeLanguage]||kmonCardUi.ko;
+ const more=document.querySelector("#cards .more-monsters-button");if(more)more.textContent=ui.more;
+ const homeTitle=document.querySelector("#cards .section-title");if(homeTitle)homeTitle.textContent=ui.homeTitle;
+ const collectionTitle=document.querySelector("#card-collection-page h1");if(collectionTitle)collectionTitle.textContent=ui.collection;
+ const orderLabel=document.querySelector("#card-collection-page > p");if(orderLabel&&orderLabel.firstChild)orderLabel.firstChild.textContent=ui.order;
+ const home=document.getElementById("kmon-home-cards");const collection=document.getElementById("kmon-collection-cards");
+ if(home){const shuffled=[...kmonCards];for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}home.replaceChildren(...shuffled.slice(0,4).map(kmonCardNode));}
+ if(collection){const groups=new Map();const sorted=[...kmonCards].sort((a,b)=>(kmonCharacterOrder.indexOf(a.character)-kmonCharacterOrder.indexOf(b.character))||(kmonRarityOrder[a.rarity]-kmonRarityOrder[b.rarity]));
+ sorted.forEach(card=>{if(!groups.has(card.character))groups.set(card.character,[]);groups.get(card.character).push(card);});
+ collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=kmonTranslated(cards[0]).character;section.appendChild(h);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
+}
+window.kmonCardsReady=true;
+renderKmonCards();
+</script>
+<script>
+/* Kmon 세계 상세페이지에서 돌아온 경우에만 메인 화면으로 직접 복귀 */
+(function () {
+  if (new URLSearchParams(location.search).get("from") !== "world" && sessionStorage.getItem("kmon_world_return") !== "1") return;
+  sessionStorage.removeItem("kmon_world_return");
+  const intro = document.getElementById("intro-screen");
+  const home = document.getElementById("home-page");
+  const nav = document.getElementById("bottom-nav");
+  const footer = document.getElementById("page-footer");
+  if (!home) return;
+  if (intro) { intro.classList.add("hide"); intro.style.display = "none"; }
+  document.body.classList.remove("intro-active");
+  home.style.display = "block";
+  if (nav) nav.style.display = "grid";
+  if (footer) footer.style.display = "block";
+  if (!location.hash) {
+    history.replaceState(null, "", location.pathname + "#world");
+    window.scrollTo(0, 0);
+  } else {
+    updatePage();
+  }
+})();
+</script>
+</body>
+</html>
