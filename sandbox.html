@@ -2036,7 +2036,7 @@ if (piLoginButton) {
 
     piLoginButton.disabled = true;
     try {
-      const auth = await window.Pi.authenticate(["username"], (payment) => {
+      const auth = await window.Pi.authenticate(["username", "payments"], (payment) => {
         console.warn("Pi 미완료 결제 확인:", payment?.identifier);
       });
       if (!auth?.accessToken || !auth?.user?.username) {
