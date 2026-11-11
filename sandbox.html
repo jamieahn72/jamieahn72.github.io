@@ -2242,12 +2242,32 @@ async function kmonDownloadTestCard(cardId,button) {
     img.src=url;
     img.alt="구매 인증 완료된 KMON TesT 카드";
     img.style.cssText="display:block;width:100%;max-width:340px;height:auto;margin:8px auto;border-radius:8px;";
+    const save=document.createElement("button");
+    save.type="button";
+    save.textContent="휴대폰에 이미지 저장 / 공유";
+    save.style.cssText="display:block;width:100%;padding:15px;margin:12px auto;border:0;border-radius:10px;background:#2257a6;color:white;font-size:16px;font-weight:700;";
+    save.onclick=async()=>{
+      const filename="KMON_"+cardId+"_TesT.png";
+      const file=new File([blob],filename,{type:"image/png"});
+      try{
+        if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+          await navigator.share({files:[file],title:"KMON TesT 카드"});
+          return;
+        }
+      }catch(error){
+        if(error.name==="AbortError")return;
+        console.warn("KMON share failed:",error);
+      }
+      // Browser fallback: open image in a new tab, where the browser menu may offer Save.
+      const opened=window.open(url,"_blank");
+      if(!opened)alert("이 브라우저는 파일 공유를 지원하지 않습니다. PC 브라우저에서 다운로드하거나 휴대폰 화면을 캡처해 주세요.");
+    };
     const link=document.createElement("a");
     link.href=url;
     link.download="KMON_"+cardId+"_TesT.png";
-    link.textContent="이미지 다시 저장";
+    link.textContent="일반 다운로드 다시 시도";
     link.style.cssText="display:inline-block;padding:12px;color:#1d4ed8;text-decoration:underline;";
-    preview.append(msg,img,link);
+    preview.append(msg,img,save,link);
     button.textContent="구매 인증 성공 · 이미지 표시 완료";
   }catch(error){alert("다운로드 실패: "+error.message);}
   finally{button.disabled=false;if(button.textContent!=="구매 인증 성공 · 이미지 표시 완료")button.textContent=original;}
