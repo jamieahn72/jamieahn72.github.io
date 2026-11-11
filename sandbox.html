@@ -2164,6 +2164,20 @@ function openKmonCard(card){
  const testPrices={NORMAL:29,RARE:49,EPIC:79,LEGEND:129};
  const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" Test Pi 결제하기";buy.disabled=false;buy.title="Pi Sandbox 테스트 결제";buy.onclick=()=>kmonSandboxPurchase(kmonSelectedCard,buy);}
  const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent="※ Pi Sandbox 전용 테스트 결제입니다. 실제 Pi 결제는 지원하지 않습니다.";
+ // Download is available only for the single watermarked Sandbox test card.
+ let download=content.querySelector("#kmon-test-download");
+ if(!download){
+   download=document.createElement("button");
+   download.id="kmon-test-download";
+   download.type="button";
+   download.style.cssText="width:100%;margin-top:12px;padding:14px;border-radius:12px;border:1px solid #64748b;background:#172033;color:#fff;font-size:15px;font-weight:700;cursor:pointer;";
+   const buyButton=content.querySelector(".sero-buy-button");
+   if(buyButton)buyButton.insertAdjacentElement("afterend",download);
+ }
+ download.hidden=card.id!=="egg-normal";
+ download.textContent="구매자 전용 TesT 카드 다운로드";
+ download.onclick=()=>kmonDownloadTestCard(download);
+
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
 }
 const KMON_PAYMENT_SERVER = "https://kmon-payment.jamieahn72.workers.dev";
@@ -2178,6 +2192,39 @@ async function kmonPaymentRequest(path, paymentId, txid) {
   const result = await response.json();
   if (!response.ok || !result.success) throw new Error(result.error || "결제 서버 오류");
   return result;
+}
+async function kmonDownloadTestCard(button) {
+  const token=sessionStorage.getItem("pi_access_token");
+  if(!token){alert("먼저 Pi 로그인을 해 주세요.");return;}
+  button.disabled=true;
+  const original=button.textContent;
+  button.textContent="구매 기록 확인 중...";
+  try{
+    const response=await fetch(KMON_PAYMENT_SERVER+"/api/cards/egg-normal/download",{
+      method:"GET",
+      headers:{"Authorization":"Bearer "+token},
+      cache:"no-store"
+    });
+    if(!response.ok){
+      let detail={};
+      try{detail=await response.json();}catch(_){}
+      if(response.status===403)throw new Error("이 계정에는 달걀귀신 NORMAL 카드의 완료된 구매 기록이 없습니다.");
+      if(response.status===401)throw new Error("Pi 로그인이 만료되었거나 인증되지 않았습니다. 다시 로그인해 주세요.");
+      if(response.status===404)throw new Error("다운로드 주소 또는 TesT 이미지가 아직 서버에 준비되지 않았습니다.");
+      throw new Error(detail.error||"서버 오류 ("+response.status+")");
+    }
+    const blob=await response.blob();
+    if(!blob.type.includes("image/png"))throw new Error("서버가 PNG 파일을 반환하지 않았습니다.");
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="KMON_egg-normal_TesT.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(error){alert("다운로드 실패: "+error.message);}
+  finally{button.disabled=false;button.textContent=original;}
 }
 let kmonPaymentBusy = false;
 async function kmonSandboxPurchase(card, button) {
