@@ -2267,7 +2267,52 @@ async function kmonDownloadTestCard(cardId,button) {
     link.download="KMON_"+cardId+"_TesT.png";
     link.textContent="일반 다운로드 다시 시도";
     link.style.cssText="display:inline-block;padding:12px;color:#1d4ed8;text-decoration:underline;";
-    preview.append(msg,img,save,link);
+    const secure=document.createElement("button");
+    secure.type="button";
+    secure.textContent="일반 브라우저용 안전 다운로드 링크 만들기";
+    secure.style.cssText="display:block;width:100%;padding:15px;margin:12px auto;border:0;border-radius:10px;background:#176b4d;color:white;font-size:15px;font-weight:700;";
+    secure.onclick=async()=>{
+      secure.disabled=true;
+      secure.textContent="안전한 링크 발급 중...";
+      try{
+        const token=sessionStorage.getItem("pi_access_token");
+        if(!token)throw new Error("Pi 로그인이 필요합니다.");
+        const response=await fetch(KMON_PAYMENT_SERVER+"/api/cards/"+encodeURIComponent(cardId)+"/download-link",{
+          method:"POST",headers:{"Authorization":"Bearer "+token},cache:"no-store"
+        });
+        const result=await response.json();
+        if(!response.ok||!result.success||!result.url)throw new Error(result.error||"링크 발급 실패 ("+response.status+")");
+        let holder=preview.querySelector("#kmon-secure-link-box");
+        if(!holder){
+          holder=document.createElement("div");
+          holder.id="kmon-secure-link-box";
+          holder.style.cssText="padding:12px;border:1px solid #bbb;border-radius:8px;margin-top:10px;";
+          secure.insertAdjacentElement("afterend",holder);
+        }
+        holder.replaceChildren();
+        const hint=document.createElement("p");
+        hint.textContent="이 링크는 2분 동안 유효합니다. 아래 주소를 복사해서 휴대폰 Chrome 주소창에 붙여넣으세요. 링크를 다른 사람에게 보내지 마세요.";
+        hint.style.cssText="font-size:13px;line-height:1.6;";
+        const field=document.createElement("textarea");
+        field.readOnly=true;
+        field.value=result.url;
+        field.rows=3;
+        field.style.cssText="width:100%;box-sizing:border-box;font-size:12px;";
+        const copy=document.createElement("button");
+        copy.type="button";
+        copy.textContent="다운로드 주소 복사";
+        copy.style.cssText="display:block;width:100%;padding:12px;margin-top:8px;border:1px solid #176b4d;border-radius:8px;background:#fff;color:#176b4d;";
+        copy.onclick=async()=>{
+          field.focus();field.select();
+          try{await navigator.clipboard.writeText(result.url);copy.textContent="주소 복사 완료";}
+          catch(_){copy.textContent="주소를 선택했어요. 복사 메뉴를 눌러주세요.";}
+        };
+        holder.append(hint,field,copy);
+        secure.textContent="새 다운로드 링크 발급";
+      }catch(error){alert("다운로드 링크 오류: "+error.message);secure.textContent="일반 브라우저용 안전 다운로드 링크 만들기";}
+      finally{secure.disabled=false;}
+    };
+    preview.append(msg,img,save,link,secure);
     button.textContent="구매 인증 성공 · 이미지 표시 완료";
   }catch(error){alert("다운로드 실패: "+error.message);}
   finally{button.disabled=false;if(button.textContent!=="구매 인증 성공 · 이미지 표시 완료")button.textContent=original;}
