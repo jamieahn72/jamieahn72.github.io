@@ -2174,9 +2174,9 @@ function openKmonCard(card){
    const buyButton=content.querySelector(".sero-buy-button");
    if(buyButton)buyButton.insertAdjacentElement("afterend",download);
  }
- download.hidden=card.id!=="egg-normal";
+ download.hidden=!["egg-normal","chery-normal"].includes(card.id);
  download.textContent="구매자 전용 TesT 카드 다운로드";
- download.onclick=()=>kmonDownloadTestCard(download);
+ download.onclick=()=>kmonDownloadTestCard(card.id,download);
 
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
 }
@@ -2193,14 +2193,14 @@ async function kmonPaymentRequest(path, paymentId, txid) {
   if (!response.ok || !result.success) throw new Error(result.error || "결제 서버 오류");
   return result;
 }
-async function kmonDownloadTestCard(button) {
+async function kmonDownloadTestCard(cardId,button) {
   const token=sessionStorage.getItem("pi_access_token");
   if(!token){alert("먼저 Pi 로그인을 해 주세요.");return;}
   button.disabled=true;
   const original=button.textContent;
   button.textContent="구매 기록 확인 중...";
   try{
-    const response=await fetch(KMON_PAYMENT_SERVER+"/api/cards/egg-normal/download",{
+    const response=await fetch(KMON_PAYMENT_SERVER+"/api/cards/"+encodeURIComponent(cardId)+"/download",{
       method:"GET",
       headers:{"Authorization":"Bearer "+token},
       cache:"no-store"
@@ -2208,7 +2208,7 @@ async function kmonDownloadTestCard(button) {
     if(!response.ok){
       let detail={};
       try{detail=await response.json();}catch(_){}
-      if(response.status===403)throw new Error("이 계정에는 달걀귀신 NORMAL 카드의 완료된 구매 기록이 없습니다.");
+      if(response.status===403)throw new Error("이 계정에는 해당 카드의 완료된 구매 기록이 없습니다.");
       if(response.status===401)throw new Error("Pi 로그인이 만료되었거나 인증되지 않았습니다. 다시 로그인해 주세요.");
       if(response.status===404)throw new Error("다운로드 주소 또는 TesT 이미지가 아직 서버에 준비되지 않았습니다.");
       throw new Error(detail.error||"서버 오류 ("+response.status+")");
@@ -2218,7 +2218,7 @@ async function kmonDownloadTestCard(button) {
     const url=URL.createObjectURL(blob);
     const a=document.createElement("a");
     a.href=url;
-    a.download="KMON_egg-normal_TesT.png";
+    a.download="KMON_"+cardId+"_TesT.png";
     document.body.appendChild(a);
     a.click();
     a.remove();
