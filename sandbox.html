@@ -2266,6 +2266,24 @@ async function kmonSandboxPurchase(card, button) {
     button.disabled = false;
   };
   try {
+    // A cached access token can identify the user without restoring the Pi SDK
+    // payments scope after reopening Pi Browser. Refresh SDK authorization first.
+    if (typeof window.Pi.authenticate !== "function") {
+      throw new Error("Pi 결제 권한 인증을 사용할 수 없습니다.");
+    }
+    const auth = await window.Pi.authenticate(["username", "payments"], (payment) => {
+      console.warn("Pi 미완료 결제 확인:", payment?.identifier);
+    });
+    if (!auth?.accessToken || !auth?.user?.username) {
+      throw new Error("Pi 결제 권한을 확인하지 못했습니다. 다시 로그인해 주세요.");
+    }
+    const previousUsername = sessionStorage.getItem("pi_username");
+    if (previousUsername && previousUsername !== auth.user.username) {
+      throw new Error("로그인 계정이 변경되었습니다. 계정을 확인하고 다시 시도해 주세요.");
+    }
+    sessionStorage.setItem("pi_access_token", auth.accessToken);
+    sessionStorage.setItem("pi_username", auth.user.username);
+    updatePiLoginButton(auth.user.username);
     // Pi.createPayment uses callbacks; its returned value is not a payment-completion signal.
     window.Pi.createPayment({
       amount,
