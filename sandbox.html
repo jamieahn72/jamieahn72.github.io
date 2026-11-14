@@ -652,6 +652,11 @@ section { padding:30px 20px; }
 .bestiary-brand { flex:0 0 auto; color:var(--navy); font:900 15px Arial,sans-serif; letter-spacing:-.5px; white-space:nowrap; }
 .bestiary-brand span { color:#65718d; font-size:9px; font-weight:700; letter-spacing:.5px; }
 .bestiary-toolbar-actions { display:flex; align-items:center; justify-content:flex-end; gap:7px; min-width:0; }
+/* 출석체크는 상단 도구줄에만 추가하며 도감 제목과 카드 배치는 유지 */
+.kmon-attendance-link{display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;padding:8px 10px;border:2px solid #8b5cf6;border-radius:9px;background:#8b5cf6;color:#fff;font-size:12px;font-weight:700;white-space:nowrap;text-decoration:none}
+@media(max-width:600px){.kmon-attendance-link{padding:7px 6px;font-size:11px}.bestiary-toolbar-actions{gap:4px}}
+@media(max-width:360px){.bestiary-brand span{display:none}.kmon-attendance-link{padding:7px 5px}}
+
 @media (max-width:600px) {
   .bestiary-title-row { display:block; }
   .bestiary-title { display:flex; width:100%; min-width:0; overflow:visible; white-space:normal; }
@@ -1041,6 +1046,8 @@ if (/Android/i.test(navigator.userAgent) &&
         <button class="language-option" type="button" data-lang="vi">Tiếng Việt</button>
             </div>
     </div>
+
+    <a class="kmon-attendance-link" href="./attendance-test.html?v=20261114-calendar" aria-label="KMON 출석체크">✓ 출석</a>
 
     <button
       class="pi-login-button"
