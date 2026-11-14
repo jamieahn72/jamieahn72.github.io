@@ -2113,7 +2113,7 @@ async function verifyPiToken(token) {
       clearPiLogin();
       console.log("Pi 로그인이 만료되었습니다.");
     }
-    } else {
+  } else {
     updatePiLoginButton(null);
   }
 })();
@@ -2175,7 +2175,7 @@ function openKmonCard(card){
    if(buyButton)buyButton.insertAdjacentElement("afterend",download);
  }
  download.hidden=!["egg-normal","chery-normal"].includes(card.id);
- download.textContent="구매자 전용 TesT 카드 다운로드";
+ download.textContent="구매자 전용 테스트 카드 다운로드";
  download.onclick=()=>kmonDownloadTestCard(card.id,download);
 
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
