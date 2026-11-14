@@ -6,7 +6,7 @@ export async function issueA2UApproval({ db, operator, uid, amount, now = new Da
   // operator is a verified identity returned by an authenticated server-side gate,
   // NEVER a value copied from a request body or query parameter.
   if (!operator || operator.authenticated !== true || operator.role !== 'a2u-operator' ||
-      typeof operator.id !== 'string' || !/^[a-zA-Z0-9_-]{4,128}$/.test(operator.id))
+      typeof operator.id !== 'string' || !/^[^\s@]{1,64}@[^\s@]{1,190}$/.test(operator.id))
     throw new Error('Authenticated A2U operator required');
   if (typeof uid !== 'string' || !/^[a-zA-Z0-9_-]{4,128}$/.test(uid))
     throw new Error('Invalid recipient UID');
