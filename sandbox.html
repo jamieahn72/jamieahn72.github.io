@@ -638,11 +638,11 @@ section { padding:30px 20px; }
 /* Kmon 세계관 상세페이지 안내 버튼: 기존 배너 위에 추가 */
 .world-banner { position:relative; }
 .world-detail-button {
-  position:absolute; right:clamp(12px,4%,32px); left:auto; width:auto; max-width:calc(100% - 24px); bottom:clamp(12px,5%,24px);
+  position:absolute; left:60.8%; right:4%; width:auto; max-width:none; bottom:clamp(12px,5%,24px);
   z-index:2; display:flex; align-items:center; justify-content:center; gap:8px;
-  padding:11px 12px; border:2px solid #E58A32;
+  padding:9px 5px; border:2px solid #E58A32;
   border-radius:9px; background:var(--bg); color:#202B4B;
-  font-family:inherit; font-size:clamp(14px,2.3vw,18px); font-weight:800; white-space:nowrap;
+  font-family:inherit; font-size:clamp(12px,2.3vw,18px); font-weight:800; white-space:nowrap;
   box-shadow:0 4px 14px rgba(0,0,0,.22); cursor:pointer;
 }
 .world-detail-button:hover { background:#F7F2E9; }
@@ -1875,7 +1875,7 @@ function setLanguage(language) {
 
   const worldButton = document.querySelector(".world-detail-button");
   if (worldButton) {
-    const worldLabels = {ko:"Kmon의 세계 알아보기",en:"Explore Kmon's World",zh:"探索Kmon的世界",ja:"Kmonの世界を知る",vi:"Khám phá thế giới Kmon"};
+    const worldLabels = {ko:"Kmon 탐험하기",en:"Explore Kmon",zh:"探索 Kmon",ja:"Kmonを探検",vi:"Khám phá Kmon"};
     worldButton.textContent = worldLabels[language] + " →";
   }
 
