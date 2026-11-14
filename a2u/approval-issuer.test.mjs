@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { issueA2UApproval } from './approval-issuer.mjs';
-const operator={authenticated:true,role:'a2u-operator',id:'admin_1234'};
+const operator={authenticated:true,role:'a2u-operator',id:'admin@example.com'};
 const uid='recipient_1234';
 function db() {
  const calls=[];
@@ -9,7 +9,7 @@ function db() {
 }
 test('rejects missing authenticated operator',async()=>{
  const d=db();
- await assert.rejects(issueA2UApproval({db:d,operator:{id:'admin_1234'},uid,amount:0.01}),/Authenticated/);
+ await assert.rejects(issueA2UApproval({db:d,operator:{id:'admin@example.com'},uid,amount:0.01}),/Authenticated/);
  assert.equal(d.calls.length,0);
 });
 test('rejects incorrect role and amount',async()=>{
