@@ -2035,6 +2035,14 @@ if (piLoginButton) {
     }
 
     piLoginButton.disabled = true;
+    const originalLoginText = piLoginButton.textContent;
+    piLoginButton.textContent = "Pi 로그인 연결 중...";
+    piLoginButton.setAttribute("aria-busy", "true");
+    // Keep the original authentication request active; do not trigger a second login.
+    const slowLoginNotice = window.setTimeout(() => {
+      piLoginButton.textContent = "Pi 인증 응답 대기 중...";
+      piLoginButton.title = "Pi 인증을 기다리고 있습니다. 잠시만 기다려 주세요.";
+    }, 8000);
     try {
       const auth = await window.Pi.authenticate(["username", "payments"], (payment) => {
         console.warn("Pi 미완료 결제 확인:", payment?.identifier);
@@ -2050,7 +2058,14 @@ if (piLoginButton) {
       console.error("Pi 로그인 오류:", error);
       alert("Pi 로그인에 실패했습니다. " + (error?.message || "Pi Browser와 앱 등록 설정을 확인해 주세요."));
     } finally {
+      window.clearTimeout(slowLoginNotice);
       piLoginButton.disabled = false;
+      piLoginButton.removeAttribute("aria-busy");
+      // Preserve the username after successful login, or restore the login label.
+      updatePiLoginButton(sessionStorage.getItem("pi_username"));
+      if (!sessionStorage.getItem("pi_username")) {
+        piLoginButton.textContent = originalLoginText;
+      }
     }
   });
 }
