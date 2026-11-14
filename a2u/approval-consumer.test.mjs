@@ -4,7 +4,7 @@ import { makeApprovalConsumer } from './approval-consumer.mjs';
 
 // D1 contract simulation. These tests check application query arguments,
 // not real SQLite concurrency or actual Cloudflare D1 behavior.
-function fakeD1({ approvedBy='admin-1', recipientUid='user_1234', approvalId='approval_123456', expired=false }={}) {
+function fakeD1({ approvedBy='admin@example.com', recipientUid='user_1234', approvalId='approval_123456', expired=false }={}) {
   const state={consumed:false,calls:0,sql:''};
   const db={prepare(sql){
     state.sql=sql;
@@ -20,7 +20,7 @@ function fakeD1({ approvedBy='admin-1', recipientUid='user_1234', approvalId='ap
   }};
   return {db,state};
 }
-const ctx={operatorId:'admin-1',approvalId:'approval_123456'};
+const ctx={operatorId:'admin@example.com',approvalId:'approval_123456'};
 test('approval can be consumed only once',async()=>{
   const {db,state}=fakeD1();
   const approval=makeApprovalConsumer(db,ctx);
@@ -43,5 +43,5 @@ test('expired approval fails closed',async()=>{
 });
 test('invalid server-side context rejected',()=>{
   const {db}=fakeD1();
-  assert.throws(()=>makeApprovalConsumer(db,{operatorId:'admin-1',approvalId:'x'}),/Invalid trusted approval/);
+  assert.throws(()=>makeApprovalConsumer(db,{operatorId:'admin@example.com',approvalId:'x'}),/Invalid trusted approval/);
 });
