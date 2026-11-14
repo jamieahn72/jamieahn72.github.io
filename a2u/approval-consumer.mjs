@@ -4,7 +4,7 @@
 // Never expose this function through a public route without trusted admin auth.
 export function makeApprovalConsumer(db, { operatorId, approvalId }) {
   if (!db || typeof db.prepare !== 'function') throw new Error('D1 required');
-  if (typeof operatorId !== 'string' || !/^[^\\s@]{1,64}@[^\\s@]{1,190}$/.test(operatorId) ||
+  if (typeof operatorId !== 'string' || !/^[^\s@]{1,64}@[^\s@]{1,190}$/.test(operatorId) ||
       typeof approvalId !== 'string' || !/^[a-zA-Z0-9_-]{8,128}$/.test(approvalId))
     throw new Error('Invalid trusted approval context');
   return Object.freeze({
