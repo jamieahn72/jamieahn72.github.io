@@ -1,0 +1,27 @@
+name: A2U official SDK offline runtime verification
+on:
+  push:
+    branches: [feature/a2u-testnet-backend-plan-20261114]
+    paths:
+      - 'a2u/sdk-runtime-check/**'
+      - '.github/workflows/a2u-sdk-runtime.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  node-sdk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned official SDK and signing dependency
+        working-directory: a2u/sdk-runtime-check
+        run: npm install --ignore-scripts --no-audit --no-fund
+      - name: Offline SDK import and constructor tests
+        working-directory: a2u/sdk-runtime-check
+        run: npm test
+      - name: Additional isolated A2U unit tests
+        run: node --test a2u/*.test.mjs
