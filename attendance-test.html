@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>KMON 테스트넷 출석체크</title><script src="https://sdk.minepi.com/pi-sdk.js"></script>
+<style>*{box-sizing:border-box}body{margin:0;background:#f7f2e9;color:#24334b;font-family:system-ui,sans-serif;padding:24px 14px}.wrap{max-width:540px;margin:auto}a{color:#5276a5}.card{background:#fff;border:1px solid #e4ded4;border-radius:18px;padding:20px;margin:16px 0;box-shadow:0 4px 18px #00000008}h1{margin:8px 0}h2{font-size:19px;margin:0 0 12px}.muted{color:#657184;font-size:14px;line-height:1.6}.score{font-size:36px;font-weight:800;color:#b06b27}button{background:#5276a5;color:white;border:0;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:700;cursor:pointer}button:disabled{background:#aab3c1;cursor:default}.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.day{text-align:center;border-radius:9px;padding:9px 1px;background:#f0f2f6;font-size:12px}.day.done{background:#d6eddf;color:#236142;font-weight:800}.day.today{outline:2px solid #e58a32}.status{font-weight:700}small{color:#657184;line-height:1.6}</style></head>
+<body><div class="wrap"><a href="./sandbox.html">← KMON 테스트넷으로 돌아가기</a><h1>✦ KMON 출석체크</h1><p class="muted">Pi Sandbox · 출석 기능 시범 운영</p>
+<div class="card"><h2>Pi 계정</h2><p id="user" class="status">로그인이 필요합니다.</p><button id="login">Pi 로그인</button></div>
+<div class="card"><h2>내 테스트 포인트</h2><div id="balance" class="score">0 KP</div><p id="streak" class="muted">연속 출석 0일</p><p class="muted">매일 +20 KP · 연속 7일 +100 · 14일 +300 · 21일 +500 · 30일 +1,000 (달성일 보상)</p></div>
+<div class="card"><h2 id="month">이번 달 출석부</h2><div id="calendar" class="grid"></div><p id="message" class="muted">로그인 후 오늘 출석할 수 있습니다.</p><button id="checkin" disabled>오늘 출석하기</button></div>
+<div class="card"><h2>테스트 안내</h2><small>현재는 서버 적립이 아닌 이 기기·브라우저의 저장소에 기록되는 테스트입니다. 다른 기기에서는 기록이 공유되지 않으며 브라우저 데이터를 삭제하면 사라집니다. 기기 날짜를 변경하거나 저장소를 수정할 수 있으므로 실제 보상·카드 교환에는 사용할 수 없습니다. 실제 Pi 및 운영 포인트와 무관합니다.</small></div></div>
+<script>
+Pi.init({version:"2.0",sandbox:true});
+const $=id=>document.getElementById(id);
+const fmt=new Intl.DateTimeFormat("en-CA",{timeZone:"Asia/Seoul",year:"numeric",month:"2-digit",day:"2-digit"});
+const today=()=>fmt.format(new Date());
+const dateBefore=day=>{const d=new Date(day+"T12:00:00+09:00");d.setUTCDate(d.getUTCDate()-1);return fmt.format(d)};
+const bonuses={7:100,14:300,21:500,30:1000};
+let username="",records={};
+function key(){return "kmon-sandbox-attendance-v1:"+username}
+function read(){try{const data=JSON.parse(localStorage.getItem(key())||"{}");return data&&typeof data==="object"&&!Array.isArray(data)?data:{}}catch{return {}}}
+function render(){
+ const now=today(),prefix=now.slice(0,7),days=new Date(Number(now.slice(0,4)),Number(now.slice(5,7)),0).getDate();
+ $("month").textContent=prefix+" 출석부";
+ const checked=Object.keys(records).filter(d=>records[d]===true);
+ $("balance").textContent=(checked.reduce((sum,d)=>sum+20+(bonuses[streakAt(d)]||0),0)).toLocaleString()+" KP";
+ let streak=0,cursor=records[now]?now:dateBefore(now);
+ while(records[cursor]===true){streak++;cursor=dateBefore(cursor);if(streak>3660)break}
+ $("streak").textContent="연속 출석 "+streak+"일";
+ $("calendar").replaceChildren();
+ for(let i=1;i<=days;i++){const d=prefix+"-"+String(i).padStart(2,"0");const node=document.createElement("div");node.className="day"+(records[d]?" done":"")+(d===now?" today":"");node.textContent=i+(records[d]?" ✓":"");$("calendar").append(node)}
+ const done=records[now]===true;$("checkin").disabled=!username||done;$("checkin").textContent=done?"오늘 출석 완료":"오늘 출석하기";
+ $("message").textContent=!username?"Pi 로그인 후 출석할 수 있습니다.":done?"오늘 출석을 완료했습니다. 내일 다시 방문해 주세요.":"오늘 출석하면 테스트 KP가 적립됩니다.";
+}
+function streakAt(day){let count=1,cursor=dateBefore(day);while(records[cursor]===true){count++;cursor=dateBefore(cursor);if(count>3660)break}return count}
+function setUser(name){username=name;records=read();$("user").textContent="@"+name;$("login").textContent="계정 확인 완료";$("login").disabled=true;render()}
+async function verify(token){const response=await fetch("https://api.minepi.com/v2/me",{headers:{Authorization:"Bearer "+token}});if(!response.ok)throw Error("Pi 로그인 확인 실패");const data=await response.json();if(!data.username)throw Error("계정 정보를 확인할 수 없습니다");return data.username}
+$("login").onclick=async()=>{const btn=$("login");btn.disabled=true;try{if(!window.Pi?.authenticate)throw Error("Pi Browser에서 열어 주세요");const auth=await Pi.authenticate(["username"],payment=>console.info("미완료 결제:",payment?.identifier));if(!auth?.accessToken)throw Error("로그인 토큰이 없습니다");const name=await verify(auth.accessToken);setUser(name)}catch(e){$("message").textContent="로그인 실패: "+(e.message||"다시 시도해 주세요");btn.disabled=false}};
+$("checkin").onclick=()=>{if(!username)return;const now=today();records=read();if(records[now]){render();return}records[now]=true;try{localStorage.setItem(key(),JSON.stringify(records));render()}catch{$("message").textContent="브라우저에 출석 기록을 저장할 수 없습니다.";records=read();render()}};
+render();
+</script></body></html>
