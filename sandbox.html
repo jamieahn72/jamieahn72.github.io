@@ -2436,8 +2436,24 @@ const signalCardEnergy={
  "water-normal":[2,3],"water-rare":[2,3],"water-epic":[2,3],"water-legend":[2,3],
  "ddbo-normal":[2,3],"ddbo-rare":[2,3],"ddbo-epic":[2,3],"ddbo-legend":[2,3]
 };
+// Match the recommended card's ability to the selected advice, not just its energy.
+// The three positions correspond to the three existing advice variants in each period.
+// Keep birthdate/period hashing and all five-language advice text unchanged.
+const adviceIndex=adviceSeed%variants.length;
+const signalAdviceCardMatches={
+  0:[["chery","dumboo"],["egg","sero"],["egg","dumboo"]],
+  1:[["chery","dumboo"],["chery","dumboo"],["chery","dumboo"]],
+  2:[["ddbo","water","sero"],["ddbo","water","sero"],["ddbo","sero","egg"]],
+  3:[["ddbo","sero","egg"],["sero","water","ddbo"],["ddbo","sero","egg"]],
+  4:[["egg","water"],["egg","sero"],["egg","water"]]
+};
+// The match list stays broad enough to offer different cards and rarities.
 const eligible=typeof kmonCards!=="undefined"?kmonCards.filter(c=>(signalCardEnergy[c.id]||[]).includes(idx)):[];
-const pickSeed=(Math.imul(hash^(hash>>>16),2246822519)^(hash>>>13))>>>0;const chosen=eligible.length?eligible[pickSeed%eligible.length]:null;if(chosen){const card=typeof kmonTranslated==="function"?kmonTranslated(chosen):chosen;const wrap=document.createElement("div");wrap.className="signal-recommend";const thumb=document.createElement("button");thumb.type="button";thumb.className="signal-card-thumb";const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity;img.loading="lazy";thumb.appendChild(img);const copy=document.createElement("div");copy.className="signal-card-copy";const label=document.createElement("small");label.textContent=t.recommend;const name=document.createElement("strong");name.textContent=card.character+" · "+card.rarity;const power=document.createElement("p");power.textContent=card.power;const detail=document.createElement("button");detail.type="button";detail.textContent=({ko:"카드 자세히 보기",en:"View card details",zh:"查看卡片详情",ja:"カード詳細を見る",vi:"Xem chi tiết thẻ"})[document.documentElement.lang]||"카드 자세히 보기";const show=()=>openKmonCard(chosen);thumb.addEventListener("click",show);detail.addEventListener("click",show);copy.append(label,name,power,detail);wrap.append(thumb,copy);box.appendChild(wrap)}box.hidden=false}
+const matchedCharacters=(signalAdviceCardMatches[idx]||[])[adviceIndex]||[];
+const matched=eligible.filter(c=>matchedCharacters.some(name=>c.id.startsWith(name+"-")));
+const recommendationPool=matched.length?matched:eligible;
+const pickSeed=(Math.imul(hash^(hash>>>16),2246822519)^(hash>>>13))>>>0;
+const chosen=recommendationPool.length?recommendationPool[pickSeed%recommendationPool.length]:null;if(chosen){const card=typeof kmonTranslated==="function"?kmonTranslated(chosen):chosen;const wrap=document.createElement("div");wrap.className="signal-recommend";const thumb=document.createElement("button");thumb.type="button";thumb.className="signal-card-thumb";const img=document.createElement("img");img.src=card.image;img.alt=card.character+" "+card.rarity;img.loading="lazy";thumb.appendChild(img);const copy=document.createElement("div");copy.className="signal-card-copy";const label=document.createElement("small");label.textContent=t.recommend;const name=document.createElement("strong");name.textContent=card.character+" · "+card.rarity;const power=document.createElement("p");power.textContent=card.power;const detail=document.createElement("button");detail.type="button";detail.textContent=({ko:"카드 자세히 보기",en:"View card details",zh:"查看卡片详情",ja:"カード詳細を見る",vi:"Xem chi tiết thẻ"})[document.documentElement.lang]||"카드 자세히 보기";const show=()=>openKmonCard(chosen);thumb.addEventListener("click",show);detail.addEventListener("click",show);copy.append(label,name,power,detail);wrap.append(thumb,copy);box.appendChild(wrap)}box.hidden=false}
  $("signal-form").addEventListener("submit",e=>{e.preventDefault();calculate()});root.querySelectorAll("[data-signal-period]").forEach(b=>b.addEventListener("click",()=>{period=b.dataset.signalPeriod;root.querySelectorAll("[data-signal-period]").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));if($("signal-birth").value)calculate()}));
  new MutationObserver(refresh).observe(document.documentElement,{attributes:true,attributeFilter:["lang"]});refresh();
 })();
