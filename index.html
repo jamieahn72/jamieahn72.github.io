@@ -2109,6 +2109,12 @@ if (window.location.hash.includes("access_token=") &&
 
       updatePiLoginButton(user.username);
 
+      if (sessionStorage.getItem("kmon_oauth_return_to_sandbox") === "1") {
+        sessionStorage.removeItem("kmon_oauth_return_to_sandbox");
+        window.location.replace("/sandbox.html");
+        return;
+      }
+
       alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
 
       history.replaceState(null, "", window.location.pathname);
