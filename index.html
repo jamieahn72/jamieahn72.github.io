@@ -2069,6 +2069,14 @@ async function verifyPiToken(token) {
   return await response.json();
 }
 
+// Return desktop OAuth users to the current KMON sandbox page without
+// changing the registered root redirect URI or normal root-page visits.
+if (window.location.hash.includes("access_token=") &&
+    window.location.hash.includes("state=") &&
+    sessionStorage.getItem("pi_login_state")) {
+  window.location.replace("/sandbox.html" + window.location.hash);
+}
+
 (async function initializePiLogin() {
   const params = new URLSearchParams(
     window.location.hash.replace(/^#/, "")
