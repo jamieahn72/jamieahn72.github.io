@@ -2073,6 +2073,7 @@ if (piLoginButton) {
     if (!isPiBrowser) {
       const state = crypto.randomUUID();
       sessionStorage.setItem("pi_login_state", state);
+      sessionStorage.setItem("kmon_oauth_return_to_sandbox", "1");
       const redirectUri = PI_REDIRECT_URI;
       const authUrl = new URL("https://accounts.pinet.com/oauth/authorize");
       authUrl.searchParams.set("response_type", "token");
