@@ -2073,7 +2073,7 @@ if (piLoginButton) {
     if (!isPiBrowser) {
       const state = crypto.randomUUID();
       sessionStorage.setItem("pi_login_state", state);
-      const redirectUri = window.location.origin + window.location.pathname;
+      const redirectUri = PI_REDIRECT_URI;
       const authUrl = new URL("https://accounts.pinet.com/oauth/authorize");
       authUrl.searchParams.set("response_type", "token");
       authUrl.searchParams.set("client_id", PI_CLIENT_ID);
