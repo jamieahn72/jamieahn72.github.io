@@ -648,10 +648,6 @@ section { padding:30px 20px; }
 .world-detail-button:hover { background:#d77c24; }
 .world-detail-button:focus-visible { outline:3px solid #E58A32; outline-offset:3px; }
 
-/* Localized world banner: original Korean lettering is embedded in the artwork. */
-.world-banner .world-localized-title{display:none;position:absolute;z-index:1;left:4%;top:50%;transform:translateY(-50%);width:53%;margin:0;color:#fff;font-size:clamp(19px,4.5vw,40px);font-weight:850;line-height:1.2;text-align:center;text-shadow:0 2px 10px #091a36,0 1px 3px #091a36;pointer-events:none;}
-html:not([lang="ko"]) .world-banner img{filter:blur(13px) brightness(.58);transform:scale(1.08);}
-html:not([lang="ko"]) .world-banner .world-localized-title{display:block;}
 .bestiary-toolbar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:15px; padding-bottom:10px; border-bottom:1px solid rgba(32,43,75,.12); }
 .bestiary-brand { flex:0 0 auto; color:var(--navy); font:900 15px Arial,sans-serif; letter-spacing:-.5px; white-space:nowrap; }
 .bestiary-brand span { color:#65718d; font-size:9px; font-weight:700; letter-spacing:.5px; }
@@ -1048,8 +1044,7 @@ if (/Android/i.test(navigator.userAgent) &&
 <!-- 홈페이지 -->
 <main id="home-page">
   <section class="world-banner" id="world">
-    <img src="kmon-world.webp" alt="Kmon의 세계" id="kmon-world-banner-image">
-    <h2 class="world-localized-title" id="kmon-world-localized-title" aria-hidden="true"></h2>
+    <img src="kmon-world.webp" alt="Kmon의 세계">
     <button class="world-detail-button" type="button" onclick="window.location.href='kmon-world-story.html'">Kmon 탐험하기 <span aria-hidden="true">→</span></button>
   </section>
   <section id="bestiary">
@@ -1903,11 +1898,6 @@ const languageNames = {
 function setLanguage(language) {
   if (!languageNames[language]) return;
 
-  const worldTitles = {ko:"Kmon의 세계",en:"Kmon World",zh:"Kmon的世界",ja:"Kmonの世界",vi:"Thế giới Kmon"};
-  const worldBannerImage=document.getElementById("kmon-world-banner-image");
-  const worldLocalizedTitle=document.getElementById("kmon-world-localized-title");
-  if(worldBannerImage)worldBannerImage.alt=worldTitles[language];
-  if(worldLocalizedTitle)worldLocalizedTitle.textContent=language==="ko"?"":worldTitles[language];
   const worldButton = document.querySelector(".world-detail-button");
   if (worldButton) {
     const worldLabels = {ko:"Kmon 탐험하기",en:"Explore Kmon",zh:"探索 Kmon",ja:"Kmonを探検",vi:"Khám phá Kmon"};
