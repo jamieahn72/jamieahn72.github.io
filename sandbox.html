@@ -2234,7 +2234,7 @@ function openKmonCard(card){
  const promise=content.querySelector(":scope > p:not(.sero-modal-rarity):not(.sero-modal-notice)");if(promise)promise.textContent=card.description;
  const guide=content.querySelector(".sero-modal-guide p");if(guide)guide.textContent=card.id==="sero-legend"?(pageTranslations[activeLanguage]||pageTranslations.ko).guide[0]:kmonCardUi[activeLanguage].guide;
  const symbolDescription=content.querySelector(".kmon-symbol-guide-description");if(symbolDescription)symbolDescription.textContent=card.id==="sero-legend"?"세로의 고유 심볼은 ‘소유와 보호’를 의미하며, 소중한 것을 지키는 힘을 상징합니다.":card.character.split(" (")[0]+"의 고유 심볼은 ‘"+card.power+"’의 의미를 담아 캐릭터의 특별한 능력을 상징합니다.";
- const testPrices={NORMAL:29,RARE:49,EPIC:79,LEGEND:129};
+ const testPrices={NORMAL:9,RARE:19,EPIC:39,LEGEND:79};
  const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" Test Pi 결제하기";buy.disabled=false;buy.title="Pi Sandbox 테스트 결제";buy.onclick=()=>kmonSandboxPurchase(kmonSelectedCard,buy);}
  const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent="※ Pi Sandbox 전용 테스트 결제입니다. 실제 Pi 결제는 지원하지 않습니다.";
  // Download is available only for the single watermarked Sandbox test card.
@@ -2326,7 +2326,7 @@ async function kmonSandboxPurchase(card, button) {
   }
   if (!sessionStorage.getItem("pi_access_token")) { alert("먼저 Pi 로그인을 해 주세요."); return; }
   if (!window.Pi || typeof window.Pi.createPayment !== "function") { alert("Pi Browser의 Sandbox에서 열어 주세요."); return; }
-  const prices = { NORMAL:29, RARE:49, EPIC:79, LEGEND:129 };
+  const prices = { NORMAL:9, RARE:19, EPIC:39, LEGEND:79 };
   const amount = prices[card?.rarity];
   if (!amount || !card?.id) return;
   kmonPaymentBusy = true;
