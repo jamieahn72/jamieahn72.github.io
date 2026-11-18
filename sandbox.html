@@ -2261,6 +2261,9 @@ function openKmonCard(card){
  kmonSelectedCard=kmonCards.find(c=>c.id===card.id)||card;
  card=kmonTranslated(kmonSelectedCard);
  const content=kmonModal.querySelector(".sero-modal-content");
+ const previewLabels={ko:"※ 카드 이미지는 미리보기용입니다.",en:"※ Card images are for preview purposes only.",zh:"※ 卡片图片仅供预览。",ja:"※ カード画像はプレビュー用です。",vi:"※ Hình ảnh thẻ chỉ dùng để xem trước."};
+ const previewNote=content.querySelector(".sero-card-preview-note");if(previewNote)previewNote.textContent=previewLabels[activeLanguage]||previewLabels.ko;
+
  content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" "+(kmonExtraTranslations[activeLanguage]||kmonExtraTranslations.ko).card;
  content.querySelector("h2").textContent=card.character;
  content.querySelector(".sero-modal-rarity").textContent=card.rarity;
