@@ -13,6 +13,14 @@
   const token = hash.get("access_token");
   if (token && state && state === sessionStorage.getItem("pi_login_state")) {
     window.location.replace("/sandbox.html" + window.location.hash);
+    return;
+  }
+  // The registered root remains the OAuth callback. Ordinary visits should
+  // open the current sandbox app rather than the archived root homepage.
+  // Never forward unmatched OAuth callbacks as ordinary navigation.
+  if (window.location.pathname === "/" && !token && !state &&
+      !hash.has("error") && !hash.has("error_description")) {
+    window.location.replace("/sandbox.html" + window.location.search + window.location.hash);
   }
 })();
 </script>
