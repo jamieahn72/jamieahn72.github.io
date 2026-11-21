@@ -963,6 +963,30 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 #card-collection-page{display:none;max-width:1150px;margin:0 auto;padding:45px 24px 90px;min-height:100vh}
 .kmon-collection-group{margin:28px 0 38px}.kmon-collection-group h2{font-size:22px;color:#202b4b;margin-bottom:14px}
 @media(max-width:600px){.kmon-card-grid{gap:7px}.kmon-card-item h3{font-size:11px}.kmon-card-item p{font-size:10px}.kmon-card-item img{border-radius:5px}#card-collection-page{padding:26px 12px 80px}}
+
+/* Compact collection header, aligned with mainnet; no payment functionality added */
+#card-collection-page{max-width:1180px;margin:0 auto;padding:38px 28px 100px;background:transparent}
+#card-collection-page .kmon-collection-back{margin-bottom:12px;border-radius:10px;padding:10px 16px}
+#card-collection-page .kmon-collection-hero{padding:22px 28px 20px;border:1px solid #e4e9f1;border-radius:22px;background:linear-gradient(130deg,#fff 5%,#f5f7fb 100%);box-shadow:0 12px 38px #1728460b}
+#card-collection-page .kmon-collection-hero .label{font-size:11px;letter-spacing:.19em;font-weight:800;color:#9a713b}
+#card-collection-page .kmon-collection-hero h1{margin:7px 0 13px;font-size:clamp(25px,3.5vw,34px);letter-spacing:-.045em;line-height:1.25;color:#172946}
+#card-collection-page .kmon-collection-hero>p{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:0;padding-top:12px;border-top:1px solid #e5e9f0;color:#68758a;font-size:12px;font-weight:700;line-height:1.6}
+#card-collection-page .kmon-collection-hero>p .kmon-rarity-normal,#card-collection-page .kmon-collection-hero>p .kmon-rarity-rare,#card-collection-page .kmon-collection-hero>p .kmon-rarity-epic,#card-collection-page .kmon-collection-hero>p .kmon-rarity-legend{display:inline-flex;align-items:center;justify-content:center;padding:6px 10px;border:1px solid currentColor;border-radius:7px;font-size:11px;letter-spacing:.04em;white-space:nowrap;color:#fff!important}
+#card-collection-page .kmon-collection-hero>p .kmon-rarity-normal{background:#7A8493!important;border-color:#7A8493!important}
+#card-collection-page .kmon-collection-hero>p .kmon-rarity-rare{background:#2378C5!important;border-color:#2378C5!important}
+#card-collection-page .kmon-collection-hero>p .kmon-rarity-epic{background:#8B42CB!important;border-color:#8B42CB!important}
+#card-collection-page .kmon-collection-hero>p .kmon-rarity-legend{background:#B58A35!important;border-color:#B58A35!important}
+#card-collection-page .kmon-order-arrow{color:#a8b0be;font-size:13px}
+#card-collection-page .kmon-collection-group{margin-top:18px}
+@media(max-width:767px){
+ #card-collection-page{padding:22px 12px 75px}
+ #card-collection-page .kmon-collection-back{margin-bottom:10px}
+ #card-collection-page .kmon-collection-hero{padding:18px 16px 17px;border-radius:16px}
+ #card-collection-page .kmon-collection-hero h1{margin:7px 0 11px;font-size:clamp(24px,6vw,30px)}
+ #card-collection-page .kmon-collection-hero>p{padding-top:10px;gap:5px;font-size:11px}
+ #card-collection-page .kmon-collection-hero>p .kmon-rarity-normal,#card-collection-page .kmon-collection-hero>p .kmon-rarity-rare,#card-collection-page .kmon-collection-hero>p .kmon-rarity-epic,#card-collection-page .kmon-collection-hero>p .kmon-rarity-legend{font-size:10px;padding:5px 7px}
+ #card-collection-page .kmon-collection-group{margin-top:13px}
+}
 </style>
 <script>
 /* 카카오톡 인앱 브라우저만 구분해 별도 인트로 너비 적용 */
@@ -1175,9 +1199,11 @@ if (/Android/i.test(navigator.userAgent) &&
 <!-- KMON 전체 디지털 카드 컬렉션 -->
 <main id="card-collection-page">
   <a class="kmon-collection-back" href="#world">← 메인으로 돌아가기</a>
-  <div class="label">KMON CARD COLLECTION</div>
-  <h1>디지털 카드 컬렉션</h1>
-  <p>캐릭터 순서 · <span class="kmon-rarity-normal">NORMAL</span> → <span class="kmon-rarity-rare">RARE</span> → <span class="kmon-rarity-epic">EPIC</span> → <span class="kmon-rarity-legend">LEGEND</span></p>
+  <header class="kmon-collection-hero">
+    <div class="label">KMON CARD COLLECTION</div>
+    <h1>디지털 카드 컬렉션</h1>
+    <p><span class="kmon-rarity-normal">NORMAL</span><span class="kmon-order-arrow" aria-hidden="true">→</span><span class="kmon-rarity-rare">RARE</span><span class="kmon-order-arrow" aria-hidden="true">→</span><span class="kmon-rarity-epic">EPIC</span><span class="kmon-order-arrow" aria-hidden="true">→</span><span class="kmon-rarity-legend">LEGEND</span></p>
+  </header>
   <div id="kmon-collection-cards"></div>
 </main>
 
