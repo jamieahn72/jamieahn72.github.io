@@ -1932,8 +1932,19 @@ introEnter.addEventListener("click",enterKmonWorld);
 // 이미 입장한 페이지를 새로고침하면 인트로를 건너뛰고 현재 위치를 유지한다.
 const isPageReload = performance.getEntriesByType("navigation")[0]?.type === "reload";
 const returningFromWorld = new URLSearchParams(window.location.search).get("from") === "world" || sessionStorage.getItem("kmon_world_return") === "1" || (isPageReload && sessionStorage.getItem("kmon_intro_entered") === "1");
+// 방문자 현지 날짜를 기준으로 하루에 한 번만 인트로 표시
+const today = new Date();
+const introDate = [today.getFullYear(), String(today.getMonth() + 1).padStart(2, "0"), String(today.getDate()).padStart(2, "0")].join("-");
+const introDateKey = "kmon_intro_last_shown_date";
+let alreadyShownToday = false;
+try {
+  alreadyShownToday = localStorage.getItem(introDateKey) === introDate;
+  if (!alreadyShownToday) localStorage.setItem(introDateKey, introDate);
+} catch (error) {
+  // 저장소를 사용할 수 없는 브라우저에서는 기존 인트로 동작 유지
+}
 const existingPageHash = window.location.hash;
-if (returningFromWorld || existingPageHash) {
+if (returningFromWorld || alreadyShownToday || (existingPageHash && existingPageHash !== "#world")) {
   sessionStorage.removeItem("kmon_world_return");
   introScreen.classList.add("hide");
   document.body.classList.remove("intro-active");
