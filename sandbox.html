@@ -2506,11 +2506,11 @@ const kmonClose=document.getElementById("sero-card-close");if(kmonClose)kmonClos
 if(kmonModal)kmonModal.addEventListener("click",e=>{if(e.target===kmonModal)closeKmonCard();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeKmonCard();});
 const kmonCharacterSummaries={
- ko:{sero:"소중한 물건을 지켜줍니다.",chery:"좋은 인연을 맺어줍니다.",chemi:"변함없는 사랑을 지켜줍니다.",egg:"집중력과 통찰력을 높여줍니다.",skinny:"식욕과 활력을 되찾아줍니다.",chesy:"한 사람만 사랑하게 해줍니다."},
- en:{sero:"Protects your precious belongings.",chery:"Helps you form meaningful connections.",chemi:"Protects lasting love.",egg:"Boosts focus and insight.",skinny:"Restores appetite and vitality.",chesy:"Helps you stay devoted to one person."},
- zh:{sero:"守护您珍贵的物品。",chery:"帮助您结下美好缘分。",chemi:"守护始终如一的爱情。",egg:"提升专注力与洞察力。",skinny:"帮助您恢复食欲与活力。",chesy:"帮助您专心爱一个人。"},
- ja:{sero:"大切な持ち物を守ります。",chery:"良いご縁を結びます。",chemi:"変わらぬ愛を守ります。",egg:"集中力と洞察力を高めます。",skinny:"食欲と活力を取り戻します。",chesy:"一人の人を愛し続ける力になります。"},
- vi:{sero:"Bảo vệ đồ vật quý giá của bạn.",chery:"Giúp bạn kết nối những mối duyên tốt đẹp.",chemi:"Gìn giữ tình yêu bền lâu.",egg:"Tăng khả năng tập trung và sự sáng suốt.",skinny:"Giúp khôi phục cảm giác ngon miệng và sức sống.",chesy:"Giúp bạn chung thủy với một người."}
+ ko:{sero:"소중한 물건을 지켜줍니다.",chery:"좋은 인연을 맺어줍니다.",chemi:"변함없는 사랑을 지켜줍니다.",egg:"집중력과 통찰력을 높여줍니다.",bbebbe:"식욕과 활력을 되찾아줍니다.",chesy:"한 사람만 사랑하게 해줍니다."},
+ en:{sero:"Protects your precious belongings.",chery:"Helps you form meaningful connections.",chemi:"Protects lasting love.",egg:"Boosts focus and insight.",bbebbe:"Restores appetite and vitality.",chesy:"Helps you stay devoted to one person."},
+ zh:{sero:"守护您珍贵的物品。",chery:"帮助您结下美好缘分。",chemi:"守护始终如一的爱情。",egg:"提升专注力与洞察力。",bbebbe:"帮助您恢复食欲与活力。",chesy:"帮助您专心爱一个人。"},
+ ja:{sero:"大切な持ち物を守ります。",chery:"良いご縁を結びます。",chemi:"変わらぬ愛を守ります。",egg:"集中力と洞察力を高めます。",bbebbe:"食欲と活力を取り戻します。",chesy:"一人の人を愛し続ける力になります。"},
+ vi:{sero:"Bảo vệ đồ vật quý giá của bạn.",chery:"Giúp bạn kết nối những mối duyên tốt đẹp.",chemi:"Gìn giữ tình yêu bền lâu.",egg:"Tăng khả năng tập trung và sự sáng suốt.",bbebbe:"Giúp khôi phục cảm giác ngon miệng và sức sống.",chesy:"Giúp bạn chung thủy với một người."}
 };
 function renderKmonCards(){
  const ui=kmonCardUi[activeLanguage]||kmonCardUi.ko;
