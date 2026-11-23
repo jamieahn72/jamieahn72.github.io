@@ -2554,7 +2554,8 @@ const signalCardEnergy={
  "ddbo-normal":[2,3],"ddbo-rare":[2,3],"ddbo-epic":[2,3],"ddbo-legend":[2,3],
  "dongja-normal":[2],"dongja-rare":[2],"dongja-epic":[2],"dongja-legend":[2],
  "dongnyeo-normal":[2],"dongnyeo-rare":[2],"dongnyeo-epic":[2],"dongnyeo-legend":[2],
- "bbebbe-normal":[0,2],"bbebbe-rare":[0,2],"bbebbe-epic":[0,2],"bbebbe-legend":[0,2]
+ "bbebbe-normal":[0,2],"bbebbe-rare":[0,2],"bbebbe-epic":[0,2],"bbebbe-legend":[0,2],
+ "chesy-normal":[1,2,3],"chesy-rare":[1,2,3],"chesy-epic":[1,2,3],"chesy-legend":[1,2,3]
 };
 // Match the recommended card's ability to the selected advice, not just its energy.
 // The three positions correspond to the three existing advice variants in each period.
@@ -2562,9 +2563,9 @@ const signalCardEnergy={
 const adviceIndex=adviceSeed%variants.length;
 const signalAdviceCardMatches={
   0:[["chery","dumboo","bbebbe"],["egg","sero","bbebbe"],["egg","dumboo","bbebbe"]],
-  1:[["chery","chemi","dumboo"],["chery","chemi","dumboo"],["chery","chemi","dumboo"]],
-  2:[["ddbo","water","sero","dongja","dongnyeo","bbebbe"],["ddbo","water","sero","dongja","dongnyeo","bbebbe"],["ddbo","sero","egg","dongnyeo","bbebbe"]],
-  3:[["ddbo","sero","egg"],["sero","water","ddbo"],["ddbo","sero","egg"]],
+  1:[["chery","chemi","dumboo","chesy"],["chery","chemi","dumboo","chesy"],["chery","chemi","dumboo","chesy"]],
+  2:[["ddbo","water","sero","dongja","dongnyeo","bbebbe","chesy"],["ddbo","water","sero","dongja","dongnyeo","bbebbe","chesy"],["ddbo","sero","egg","dongnyeo","bbebbe","chesy"]],
+  3:[["ddbo","sero","egg","chesy"],["sero","water","ddbo","chesy"],["ddbo","sero","egg","chesy"]],
   4:[["egg","water"],["egg","sero"],["egg","water"]]
 };
 // The match list stays broad enough to offer different cards and rarities.
