@@ -1221,7 +1221,7 @@ if (/Android/i.test(navigator.userAgent) &&
   <section id="cards">
     <div class="label">COLLECT YOUR WORLD</div>
     <h2 class="section-title">디지털 카드</h2>
-    <p class="kmon-card-tagline"><span id="kmon-card-tagline-first">각각의 Kmon 카드는 저마다 고유한 능력을 지니고 있습니다.</span><span class="kmon-mobile-break"><br></span><span class="kmon-desktop-space"> </span><span id="kmon-card-tagline-second">카드를 소유하는 순간, 그 특별한 능력은 당신의 일상과 함께합니다.</span></p>
+    <p class="kmon-card-tagline"><span id="kmon-card-tagline-first">당신만의 Kmon 카드,</span><span class="kmon-mobile-break"><br></span><span class="kmon-desktop-space"> </span><span id="kmon-card-tagline-second">특별한 능력이 당신의 것이 됩니다.</span></p>
     <div class="kmon-card-grid" id="kmon-home-cards"></div>
     <div class="more-monsters-wrap"><a class="more-monsters-button" href="#card-collection">전체 카드 더보기</a></div>
   </section>
@@ -1948,7 +1948,7 @@ const languageNames = {
 function setLanguage(language) {
   if (!languageNames[language]) return;
 
-  const cardTaglines={ko:["각각의 Kmon 카드는 저마다 고유한 능력을 지니고 있습니다.","카드를 소유하는 순간, 그 특별한 능력은 당신의 일상과 함께합니다."],en:["Discover the special power you need,","with KMON cards."],zh:["发现你所需要的特别力量，","就在 KMON 卡片中。"],ja:["あなたに必要な特別な力を、","KMONカードで見つけよう。"],vi:["Khám phá sức mạnh đặc biệt bạn cần,","qua những thẻ KMON."]};
+  const cardTaglines={ko:["당신만의 Kmon 카드,","특별한 능력이 당신의 것이 됩니다."],en:["Discover the special power you need,","with KMON cards."],zh:["发现你所需要的特别力量，","就在 KMON 卡片中。"],ja:["あなたに必要な特別な力を、","KMONカードで見つけよう。"],vi:["Khám phá sức mạnh đặc biệt bạn cần,","qua những thẻ KMON."]};
   const cardTagline=cardTaglines[language]||cardTaglines.ko;
   const taglineFirst=document.getElementById("kmon-card-tagline-first");
   const taglineSecond=document.getElementById("kmon-card-tagline-second");
@@ -1956,8 +1956,8 @@ function setLanguage(language) {
   if(taglineSecond)taglineSecond.textContent=cardTagline[1];
   const collectionFirst=document.getElementById("kmon-collection-message-first");
   const collectionSecond=document.getElementById("kmon-collection-message-second");
-  if(collectionFirst)collectionFirst.textContent=cardTagline[0];
-  if(collectionSecond)collectionSecond.textContent=cardTagline[1];
+  if(collectionFirst)collectionFirst.textContent=language==="ko"?"각각의 Kmon 카드는 저마다 고유한 능력을 지니고 있습니다.":cardTagline[0];
+  if(collectionSecond)collectionSecond.textContent=language==="ko"?"카드를 소유하는 순간, 그 특별한 능력은 당신의 일상과 함께합니다.":cardTagline[1];
   const worldButton = document.querySelector(".world-detail-button");
   if (worldButton) {
     const worldLabels = {ko:"Kmon 탐험하기",en:"Explore Kmon",zh:"探索 Kmon",ja:"Kmonを探検",vi:"Khám phá Kmon"};
