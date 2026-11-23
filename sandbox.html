@@ -1013,6 +1013,7 @@ footer { padding:25px 20px; color:#9299ad; text-align:center; font-size:12px; }
 #card-collection-page .kmon-collection-back:hover {
   background:#fff8ef;
 }
+.kmon-collection-group .kmon-character-divider{height:1px;background:#dce1e9;margin:0 0 15px;width:100%}
 .kmon-collection-group .kmon-character-summary{margin:-5px 0 14px;color:#596176;font-size:14px;line-height:1.5;font-weight:500}
 @media(max-width:600px){.kmon-collection-group .kmon-character-summary{font-size:12px;margin:-5px 0 11px}}
 </style>
@@ -2506,11 +2507,11 @@ const kmonClose=document.getElementById("sero-card-close");if(kmonClose)kmonClos
 if(kmonModal)kmonModal.addEventListener("click",e=>{if(e.target===kmonModal)closeKmonCard();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeKmonCard();});
 const kmonCharacterSummaries={
- ko:{sero:"소중한 물건을 지켜줍니다.",chery:"좋은 인연을 맺어줍니다.",chemi:"변함없는 사랑을 지켜줍니다.",egg:"집중력과 통찰력을 높여줍니다.",bbebbe:"식욕과 활력을 되찾아줍니다.",chesy:"한 사람만 사랑하게 해줍니다."},
- en:{sero:"Protects your precious belongings.",chery:"Helps you form meaningful connections.",chemi:"Protects lasting love.",egg:"Boosts focus and insight.",bbebbe:"Restores appetite and vitality.",chesy:"Helps you stay devoted to one person."},
- zh:{sero:"守护您珍贵的物品。",chery:"帮助您结下美好缘分。",chemi:"守护始终如一的爱情。",egg:"提升专注力与洞察力。",bbebbe:"帮助您恢复食欲与活力。",chesy:"帮助您专心爱一个人。"},
- ja:{sero:"大切な持ち物を守ります。",chery:"良いご縁を結びます。",chemi:"変わらぬ愛を守ります。",egg:"集中力と洞察力を高めます。",bbebbe:"食欲と活力を取り戻します。",chesy:"一人の人を愛し続ける力になります。"},
- vi:{sero:"Bảo vệ đồ vật quý giá của bạn.",chery:"Giúp bạn kết nối những mối duyên tốt đẹp.",chemi:"Gìn giữ tình yêu bền lâu.",egg:"Tăng khả năng tập trung và sự sáng suốt.",bbebbe:"Giúp khôi phục cảm giác ngon miệng và sức sống.",chesy:"Giúp bạn chung thủy với một người."}
+ ko:{sero:"소중한 물건을 지켜줍니다.",chery:"좋은 인연을 맺어줍니다.",chemi:"변함없는 사랑을 지켜줍니다.",egg:"집중력과 통찰력을 높여줍니다.",bbebbe:"식욕과 활력을 되찾아줍니다.",chesy:"한 사람을 향한 변치 않는 사랑을 지켜줍니다.",water:"물과 관련된 위험으로부터 지켜줍니다.",fat:"식욕을 조절하고 다이어트를 도와줍니다.",dongja:"건강을 지키고 회복을 도와줍니다.",dongnyeo:"따뜻한 손길로 건강과 회복을 돕습니다.",dumbu:"남녀 간의 사랑이 이루어지도록 도와줍니다."},
+ en:{sero:"Protects your precious belongings.",chery:"Helps you form meaningful connections.",chemi:"Protects lasting love.",egg:"Boosts focus and insight.",bbebbe:"Restores appetite and vitality.",chesy:"Protects your one true love.",water:"Protects you from water-related dangers.",fat:"Helps control appetite and supports dieting.",dongja:"Supports health and recovery.",dongnyeo:"Nurtures health with gentle care.",dumbu:"Helps romantic love blossom."},
+ zh:{sero:"守护您珍贵的物品。",chery:"帮助您结下美好缘分。",chemi:"守护始终如一的爱情。",egg:"提升专注力与洞察力。",bbebbe:"帮助您恢复食欲与活力。",chesy:"守护您对唯一挚爱的恒久深情。",water:"守护您远离与水有关的危险。",fat:"帮助控制食欲并支持减肥。",dongja:"守护健康并帮助恢复。",dongnyeo:"以温柔的关怀守护健康与康复。",dumbu:"帮助男女之间的爱情开花结果。"},
+ ja:{sero:"大切な持ち物を守ります。",chery:"良いご縁を結びます。",chemi:"変わらぬ愛を守ります。",egg:"集中力と洞察力を高めます。",bbebbe:"食欲と活力を取り戻します。",chesy:"ただ一人への変わらぬ愛を守ります。",water:"水に関わる危険から守ります。",fat:"食欲を抑え、ダイエットを助けます。",dongja:"健康を守り、回復を助けます。",dongnyeo:"温かなケアで健康と回復を支えます。",dumbu:"男女の恋が実るよう助けます。"},
+ vi:{sero:"Bảo vệ đồ vật quý giá của bạn.",chery:"Giúp bạn kết nối những mối duyên tốt đẹp.",chemi:"Gìn giữ tình yêu bền lâu.",egg:"Tăng khả năng tập trung và sự sáng suốt.",bbebbe:"Giúp khôi phục cảm giác ngon miệng và sức sống.",chesy:"Bảo vệ tình yêu thủy chung dành cho một người.",water:"Bảo vệ bạn khỏi nguy hiểm liên quan đến nước.",fat:"Giúp kiểm soát cảm giác thèm ăn và hỗ trợ giảm cân.",dongja:"Bảo vệ sức khỏe và hỗ trợ hồi phục.",dongnyeo:"Chăm sóc sức khỏe và hồi phục bằng sự dịu dàng.",dumbu:"Giúp tình yêu đôi lứa đơm hoa."}
 };
 function renderKmonCards(){
  const ui=kmonCardUi[activeLanguage]||kmonCardUi.ko;
@@ -2523,7 +2524,7 @@ function renderKmonCards(){
  if(home){const byCharacter=new Map();kmonCards.forEach(card=>{if(!byCharacter.has(card.character))byCharacter.set(card.character,[]);byCharacter.get(card.character).push(card);});const characters=[...byCharacter.keys()];for(let i=characters.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[characters[i],characters[j]]=[characters[j],characters[i]];}const chosen=characters.slice(0,4).map(character=>{const cards=byCharacter.get(character);return cards[Math.floor(Math.random()*cards.length)];});home.replaceChildren(...chosen.map(kmonCardNode));}
  if(collection){const groups=new Map();const sorted=[...kmonCards].sort((a,b)=>(kmonCharacterOrder.indexOf(a.character)-kmonCharacterOrder.indexOf(b.character))||(kmonRarityOrder[a.rarity]-kmonRarityOrder[b.rarity]));
  sorted.forEach(card=>{if(!groups.has(card.character))groups.set(card.character,[]);groups.get(card.character).push(card);});
- collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=kmonTranslated(cards[0]).character;section.appendChild(h);const summary=document.createElement("p");summary.className="kmon-character-summary";summary.textContent=(kmonCharacterSummaries[activeLanguage]||kmonCharacterSummaries.ko)[cards[0].id.split("-")[0]]||"";if(summary.textContent)section.appendChild(summary);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
+ collection.replaceChildren();groups.forEach((cards,name)=>{const section=document.createElement("section");section.className="kmon-collection-group";const h=document.createElement("h2");h.textContent=kmonTranslated(cards[0]).character;section.appendChild(h);const summary=document.createElement("p");summary.className="kmon-character-summary";summary.textContent=(kmonCharacterSummaries[activeLanguage]||kmonCharacterSummaries.ko)[cards[0].id.split("-")[0]]||"";if(summary.textContent)section.appendChild(summary);const rule=document.createElement("div");rule.className="kmon-character-divider";section.appendChild(rule);const grid=document.createElement("div");grid.className="kmon-card-grid";cards.forEach(card=>grid.appendChild(kmonCardNode(card)));section.appendChild(grid);collection.appendChild(section);});}
 }
 window.kmonCardsReady=true;
 renderKmonCards();
