@@ -2562,11 +2562,11 @@ const signalCardEnergy={
 // Keep birthdate/period hashing and all five-language advice text unchanged.
 const adviceIndex=adviceSeed%variants.length;
 const signalAdviceCardMatches={
-  0:[["chery","dumboo","bbebbe"],["egg","sero","bbebbe"],["egg","dumboo","bbebbe"]],
-  1:[["chery","chemi","dumboo","chesy"],["chery","chemi","dumboo","chesy"],["chery","chemi","dumboo","chesy"]],
-  2:[["ddbo","water","sero","dongja","dongnyeo","bbebbe","chesy"],["ddbo","water","sero","dongja","dongnyeo","bbebbe","chesy"],["ddbo","sero","egg","dongnyeo","bbebbe","chesy"]],
-  3:[["ddbo","sero","egg","chesy"],["sero","water","ddbo","chesy"],["ddbo","sero","egg","chesy"]],
-  4:[["egg","water"],["egg","sero"],["egg","water"]]
+  0:[["chery","dumboo","bbebbe"],["egg","sero"],["egg","dumboo","bbebbe"]],
+  1:[["chery","chemi","dumboo"],["chery","chemi","chesy"],["dumboo","chesy"]],
+  2:[["ddbo","water","dongja","bbebbe"],["sero","dongnyeo","chesy","water"],["ddbo","sero","egg","dongnyeo","bbebbe","chesy"]],
+  3:[["ddbo","sero","egg"],["sero","water","chesy"],["ddbo","egg","chesy"]],
+  4:[["egg","water"],["egg","sero"],["water","sero"]]
 };
 // The match list stays broad enough to offer different cards and rarities.
 const eligible=typeof kmonCards!=="undefined"?kmonCards.filter(c=>(signalCardEnergy[c.id]||[]).includes(idx)):[];
