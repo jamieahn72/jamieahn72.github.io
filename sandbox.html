@@ -2242,12 +2242,6 @@ async function verifyPiToken(token) {
     }
   }
 
-  // In Pi Browser, use the official SDK on page entry rather than bypassing it with a saved token.
-  if (/PiBrowser/i.test(navigator.userAgent) && piLoginButton && typeof window.Pi?.authenticate === "function") {
-    await authenticatePiBrowser(false);
-    return;
-  }
-
   const savedAccessToken = sessionStorage.getItem("pi_access_token");
 
   if (savedAccessToken) {
