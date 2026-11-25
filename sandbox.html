@@ -2170,32 +2170,30 @@ if (piLoginButton) {
       return;
     }
 
+    await authenticatePiBrowser(true);
+  });
+}
+
+async function authenticatePiBrowser(showSuccess) {
     piLoginButton.disabled = true;
     try {
-      // Pi SDK may hang on desktop Chrome when its cross-origin messaging
-      // cannot reach the Pi authentication host. Never leave the button locked.
-      const auth = await Promise.race([
-        window.Pi.authenticate(["username", "payments"], (payment) => {
-          console.warn("Pi 미완료 결제 확인:", payment?.identifier);
-        }),
-        new Promise((_, reject) => setTimeout(() => reject(new Error(
-          "Pi 인증 응답이 지연되고 있습니다. 일반 Chrome에서는 Pi SDK 인증이 지원되지 않을 수 있습니다. 휴대폰 Pi Browser에서 테스트넷 주소를 열어 로그인해 주세요."
-        )), 15000))
-      ]);
+      const auth = await window.Pi.authenticate(["username", "payments"], (payment) => {
+        console.warn("Pi 미완료 결제 확인:", payment?.identifier);
+      });
       if (!auth?.accessToken || !auth?.user?.username) {
         throw new Error("인증 결과가 올바르지 않습니다.");
       }
       sessionStorage.setItem("pi_access_token", auth.accessToken);
       sessionStorage.setItem("pi_username", auth.user.username);
       updatePiLoginButton(auth.user.username);
-      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
+      if (showSuccess) alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
     } catch (error) {
+      if (!showSuccess) clearPiLogin();
       console.error("Pi 로그인 오류:", error);
       alert("Pi 로그인에 실패했습니다. " + (error?.message || "Pi Browser와 앱 등록 설정을 확인해 주세요."));
     } finally {
       piLoginButton.disabled = false;
     }
-  });
 }
 
 async function verifyPiToken(token) {
@@ -2242,6 +2240,12 @@ async function verifyPiToken(token) {
       alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginFail);
       return;
     }
+  }
+
+  // In Pi Browser, use the official SDK on page entry rather than bypassing it with a saved token.
+  if (/PiBrowser/i.test(navigator.userAgent) && piLoginButton && typeof window.Pi?.authenticate === "function") {
+    await authenticatePiBrowser(false);
+    return;
   }
 
   const savedAccessToken = sessionStorage.getItem("pi_access_token");
