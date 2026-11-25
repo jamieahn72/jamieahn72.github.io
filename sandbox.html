@@ -2170,11 +2170,6 @@ if (piLoginButton) {
       return;
     }
 
-    await authenticatePiBrowser(true);
-  });
-}
-
-async function authenticatePiBrowser(showSuccess) {
     piLoginButton.disabled = true;
     try {
       const auth = await window.Pi.authenticate(["username", "payments"], (payment) => {
@@ -2186,14 +2181,14 @@ async function authenticatePiBrowser(showSuccess) {
       sessionStorage.setItem("pi_access_token", auth.accessToken);
       sessionStorage.setItem("pi_username", auth.user.username);
       updatePiLoginButton(auth.user.username);
-      if (showSuccess) alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
+      alert((pageTranslations[activeLanguage] || pageTranslations.ko).loginSuccess);
     } catch (error) {
-      if (!showSuccess) clearPiLogin();
       console.error("Pi 로그인 오류:", error);
       alert("Pi 로그인에 실패했습니다. " + (error?.message || "Pi Browser와 앱 등록 설정을 확인해 주세요."));
     } finally {
       piLoginButton.disabled = false;
     }
+  });
 }
 
 async function verifyPiToken(token) {
