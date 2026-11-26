@@ -19,9 +19,9 @@ small{color:#555}
 <main>
 <h1>KMON A2U 사용자 확인 테스트</h1>
 <p>Pi Browser에서 KMON Testnet으로 이 페이지를 열고 수신자 확인에 필요한 권한에 동의하세요.</p>
-<p><strong>Test Pi 송금 기능은 없습니다.</strong> 이 페이지는 수신자 권한과 UID를 확인합니다.</p>
+<p>수신 권한에 동의하면 Test Pi 수신 신청이 등록됩니다.</p>
 <p><a href="./sandbox.html">KMON 테스트넷으로 이동</a></p>
-<button id="verify" type="button">로그인한 사용자 확인</button>
+<button id="verify" type="button">Test Pi 수신 신청</button>
 <p id="result" role="status" aria-live="polite">아직 확인하지 않았습니다.</p>
 <small>확인 시 Pi 인증 토큰을 KMON의 별도 확인 서버에 전송합니다. 화면이나 로그에 토큰을 출력하지 않습니다.</small>
 </main>
@@ -50,24 +50,18 @@ small{color:#555}
       const response = await fetch('https://kmon-a2u-testnet.jamieahn72.workers.dev/verify-recipient', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({accessToken}),
+        body: JSON.stringify({accessToken, register: true}),
         cache: 'no-store',
         redirect: 'error'
       });
       const data = await response.json();
-      if (!response.ok || data.verified !== true || typeof data.uid !== 'string' || !data.uid.trim()) {
+      if (!response.ok || data.verified !== true || data.registered !== true) {
         result.textContent = data.code === 'missing_scopes'
           ? '필수 권한에 모두 동의한 뒤 다시 확인해 주세요.'
-          : '사용자 확인에 실패했습니다 (HTTP ' + response.status + ').';
+          : '수신 신청을 확인하지 못했습니다. 다시 시도해 주세요.';
         return;
       }
-      if (response.headers.get('X-Kmon-A2U-Scopes-Verified') !== 'true') {
-        result.textContent = '서버에서 수신자 권한 확인 결과를 받지 못했습니다.';
-        return;
-      }
-      result.textContent = '사용자 확인 성공: @' + String(data.username || '(이름 없음)') + '\nUID: ' + data.uid
-        + '\n권한 확인 완료: username, payments, wallet_address'
-        + '\n송금 기능: 비활성화';
+      result.textContent = 'Test Pi 수신 신청 완료';
     } catch (_) {
       result.textContent = 'Pi 인증 또는 서버 연결을 완료하지 못했습니다. Pi Browser에서 다시 시도해 주세요.';
     } finally {
