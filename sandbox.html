@@ -2074,6 +2074,81 @@ const pageTranslations = {
   }
 };
 
+// Staged Indonesian page labels; details and language activation pending.
+pageTranslations.id = {
+  "mainBack": "← Kembali ke Beranda",
+  "indexBack": "← Kembali ke Ensiklopedia",
+  "indexTitle": "Ensiklopedia Monster",
+  "intro": "Kenali satu per satu makhluk misterius Kmon.",
+  "preparing": "Segera Hadir",
+  "pageLabel": "Halaman ensiklopedia",
+  "characterLabel": "KARAKTER KMON",
+  "piLogin": "Masuk dengan Pi",
+  "piLoginTitle": "Masuk menggunakan akun Pi Anda.",
+  "logoutConfirm": "Keluar dari Kmon?",
+  "logoutAlert": "Anda telah keluar.",
+  "loginSuccess": "Berhasil masuk dengan Pi!",
+  "loginFail": "Gagal masuk dengan Pi. Silakan coba lagi.",
+  "cardTitle2": "Sero",
+  "cardRarity": "LEGEND · Penjaga barang berharga",
+  "modalPower": "Penjaga barang berharga",
+  "modalPromise": "Melindungi barang berharga milik Anda agar tidak hilang atau dirampas, apa pun yang terjadi.",
+  "guide": [
+    "Apakah Anda sering kehilangan atau lupa menaruh barang?",
+    "Saat memiliki kartu ini, kemampuan khusus karakter tersebut diwariskan kepada Anda.",
+    "Pengalaman istimewa ini dimungkinkan oleh simbol unik pada setiap kartu karakter.",
+    "Simbol unik Kmon terinspirasi dari kepercayaan rakyat tradisional Korea dan mewakili makna serta kemampuan masing-masing karakter."
+  ],
+  "notice": "Pembelian kartu dan pengunduhan versi asli resmi akan segera tersedia.",
+  "buy": "Beli dengan Pi · Segera Hadir",
+  "monsters": [
+    [
+      "Sero",
+      "Pemimpin tim Kmon (Malaikat Maut)"
+    ],
+    [
+      "Chesy",
+      "Kakak tertua dari tiga saudari hantu"
+    ],
+    [
+      "Chery",
+      "Anak tengah dari tiga saudari hantu"
+    ],
+    [
+      "Chemi",
+      "Adik bungsu dari tiga saudari hantu"
+    ],
+    [
+      "Dumboo",
+      "Anggota tim Kmon (Hantu Bujang)"
+    ],
+    [
+      "Hungry Monster",
+      "Roh jahat: Monster Rakus"
+    ],
+    [
+      "Water Ghost",
+      "Roh jahat: Hantu Air"
+    ],
+    [
+      "Dongnyeo (Hantu Anak Perempuan)",
+      "Yokai: Dongnyeo"
+    ],
+    [
+      "Egg Ghost",
+      "Roh jahat: Hantu Telur"
+    ],
+    [
+      "Skinny Hungry Monster",
+      "Roh jahat: Monster Rakus Kurus"
+    ],
+    [
+      "Dongja (Hantu Anak Laki-laki)",
+      "Yokai: Dongja"
+    ]
+  ]
+};
+
 let activeLanguage = "ko";
 function applyPageTranslations(language) {
   const t = pageTranslations[language] || pageTranslations.ko;
