@@ -1563,7 +1563,7 @@ function renderMonsterIndex(page=1) {
     card.className = "index-card preparing";
     const label = document.createElement("div");
     label.className = "preparing-label";
-    label.textContent = "준비중";
+    label.textContent = (pageTranslations[activeLanguage] || pageTranslations.ko).preparing;
     card.appendChild(label);
     grid.appendChild(card);
   }
