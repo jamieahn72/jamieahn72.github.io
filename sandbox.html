@@ -2822,7 +2822,7 @@ const languageNames = {
 function setLanguage(language) {
   if (!languageNames[language]) return;
 
-  const cardTaglines={ko:["당신만의 Kmon 카드,","특별한 능력이 당신의 것이 됩니다."],en:["Discover the special power you need,","with KMON cards."],zh:["发现你所需要的特别力量，","就在 KMON 卡片中。"],ja:["あなたに必要な特別な力を、","KMONカードで見つけよう。"],vi:["Khám phá sức mạnh đặc biệt bạn cần,","qua những thẻ KMON."]};
+  const cardTaglines={ko:["당신만의 Kmon 카드,","특별한 능력이 당신의 것이 됩니다."],en:["Discover the special power you need,","with KMON cards."],zh:["发现你所需要的特别力量，","就在 KMON 卡片中。"],ja:["あなたに必要な特別な力を、","KMONカードで見つけよう。"],vi:["Khám phá sức mạnh đặc biệt bạn cần,","qua những thẻ KMON."],"id":["Temukan kekuatan khusus yang Anda butuhkan,","dengan kartu KMON."],"es":["Descubre el poder especial que necesitas,","con las cartas KMON."],"fr":["Découvrez le pouvoir spécial dont vous avez besoin,","avec les cartes KMON."],"de":["Entdecke die besondere Kraft, die du brauchst,","mit KMON-Karten."],"pt":["Descubra o poder especial de que você precisa,","com as cartas KMON."]};
   const cardTagline=cardTaglines[language]||cardTaglines.ko;
   const taglineFirst=document.getElementById("kmon-card-tagline-first");
   const taglineSecond=document.getElementById("kmon-card-tagline-second");
@@ -2834,7 +2834,7 @@ function setLanguage(language) {
   if(collectionSecond)collectionSecond.textContent=language==="ko"?"카드를 소유하는 순간, 그 특별한 능력은 당신의 일상과 함께합니다.":cardTagline[1];
   const worldButton = document.querySelector(".world-detail-button");
   if (worldButton) {
-    const worldLabels = {ko:"Kmon 탐험하기",en:"Explore Kmon",zh:"探索 Kmon",ja:"Kmonを探検",vi:"Khám phá Kmon"};
+    const worldLabels = {ko:"Kmon 탐험하기",en:"Explore Kmon",zh:"探索 Kmon",ja:"Kmonを探検",vi:"Khám phá Kmon","id":"Jelajahi Kmon","es":"Explorar Kmon","fr":"Explorer Kmon","de":"Kmon entdecken","pt":"Explorar Kmon"};
     worldButton.textContent = worldLabels[language] + " →";
   }
 
@@ -3201,7 +3201,7 @@ function openKmonCard(card){
  kmonSelectedCard=kmonCards.find(c=>c.id===card.id)||card;
  card=kmonTranslated(kmonSelectedCard);
  const content=kmonModal.querySelector(".sero-modal-content");
- const previewLabels={ko:"※ 카드 이미지는 미리보기용입니다.",en:"※ Card images are for preview purposes only.",zh:"※ 卡片图片仅供预览。",ja:"※ カード画像はプレビュー用です。",vi:"※ Hình ảnh thẻ chỉ dùng để xem trước."};
+ const previewLabels={ko:"※ 카드 이미지는 미리보기용입니다.",en:"※ Card images are for preview purposes only.",zh:"※ 卡片图片仅供预览。",ja:"※ カード画像はプレビュー用です。",vi:"※ Hình ảnh thẻ chỉ dùng để xem trước.","id":"※ Gambar kartu hanya untuk pratinjau.","es":"※ Las imágenes de las cartas son solo para vista previa.","fr":"※ Les images des cartes sont uniquement des aperçus.","de":"※ Kartenbilder dienen nur der Vorschau.","pt":"※ As imagens das cartas são apenas para visualização."};
  const previewNote=content.querySelector(".sero-card-preview-note");if(previewNote)previewNote.textContent=previewLabels[activeLanguage]||previewLabels.ko;
 
  content.querySelector("img").src=card.image;content.querySelector("img").alt=card.character+" "+card.rarity+" "+(kmonExtraTranslations[activeLanguage]||kmonExtraTranslations.ko).card;
@@ -3214,6 +3214,8 @@ function openKmonCard(card){
  const cardLang=kmonExtraTranslations[activeLanguage]||kmonExtraTranslations.ko;
  const symbolTitle=content.querySelector(".kmon-symbol-guide-title");if(symbolTitle)symbolTitle.textContent=cardLang.symbolTitle;
  const symbolDescription=content.querySelector(".kmon-symbol-guide-description");if(symbolDescription)symbolDescription.textContent=card.id==="sero-legend"?cardLang.symbolSero:(activeLanguage==="ko"?card.character.split(" (")[0]+"의 고유 심볼은 ‘"+card.power+"’의 의미를 담아 캐릭터의 특별한 능력을 상징합니다.":activeLanguage==="ja"?card.character+"の固有シンボルには「"+card.power+"」の意味が込められ、キャラクターの特別な力を表しています。":activeLanguage==="zh"?card.character+"的专属符号蕴含“"+card.power+"”之意，象征角色的特殊能力。":activeLanguage==="vi"?"Biểu tượng riêng của "+card.character+" mang ý nghĩa “"+card.power+"”, tượng trưng cho năng lực đặc biệt của nhân vật.":card.character+"\u0027s unique symbol represents “"+card.power+"” and the character\u0027s special ability.");
+ const newSymbolDescriptions={id:`Simbol unik ${card.character} melambangkan “${card.power}” dan kemampuan khusus karakter tersebut.`,es:`El símbolo único de ${card.character} representa «${card.power}» y la habilidad especial del personaje.`,fr:`Le symbole unique de ${card.character} représente « ${card.power} » et le pouvoir spécial du personnage.`,de:`Das einzigartige Symbol von ${card.character} steht für „${card.power}“ und die besondere Fähigkeit des Charakters.`,pt:`O símbolo exclusivo de ${card.character} representa “${card.power}” e a habilidade especial do personagem.`};
+ if(symbolDescription&&card.id!=="sero-legend"&&newSymbolDescriptions[activeLanguage])symbolDescription.textContent=newSymbolDescriptions[activeLanguage];
  const testPrices={NORMAL:9,RARE:19,EPIC:39,LEGEND:79};
  const buy=content.querySelector(".sero-buy-button");if(buy){buy.textContent=testPrices[card.rarity]+" "+cardLang.buyTest;buy.disabled=false;buy.title=cardLang.testTitle;buy.onclick=()=>kmonSandboxPurchase(kmonSelectedCard,buy);}
  const notice=content.querySelector(".sero-modal-notice");if(notice)notice.textContent=cardLang.testNotice;
