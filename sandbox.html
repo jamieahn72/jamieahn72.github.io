@@ -3235,10 +3235,11 @@ function openKmonCard(card){
 
  kmonModal.classList.add("active");document.body.style.overflow="hidden";
 }
+function kmonLocalizedNotice(message){const notices={"먼저 Pi 로그인을 해 주세요.":{"ko":"먼저 Pi 로그인을 해 주세요.","en":"Please sign in to Pi first.","zh":"请先登录 Pi。","ja":"先にPiにログインしてください。","vi":"Vui lòng đăng nhập Pi trước.","id":"Silakan masuk ke Pi terlebih dahulu.","es":"Inicia sesión en Pi primero.","fr":"Connectez-vous d’abord à Pi.","de":"Melde dich zuerst bei Pi an.","pt":"Entre no Pi primeiro."},"구매 확인 및 다운로드 준비 중...":{"ko":"구매 확인 및 다운로드 준비 중...","en":"Verifying purchase and preparing download...","zh":"正在验证购买并准备下载…","ja":"購入を確認し、ダウンロードを準備中…","vi":"Đang xác minh giao dịch và chuẩn bị tải xuống...","id":"Memverifikasi pembelian dan menyiapkan unduhan...","es":"Verificando la compra y preparando la descarga...","fr":"Vérification de l’achat et préparation du téléchargement…","de":"Kauf wird geprüft und Download vorbereitet...","pt":"Verificando a compra e preparando o download..."},"카드 PNG 다운로드 열기":{"ko":"카드 PNG 다운로드 열기","en":"Open card PNG download","zh":"打开卡片 PNG 下载","ja":"カードPNGのダウンロードを開く","vi":"Mở tải xuống PNG của thẻ","id":"Buka unduhan PNG kartu","es":"Abrir descarga PNG de la carta","fr":"Ouvrir le téléchargement PNG de la carte","de":"Karten-PNG-Download öffnen","pt":"Abrir download do PNG da carta"},"다운로드 링크 다시 만들기":{"ko":"다운로드 링크 다시 만들기","en":"Generate download link again","zh":"重新生成下载链接","ja":"ダウンロードリンクを再発行","vi":"Tạo lại liên kết tải xuống","id":"Buat ulang tautan unduhan","es":"Generar de nuevo el enlace de descarga","fr":"Générer à nouveau le lien de téléchargement","de":"Downloadlink erneut erstellen","pt":"Gerar novamente o link de download"},"KMON 테스트 결제가 완료되었습니다.":{"ko":"KMON 테스트 결제가 완료되었습니다.","en":"KMON test payment completed.","zh":"KMON 测试支付已完成。","ja":"KMONのテスト決済が完了しました。","vi":"Thanh toán thử KMON đã hoàn tất.","id":"Pembayaran uji KMON selesai.","es":"Pago de prueba de KMON completado.","fr":"Paiement test KMON terminé.","de":"KMON-Testzahlung abgeschlossen.","pt":"Pagamento de teste KMON concluído."},"Pi Browser의 Sandbox에서 열어 주세요.":{"ko":"Pi Browser의 Sandbox에서 열어 주세요.","en":"Please open in Pi Browser Sandbox.","zh":"请在 Pi Browser 的 Sandbox 中打开。","ja":"Pi BrowserのSandboxで開いてください。","vi":"Vui lòng mở trong Sandbox của Pi Browser.","id":"Silakan buka di Sandbox Pi Browser.","es":"Abre en el Sandbox de Pi Browser.","fr":"Ouvrez dans le Sandbox de Pi Browser.","de":"Bitte im Sandbox-Modus des Pi Browsers öffnen.","pt":"Abra no Sandbox do Pi Browser."}};return notices[message]?.[document.documentElement.lang]||message;}
 const KMON_PAYMENT_SERVER = "https://kmon-payment.jamieahn72.workers.dev";
 async function kmonPaymentRequest(path, paymentId, txid) {
   const token = sessionStorage.getItem("pi_access_token");
-  if (!token) throw new Error("먼저 Pi 로그인을 해 주세요.");
+  if (!token) throw new Error(kmonLocalizedNotice("먼저 Pi 로그인을 해 주세요."));
   const response = await fetch(KMON_PAYMENT_SERVER + path, {
     method: "POST",
     headers: { "Authorization": "Bearer " + token, "Content-Type": "application/json" },
@@ -3250,10 +3251,10 @@ async function kmonPaymentRequest(path, paymentId, txid) {
 }
 async function kmonDownloadTestCard(cardId,button) {
   const token=sessionStorage.getItem("pi_access_token");
-  if(!token){alert("먼저 Pi 로그인을 해 주세요.");return;}
+  if(!token){alert(kmonLocalizedNotice("먼저 Pi 로그인을 해 주세요."));return;}
   button.disabled=true;
   const original=button.textContent;
-  button.textContent="구매 확인 및 다운로드 준비 중...";
+  button.textContent=kmonLocalizedNotice("구매 확인 및 다운로드 준비 중...");
   try{
     const response=await fetch(KMON_PAYMENT_SERVER+"/api/cards/"+encodeURIComponent(cardId)+"/download-link",{
       method:"POST",headers:{"Authorization":"Bearer "+token},cache:"no-store"
@@ -3279,7 +3280,7 @@ async function kmonDownloadTestCard(cardId,button) {
     open.href=result.url;
     open.target="_blank";
     open.rel="noopener noreferrer";
-    open.textContent="카드 PNG 다운로드 열기";
+    open.textContent=kmonLocalizedNotice("카드 PNG 다운로드 열기");
     open.style.cssText="display:block;padding:15px;border-radius:9px;background:#176b4d;color:white;font-weight:700;text-decoration:none;";
     const copy=document.createElement("button");
     copy.type="button";
@@ -3296,7 +3297,7 @@ async function kmonDownloadTestCard(cardId,button) {
       }
     };
     box.append(info,open,copy);
-    button.textContent="다운로드 링크 다시 만들기";
+    button.textContent=kmonLocalizedNotice("다운로드 링크 다시 만들기");
   }catch(error){alert("다운로드 오류: "+error.message);button.textContent=original;}
   finally{button.disabled=false;}
 }
@@ -3306,8 +3307,8 @@ async function kmonSandboxPurchase(card, button) {
     alert("이전 결제 요청이 아직 처리 중입니다. Pi 결제창에서 취소하거나 완료한 뒤 다시 시도해 주세요.");
     return;
   }
-  if (!sessionStorage.getItem("pi_access_token")) { alert("먼저 Pi 로그인을 해 주세요."); return; }
-  if (!window.Pi || typeof window.Pi.createPayment !== "function") { alert("Pi Browser의 Sandbox에서 열어 주세요."); return; }
+  if (!sessionStorage.getItem("pi_access_token")) { alert(kmonLocalizedNotice("먼저 Pi 로그인을 해 주세요.")); return; }
+  if (!window.Pi || typeof window.Pi.createPayment !== "function") { alert(kmonLocalizedNotice("Pi Browser의 Sandbox에서 열어 주세요.")); return; }
   const prices = { NORMAL:9, RARE:19, EPIC:39, LEGEND:79 };
   const amount = prices[card?.rarity];
   if (!amount || !card?.id) return;
@@ -3351,7 +3352,7 @@ async function kmonSandboxPurchase(card, button) {
       onReadyForServerCompletion: async (paymentId, txid) => {
         try {
           await kmonPaymentRequest("/api/payments/complete", paymentId, txid);
-          alert("KMON 테스트 결제가 완료되었습니다.");
+          alert(kmonLocalizedNotice("KMON 테스트 결제가 완료되었습니다."));
         } catch (error) {
           console.error("KMON Sandbox completion:", error);
           alert("결제 확인 중 오류가 발생했습니다. 다시 결제하지 말고 구매 내역을 확인해 주세요.");
