@@ -1720,6 +1720,28 @@ function applyTranslations(language) {
     }
   };
 
+  // Indonesian homepage translation; not exposed until all sections are translated.
+  translations.id = {
+    title: "Ensiklopedia Monster",
+    intro: "Kenali satu per satu makhluk misterius Kmon.",
+    monsters: [
+      ["Sero", "Pemimpin tim Kmon (Malaikat Maut)"],
+      ["Chesy", "Kakak tertua dari tiga saudari hantu"],
+      ["Chery", "Anak tengah dari tiga saudari hantu"],
+      ["Chemi", "Adik bungsu dari tiga saudari hantu"],
+      ["Dumboo", "Anggota tim Kmon (Hantu Bujang)"],
+      ["Hungry Monster", "Roh jahat: Monster Rakus"]
+    ],
+    more: "Temukan Monster Lainnya",
+    videos: "Video Episode",
+    cards: "Kartu Digital",
+    cardTitle1: "Kartu Karakter",
+    cardText1: "Temui karakter Kmon favoritmu.",
+    cardTitle2: "Kisah Istimewa",
+    cardText2: "Jelajahi kisah tersembunyi para karakter.",
+    nav: ["Beranda", "Ensiklopedia", "Video", "Kartu & Cerita"]
+  };
+
   const t = translations[language] || translations.ko;
 
   document.querySelector(".title-text").textContent = t.title;
