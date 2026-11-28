@@ -1,0 +1,25 @@
+name: A2U isolated unit tests
+on:
+  push:
+    branches:
+      - feature/a2u-testnet-backend-plan-20261114
+    paths:
+      - 'a2u/**'
+      - '.github/workflows/a2u-unit-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run offline tests (no secrets, no network calls in test code)
+        run: node --test a2u/payout-engine.test.mjs
+      - name: Check source syntax
+        run: |
+          node --check a2u/payout-engine.mjs
+          node --check a2u/preflight.mjs
